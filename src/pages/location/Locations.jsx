@@ -3,37 +3,37 @@ import { MapPin, Clock, Phone, Mail, Globe } from "lucide-react";
 
 const Locations = () => {
   const locations = [
-    {
-      id: 1,
-      city: "Lusaka",
-      country: "Zambia",
-      address: "Shop # 94 Carousel Mall, Lusaka, Zambia",
-      phone: "+260 96 7379139",
-      email: "support@xycargozm.com",
-      hours: "Mon-Fri: 8:00 AM - 5:00 PM (Zambia Time)\nSat: 10:00 AM - 4:00 PM\nSun: Closed",
-      services: ["Warehouse Operations", "Air Freight", "Sea Freight", "Electronics Handling"],
-      timezone: "CAT (UTC+2)",
-      image: "https://images.unsplash.com/photo-1570101615121-bc725e35a0bf?w=400&h=250&fit=crop",
-      whatsapp: [
-        { number: "+260 96 7379139" },
-        { number: "+260 769 481 203" }
-      ]
-    },
-    {
-      id: 2,
-      city: "Lusaka",
-      country: "Zambia",
-      address: "Main Shipping Hub, Lusaka, Zambia",
-      phone: "+260 96 7379139",
-      email: "zambia@xycargozm.com",
-      hours: "Mon-Fri: 5:00 AM - 1:00 PM (Zambia Time)\nSat: 5:00 AM - 12:00 PM\nSun: Closed",
-      services: ["Delivery Hub", "Customs Clearance", "Final Mile Delivery", "Customer Support"],
-      timezone: "CAT (UTC+2)",
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop",
-      whatsapp: [
-        { number: "+260 96 7379139" }
-      ]
-    }
+      {
+          id: 1,
+          city: "Lusaka",
+          country: "Zambia",
+          address: "Main Shipping Hub, Lusaka, Zambia",
+          phone: "+260 96 7379139",
+          email: "zambia@xycargozm.com",
+          hours: "Mon-Fri: 5:00 AM - 1:00 PM (Zambia Time)\nSat: 5:00 AM - 12:00 PM\nSun: Closed",
+          services: ["Delivery Hub", "Customs Clearance", "Final Mile Delivery", "Customer Support"],
+          timezone: "CAT (UTC+2)",
+          image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop",
+          whatsapp: [
+              { number: "+260 96 7379139" }
+            ]
+        },
+        {
+          id: 2,
+          city: "Foshan",
+          country: "China",
+          address: "Shop # 94 Carousel Mall, Lusaka, Zambia",
+          phone: "+260 96 7379139",
+          email: "support@xycargozm.com",
+          hours: "Mon-Fri: 8:00 AM - 5:00 PM (Zambia Time)\nSat: 10:00 AM - 4:00 PM\nSun: Closed",
+          services: ["Warehouse Operations", "Air Freight", "Sea Freight", "Electronics Handling"],
+          timezone: "CAT (UTC+2)",
+          image: "https://images.unsplash.com/photo-1570101615121-bc725e35a0bf?w=400&h=250&fit=crop",
+          whatsapp: [
+            { number: "+260 96 7379139" },
+            { number: "+260 769 481 203" }
+          ]
+        },
   ];
 
   const containerVariants = {

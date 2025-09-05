@@ -19,16 +19,26 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone Support",
-      content: "+1 (555) 123-SHIP",
-      subtitle: "24/7 Customer Service",
-      action: "Call Now"
+      content: "+260 96 7379139",
+      subtitle: "Zambia Office",
+      action: "Call Now",
+      href: "tel:+260967379139"
+    },
+    {
+      icon: Phone,
+      title: "WhatsApp Support",
+      content: "+260 769 481 203",
+      subtitle: "Quick Response",
+      action: "Call Now",
+      href: "tel:+260769481203"
     },
     {
       icon: Mail,
       title: "Email Support",
       content: "support@xycargozm.com",
       subtitle: "Response within 2 hours",
-      action: "Send Email"
+      action: "Send Email",
+      href: "mailto:support@xycargozm.com?subject=Support Request - XY Cargo Zambia"
     },
     {
       icon: MessageCircle,
@@ -40,9 +50,10 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Headquarters",
-      content: "1234 Shipping Blvd, New York, NY 10001",
+      content: "Shop # 94 Carousel Mall, Lusaka, Zambia",
       subtitle: "Visit our main office",
-      action: "Get Directions"
+      action: "Get Directions",
+      href: "https://maps.google.com/?q=Carousel+Mall,+Lusaka,+Zambia"
     }
   ];
 
@@ -175,9 +186,15 @@ const Contact = () => {
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">{info.title}</h3>
                 <p className="font-medium text-gray-700 mb-1">{info.content}</p>
                 <p className="text-sm text-gray-500 mb-4">{info.subtitle}</p>
-                <button className="text-red-500 hover:text-red-600 font-medium text-sm">
-                  {info.action}
-                </button>
+                {info.href ? (
+                  <a href={info.href} className="text-red-500 hover:text-red-600 font-medium text-sm">
+                    {info.action}
+                  </a>
+                ) : (
+                  <button className="text-red-500 hover:text-red-600 font-medium text-sm">
+                    {info.action}
+                  </button>
+                )}
               </motion.div>
             );
           })}
