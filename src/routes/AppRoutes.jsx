@@ -5,6 +5,9 @@ import PackageTracking from "../pages/tracking/PackageTracking";
 import Locations from "../pages/location/Locations";
 import ShippingCalculator from "../pages/ShippingCalc/ShippingCalculator";
 import Contact from "../pages/contact/Contact";
+import SupportPage from "../pages/support/Support";
+import ServicesPage from "../pages/services/Services";
+import HowWeWorkPage from "../pages/howwework/HowWeWork";
 
 const AppRoutes = () => {
   return (
@@ -15,6 +18,9 @@ const AppRoutes = () => {
       <Route path="/locations" element={<Locations />} />
       <Route path="/calculator" element={<ShippingCalculator />} />
       <Route path="/contact" element={<Contact />} />
+        <Route path="/support" element={<SupportPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/how-we-work" element={<HowWeWorkPage />} />
     </Routes>
   );
 };

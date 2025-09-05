@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle, HelpCircle } from "lucide-react";
+import SEO from "../../components/common/SEO/SEO";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -129,6 +130,12 @@ const Contact = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="min-h-screen bg-gray-50 flex items-center justify-center py-16"
       >
+        <SEO 
+          title="Contact Us - Message Sent"
+          description="Thank you for contacting XY Cargo Zambia. We'll get back to you within 2 business hours."
+          keywords="contact XY Cargo, shipping support, message sent, contact confirmation"
+          canonical="https://xycargozm.com/contact"
+        />
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto text-center">
           <motion.div
             initial={{ scale: 0 }}
@@ -160,6 +167,12 @@ const Contact = () => {
       animate="visible"
       className="min-h-screen bg-gray-50 py-16"
     >
+      <SEO 
+        title="Contact Us"
+        description="Get in touch with XY Cargo Zambia. Contact our team for shipping inquiries, quotes, and support via phone, email, or the contact form."
+        keywords="contact XY Cargo, shipping support, customer service, contact form, shipping inquiries"
+        canonical="https://xycargozm.com/contact"
+      />
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <motion.div variants={sectionVariants} className="text-center mb-16">

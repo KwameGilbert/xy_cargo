@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Calculator, Package, Truck, Plane, Ship, Clock, DollarSign } from "lucide-react";
+import SEO from "../../components/common/SEO/SEO";
 
 const ShippingCalculator = () => {
   const [formData, setFormData] = useState({
@@ -122,6 +123,12 @@ const ShippingCalculator = () => {
       animate="visible"
       className="min-h-screen bg-gray-50 py-16"
     >
+      <SEO 
+        title="Shipping Calculator"
+        description="Calculate your shipping costs with XY Cargo Zambia's shipping calculator. Get instant quotes for air freight, sea freight, and special handling services."
+        keywords="shipping calculator, freight calculator, shipping cost, shipping rates, calculate shipping cost"
+        canonical="https://xycargozm.com/shipping-calculator"
+      />
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <motion.div variants={sectionVariants} className="text-center mb-12">

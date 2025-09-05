@@ -27,13 +27,15 @@ const NavBar = () => {
   return (
     <nav className="flex items-center justify-between px-4 md:px-16 py-4 bg-white shadow-md">
       {/* Logo */}
-      <div className="flex items-center space-x-2">
-        <div className="flex items-center justify-center w-10 h-10 bg-red-500 rounded-md">
-          <span className="text-white font-bold">XY</span>
-        </div>
-        <div className="text-xl font-bold text-gray-800">
-          <Link to="/">Cargo</Link>
-        </div>
+      <div className="flex items-center">
+        <Link to="/" className="flex items-center">
+          <img 
+            src="/images/logo/xy-cargo-logo.svg" 
+            alt="XY Cargo Zambia Logo" 
+            className="h-12 w-auto" 
+          />
+          <span className="text-xl font-bold text-gray-800 ml-2">ZAMBIA</span>
+        </Link>
       </div>
 
       {/* Mobile menu button */}

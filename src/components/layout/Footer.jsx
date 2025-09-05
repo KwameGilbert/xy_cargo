@@ -10,10 +10,15 @@ const Footer = () => {
           {/* Logo and Company Info */}
           <div>
             <div className="flex items-center mb-4">
-              <div className="flex items-center justify-center w-10 h-10 bg-red-500 rounded-md mr-2">
-                <span className="text-white font-bold">XY</span>
+              <img 
+                src="/images/logo/xy-cargo-logo.svg" 
+                alt="XY Cargo Zambia Logo" 
+                className="h-10 w-auto bg-white rounded-md p-1" 
+              />
+              <div className="flex flex-col ml-2">
+                <span className="text-xl font-bold text-white">CARGO</span>
+                <span className="text-sm font-medium text-red-400">ZAMBIA</span>
               </div>
-              <span className="text-xl font-bold">CARGO</span>
             </div>
             <p className="text-gray-400 mb-4">
               Reliable China to Zambia shipping services. Specializing in air and sea freight 
