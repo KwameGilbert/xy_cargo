@@ -35,7 +35,7 @@ const ShippingPricing = () => {
       icon: Battery,
       price: '$14',
       unit: 'per kg',
-      delivery: '2-3 weeks',
+      delivery: '10-17 days',
       description: 'Items with batteries, cosmetics, toner, medicine',
       color: 'bg-orange-50 text-orange-600 border-orange-200'
     },

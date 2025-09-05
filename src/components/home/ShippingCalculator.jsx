@@ -47,7 +47,7 @@ const ShippingCalculator = () => {
       total = weight * 11; // $11 per piece (treating weight as piece count)
     } else if (formData.category === 'electronics') {
       total = weight * 14; // $14 per kg for battery goods
-      deliveryDays = '14-21'; // Longer for battery items
+      deliveryDays = '10-17'; // Battery items delivery time
     } else if (formData.category === 'laptops') {
       total = weight * 16; // $16 per kg
     } else {

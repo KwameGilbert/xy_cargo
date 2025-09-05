@@ -5,14 +5,14 @@ const Locations = () => {
   const locations = [
     {
       id: 1,
-      city: "Foshan",
-      country: "China",
-      address: "广东省佛山市南海区里水镇沙步工业区横二路9号菲尔国际仓转赞比亚",
-      phone: "+86 199 2568 2512",
-      email: "china@xycargozm.com",
-      hours: "Mon-Fri: 10:00 AM - 7:00 PM (China Time)\nSat: 10:00 AM - 4:00 PM\nSun: Closed",
+      city: "Lusaka",
+      country: "Zambia",
+      address: "Shop # 94 Carousel Mall, Lusaka, Zambia",
+      phone: "+260 96 7379139",
+      email: "support@xycargozm.com",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM (Zambia Time)\nSat: 10:00 AM - 4:00 PM\nSun: Closed",
       services: ["Warehouse Operations", "Air Freight", "Sea Freight", "Electronics Handling"],
-      timezone: "CST (UTC+8)",
+      timezone: "CAT (UTC+2)",
       image: "https://images.unsplash.com/photo-1570101615121-bc725e35a0bf?w=400&h=250&fit=crop",
       whatsapp: [
         { number: "+260 96 7379139" },
@@ -85,8 +85,8 @@ const Locations = () => {
         <motion.div variants={headerVariants} className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">XY CARGO ZAMBIA Locations</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Connecting China and Zambia with reliable shipping services. Our strategically located facilities 
-            in Foshan, China and Lusaka, Zambia ensure fast and efficient cargo delivery.
+            Providing reliable shipping services within Zambia. Our strategically located facility
+            in Lusaka, Zambia ensures fast and efficient cargo delivery to all destinations.
           </p>
         </motion.div>
 
