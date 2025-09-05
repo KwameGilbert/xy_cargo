@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <div className="flex items-center justify-center w-10 h-10 bg-red-500 rounded-md mr-2">
-                <span className="text-white font-bold">FY</span>
+                <span className="text-white font-bold">XY</span>
               </div>
               <span className="text-xl font-bold">Cargo</span>
             </div>
@@ -97,7 +97,7 @@ const Footer = () => {
         <hr className="border-gray-800 mb-8" />
         
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-500 text-sm">© 2024 FY Cargo. All rights reserved.</p>
+          <p className="text-gray-500 text-sm">© 2024 XY Cargo. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link to="/privacy-policy" className="text-gray-500 hover:text-red-500 text-sm">Privacy Policy</Link>
             <Link to="/terms-of-service" className="text-gray-500 hover:text-red-500 text-sm">Terms of Service</Link>

@@ -29,7 +29,7 @@ const NavBar = () => {
       {/* Logo */}
       <div className="flex items-center space-x-2">
         <div className="flex items-center justify-center w-10 h-10 bg-red-500 rounded-md">
-          <span className="text-white font-bold">FY</span>
+          <span className="text-white font-bold">XY</span>
         </div>
         <div className="text-xl font-bold text-gray-800">
           <Link to="/">Cargo</Link>
