@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Pricing = () => {
+const ShippingPricing = () => {
   const pricingData = [
     {
       region: 'United States',
@@ -81,4 +81,4 @@ const Pricing = () => {
   );
 };
 
-export default Pricing;
+export default ShippingPricing;
