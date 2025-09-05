@@ -78,15 +78,14 @@ const ShippingPricing = () => {
   ];
 
   const whatsappContacts = [
-    { name: 'XY LEON', number: '+260778264621', region: 'Zambia' },
-    { name: 'XY MAX/TINA', number: '+8619924391428', region: 'China' },
-    { name: 'XY BESS/JUDY', number: '+86189240258111', region: 'China' }
+    { number: '+260967379139', region: 'Zambia' },
+    { number: '+260769481203', region: 'Support' }
   ];
 
   return (
     <section className="py-16 bg-gray-50">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-800">XY CARGO: China to Zambia Pricing</h2>
+        <h2 className="text-3xl font-bold text-gray-800">XY CARGO ZAMBIA: China to Zambia Pricing</h2>
         <p className="text-gray-600 mt-4">
           Transparent pricing for air and sea freight services. All rates in USD.
         </p>
@@ -180,10 +179,9 @@ const ShippingPricing = () => {
           <h3 className="text-2xl font-bold text-gray-800">WhatsApp Support</h3>
           <p className="text-gray-600 mt-2">Working Hours: 10am-7pm (China Time) / 5am-1pm (Zambia Time)</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {whatsappContacts.map((contact, index) => (
             <div key={index} className="bg-white shadow-lg rounded-lg p-6 text-center border-2 border-green-200">
-              <h4 className="text-lg font-semibold text-gray-800 mb-2">{contact.name}</h4>
               <p className="text-gray-600 text-sm mb-4">{contact.region}</p>
               <a 
                 href={`https://wa.me/${contact.number.replace(/\D/g, '')}`}
@@ -212,8 +210,9 @@ const ShippingPricing = () => {
         </div>
         <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
           <h4 className="text-lg font-bold text-blue-800 mb-2">China Warehouse Address:</h4>
-          <p className="text-blue-700">广东省佛山市南海区里水镇沙浦工业区横二路9号</p>
-          <p className="text-blue-700 mt-2">Contact: +86 188 2011 6270</p>
+          <p className="text-blue-700">广东省佛山市南海区里水镇沙步工业区横二路9号菲尔国际仓转赞比亚</p>
+          <p className="text-blue-700 mt-2">客户名称:</p>
+          <p className="text-blue-700 mt-2">Mobile: +86 199 2568 2512</p>
         </div>
       </div>
     </section>

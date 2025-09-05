@@ -30,7 +30,7 @@ const ShippingCalculator = () => {
 
     setIsCalculating(true);
     
-    // Simulate API call with XY Cargo rates
+    // Simulate API call with XY Cargo Zambia rates
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     const weight = parseFloat(formData.weight);
@@ -38,7 +38,7 @@ const ShippingCalculator = () => {
     let deliveryDays = '10-17';
     let service = 'Air Freight';
     
-    // XY Cargo Air Freight Rates
+    // XY Cargo Zambia Air Freight Rates
     if (formData.category === 'normal') {
       total = weight * 12; // $12 per kg
     } else if (formData.category === 'wigs') {

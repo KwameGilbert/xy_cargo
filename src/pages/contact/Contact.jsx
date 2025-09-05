@@ -26,7 +26,7 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Support",
-      content: "support@fycargo.com",
+      content: "support@xycargozm.com",
       subtitle: "Response within 2 hours",
       action: "Send Email"
     },

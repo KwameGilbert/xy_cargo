@@ -34,7 +34,7 @@ const translations = {
     'hero.subtitle': 'Fast, reliable, and affordable shipping solutions connecting China to Zambia for businesses and individuals.',
     'button.getQuote': 'Get Quote',
     'button.trackPackage': 'Track Package',
-    'pricing.title': 'XY Cargo Transparent Pricing',
+    'pricing.title': 'XY Cargo Zambia Transparent Pricing',
     'pricing.subtitle': 'No hidden fees, no surprises. Simple, weight-based pricing for China to Zambia shipping.',
     'contact.title': 'Contact Us',
     'contact.subtitle': 'Get in touch with our team for support, quotes, or any questions about our shipping services.',

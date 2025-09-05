@@ -63,7 +63,7 @@ const SupportCenter = () => {
       icon: Mail,
       title: 'Email Support',
       subtitle: 'Detailed Help',
-      contact: 'support@fycargo.com',
+      contact: 'support@xycargozm.com',
       action: 'Send Email',
       color: 'from-purple-400 to-purple-600',
       available: true,
