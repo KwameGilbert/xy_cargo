@@ -7,20 +7,15 @@ const ShippingCalculator = () => {
     origin: '',
     destination: '',
     weight: '',
-    volume: ''
+    volume: '',
+    category: 'normal'
   });
   const [quote, setQuote] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
 
   const countries = [
-    { code: 'US', name: 'United States', flag: '🇺🇸' },
-    { code: 'CA', name: 'Canada', flag: '🇨🇦' },
-    { code: 'UK', name: 'United Kingdom', flag: '🇬🇧' },
-    { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-    { code: 'FR', name: 'France', flag: '🇫🇷' },
-    { code: 'JP', name: 'Japan', flag: '🇯🇵' },
-    { code: 'AU', name: 'Australia', flag: '🇦🇺' },
-    { code: 'BR', name: 'Brazil', flag: '🇧🇷' }
+    { code: 'CN', name: 'China (Foshan)', flag: '��' },
+    { code: 'ZM', name: 'Zambia (Lusaka)', flag: '��' }
   ];
 
   const handleInputChange = (field, value) => {
@@ -35,21 +30,54 @@ const ShippingCalculator = () => {
 
     setIsCalculating(true);
     
-    // Simulate API call with realistic calculation
+    // Simulate API call with XY Cargo rates
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    const baseRate = 15;
-    const weightRate = parseFloat(formData.weight) * 2.5;
-    const volumeRate = parseFloat(formData.volume || 0) * 0.001;
-    const distance = Math.random() * 1000 + 500; // Simulate distance
-    const distanceRate = distance * 0.01;
+    const weight = parseFloat(formData.weight);
+    let total = 0;
+    let deliveryDays = '10-17';
+    let service = 'Air Freight';
     
-    const total = baseRate + weightRate + volumeRate + distanceRate;
+    // XY Cargo Air Freight Rates
+    if (formData.category === 'normal') {
+      total = weight * 12; // $12 per kg
+    } else if (formData.category === 'wigs') {
+      total = weight * 14; // $14 per kg  
+    } else if (formData.category === 'phones') {
+      total = weight * 11; // $11 per piece (treating weight as piece count)
+    } else if (formData.category === 'electronics') {
+      total = weight * 14; // $14 per kg for battery goods
+      deliveryDays = '14-21'; // Longer for battery items
+    } else if (formData.category === 'laptops') {
+      total = weight * 16; // $16 per kg
+    } else {
+      total = weight * 12; // Default normal goods rate
+    }
+    
+    // Apply minimum 1kg charge
+    if (total < 12) {
+      total = 12;
+    }
+    
+    // Sea freight option (if volume provided)
+    if (formData.volume) {
+      const volume = parseFloat(formData.volume) / 1000000; // Convert cm³ to m³
+      const seaRate = volume * 300; // $300 per CBM
+      const minSeaCharge = 50; // Minimum $50
+      const seaTotal = Math.max(seaRate, minSeaCharge);
+      
+      if (seaTotal < total) {
+        total = seaTotal;
+        service = 'Sea Freight';
+        deliveryDays = '25-35';
+      }
+    }
     
     setQuote({
       cost: total.toFixed(2),
-      deliveryTime: Math.floor(Math.random() * 5) + 3,
-      distance: distance.toFixed(0)
+      deliveryTime: deliveryDays,
+      service: service,
+      route: 'China → Zambia'
     });
     
     setIsCalculating(false);
@@ -218,6 +246,26 @@ const ShippingCalculator = () => {
                   </motion.div>
                 </div>
 
+                {/* Cargo Category */}
+                <motion.div variants={itemVariants}>
+                  <label className="text-gray-700 font-medium mb-2 flex items-center">
+                    <Package size={16} className="mr-2 text-orange-500" />
+                    Cargo Category
+                  </label>
+                  <motion.select
+                    value={formData.category}
+                    onChange={(e) => handleInputChange('category', e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-red-500 transition-all duration-300 bg-gray-50 hover:bg-white"
+                    whileFocus={{ scale: 1.02 }}
+                  >
+                    <option value="normal">Normal Goods ($12/kg)</option>
+                    <option value="wigs">Wigs & Hair Products ($14/kg)</option>
+                    <option value="phones">Mobile Phones ($11/piece)</option>
+                    <option value="electronics">Battery Goods/Electronics ($14/kg)</option>
+                    <option value="laptops">Laptops & iPads ($16/kg)</option>
+                  </motion.select>
+                </motion.div>
+
                 {/* Weight and Volume */}
                 <div className="grid grid-cols-2 gap-4">
                   <motion.div variants={itemVariants}>
@@ -332,8 +380,18 @@ const ShippingCalculator = () => {
                       transition={{ delay: 0.9 }}
                       className="flex justify-between items-center p-4 bg-white rounded-lg"
                     >
-                      <span className="text-gray-600">Distance:</span>
-                      <span className="font-semibold text-purple-600">{quote.distance} km</span>
+                      <span className="text-gray-600">Service Type:</span>
+                      <span className="font-semibold text-purple-600">{quote.service}</span>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.1 }}
+                      className="flex justify-between items-center p-4 bg-white rounded-lg"
+                    >
+                      <span className="text-gray-600">Route:</span>
+                      <span className="font-semibold text-red-600">{quote.route}</span>
                     </motion.div>
 
                     <motion.button
