@@ -166,7 +166,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 1.1, type: "spring", stiffness: 100 }}
           >
-            Global Shipping
+            China to Zambia Shipping
           </motion.span>
         </motion.h1>
         
@@ -174,8 +174,8 @@ const HeroSection = () => {
           variants={subtitleVariants}
           className="text-white text-lg md:text-xl max-w-3xl mb-10"
         >
-          Ship from anywhere to anywhere with real-time tracking and 
-          transparent pricing. Your trusted logistics partner for global commerce.
+          Reliable air and sea freight from China to Zambia with competitive rates and 
+          transparent pricing. Your trusted logistics partner connecting two nations.
         </motion.p>
         
         <motion.div 
