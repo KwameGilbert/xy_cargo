@@ -177,7 +177,7 @@ const ShippingPricing = () => {
         <div className="text-center mb-8">
           <MessageCircle className="text-green-500 mx-auto mb-4" size={48} />
           <h3 className="text-2xl font-bold text-gray-800">WhatsApp Support</h3>
-          <p className="text-gray-600 mt-2">Working Hours: 10am-7pm (China Time) / 5am-1pm (Zambia Time)</p>
+          <p className="text-gray-600 mt-2">Working Hours: 8:00 am-17:00 pm (Zambia Time)</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {whatsappContacts.map((contact, index) => (

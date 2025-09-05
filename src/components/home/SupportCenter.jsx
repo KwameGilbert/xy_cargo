@@ -49,6 +49,7 @@ const SupportCenter = () => {
       action: 'Call Now',
       color: 'from-green-400 to-green-600',
       available: true,
+      href: 'tel:+15551234567',
     },
     {
       icon: MessageCircle,
@@ -57,7 +58,7 @@ const SupportCenter = () => {
       contact: 'Average wait: 30 seconds',
       action: 'Start Chat',
       color: 'from-blue-400 to-blue-600',
-      available: true,
+      available: false,
     },
     {
       icon: Mail,
@@ -67,6 +68,7 @@ const SupportCenter = () => {
       action: 'Send Email',
       color: 'from-purple-400 to-purple-600',
       available: true,
+      href: 'mailto:support@xycargozm.com?subject=Support Request - XY Cargo Zambia',
     },
   ];
 
@@ -251,13 +253,36 @@ const SupportCenter = () => {
                             <p className="text-xs opacity-80">{channel.contact}</p>
                           </div>
                         </div>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                        >
-                          {channel.action}
-                        </motion.button>
+                        {channel.available ? (
+                          channel.href ? (
+                            <motion.a
+                              href={channel.href}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
+                              {channel.action}
+                            </motion.a>
+                          ) : (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+                              disabled
+                            >
+                              Coming Soon
+                            </motion.button>
+                          )
+                        ) : (
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+                            disabled
+                          >
+                            Coming Soon
+                          </motion.button>
+                        )}
                       </div>
                     </motion.div>
                   ))}
