@@ -49,7 +49,7 @@ const Contact = () => {
     },
     {
       icon: MapPin,
-      title: "Headquarters",
+      title: "Head Office",
       content: "Shop # 94 Carousel Mall, Lusaka, Zambia",
       subtitle: "Visit our main office",
       action: "Get Directions",
@@ -329,11 +329,7 @@ const Contact = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Saturday:</span>
-                  <span className="font-medium">9:00 AM - 5:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sunday:</span>
-                  <span className="font-medium">10:00 AM - 4:00 PM</span>
+                  <span className="font-medium">8:00 AM - 12:00 PM</span>
                 </div>
                 <div className="mt-3 pt-3 border-t">
                   <p className="text-xs text-gray-500">Emergency support available 24/7</p>
