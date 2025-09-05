@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import ShippingCalc from "../../components/pricing/ShippingCalc";
 import ShippingPricing from "../../components/pricing/Pricing";
 import AdditionalServices from "../../components/pricing/AdditionalServices";
@@ -5,14 +6,60 @@ import VolumeDiscounts from "../../components/pricing/VolumeDiscounts";
 import PriceMatch from "../../components/pricing/PriceMatch";
 
 const Pricing = () => {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.1,
+            },
+        },
+    };
+
+    const sectionVariants = {
+        hidden: { 
+            opacity: 0, 
+            y: 30,
+            scale: 0.95
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                duration: 0.6,
+                ease: "easeOut",
+            },
+        },
+    };
+
     return (
-        <div>
-            <ShippingCalc />
-            <AdditionalServices />
-            <VolumeDiscounts />
-            <PriceMatch />
-            <ShippingPricing />
-        </div>
+        <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <motion.div variants={sectionVariants}>
+                <ShippingCalc />
+            </motion.div>
+            
+            <motion.div variants={sectionVariants}>
+                <AdditionalServices />
+            </motion.div>
+            
+            <motion.div variants={sectionVariants}>
+                <VolumeDiscounts />
+            </motion.div>
+            
+            <motion.div variants={sectionVariants}>
+                <PriceMatch />
+            </motion.div>
+            
+            <motion.div variants={sectionVariants}>
+                <ShippingPricing />
+            </motion.div>
+        </motion.div>
     );
 };
 
