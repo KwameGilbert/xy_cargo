@@ -12,20 +12,16 @@ const ShippingCalculator = () => {
     width: "",
     height: "",
     packageType: "standard",
-    serviceType: "standard",
+    serviceType: "standard", // default to standard air
     category: "normal" // Default category
   });
+
+  const [weightWarning, setWeightWarning] = useState("");
 
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const packageTypes = [
-    { id: "standard", name: "Standard Package", icon: "📦" },
-    { id: "fragile", name: "Fragile Items", icon: "🔮" },
-    { id: "electronics", name: "Electronics", icon: "📱" },
-    { id: "battery", name: "Battery/Cosmetics/Medicine", icon: "🔋" }
-  ];
-
+  // Updated service types to match the business requirements
   const serviceTypes = [
     { 
       id: "standard", 
@@ -38,30 +34,38 @@ const ShippingCalculator = () => {
       id: "express", 
       name: "Express Air Freight", 
       icon: Plane, 
-      description: "3-5 business days",
+      description: "7-9 business days",
       multiplier: 1.5
     },
     { 
       id: "sea", 
       name: "Sea Freight", 
       icon: Ship, 
-      description: "45-60 business days",
-      multiplier: 0.5
+      description: "30-45 business days",
+      multiplier: 1.0
     }
   ];
 
+  // Updated category types to exactly match the pricing structure
   const categoryTypes = [
-    { id: "normal", name: "Normal Goods", rate: 12 },
-    { id: "wigs", name: "Wigs", rate: 14 },
-    { id: "phones", name: "Phones (per piece)", rate: 11 },
-    { id: "battery", name: "Battery Goods/Cosmetics/Medicine", rate: 14 },
-    { id: "laptop", name: "Laptops and iPads", rate: 16 },
-    { id: "sea_general", name: "General Goods (Sea)", rate: 300 },
-    { id: "sea_special", name: "Special Goods (Sea)", rate: 330 }
+    { id: "normal", name: "Normal Goods", rate: 12, service: "air" },
+    { id: "wigs", name: "Wigs", rate: 14, service: "air" },
+    { id: "phones", name: "Phones", rate: 11, unit: "per piece", service: "air" },
+    { id: "battery", name: "Battery Goods/Cosmetics/Toner Cartridges/Medicine", rate: 14, service: "air" },
+    { id: "laptop", name: "Laptops and iPads", rate: 16, service: "air" },
+    { id: "sea_general", name: "General Goods (Sea)", rate: 300, unit: "CBM", service: "sea" },
+    { id: "sea_special", name: "Special Goods (Sea)", rate: 330, unit: "CBM", service: "sea" }
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "weight") {
+      if (value !== "" && parseFloat(value) < 5) {
+        setWeightWarning("Minimum allowed weight is 5kg.");
+      } else {
+        setWeightWarning("");
+      }
+    }
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -69,19 +73,26 @@ const ShippingCalculator = () => {
   };
 
   const calculateShipping = () => {
-    if (!formData.weight && formData.serviceType !== 'sea') {
-      alert("Please enter weight for air freight");
-      return;
+    // Validation
+    if (formData.serviceType !== 'sea') {
+      if (!formData.weight) {
+        alert("Please enter weight for air freight");
+        return;
+      }
+      if (parseFloat(formData.weight) < 5) {
+        setWeightWarning("Minimum allowed weight is 5kg.");
+        return;
+      }
     }
 
-    if ((formData.serviceType === 'sea') && (!formData.length || !formData.width || !formData.height)) {
+    if (formData.serviceType === 'sea' && (!formData.length || !formData.width || !formData.height)) {
       alert("Please enter dimensions for sea freight");
       return;
     }
 
     setLoading(true);
     
-    // Simulate API call
+    // Simulate API call with a delay
     setTimeout(() => {
       let cost = 0;
       let description = '';
@@ -89,10 +100,11 @@ const ShippingCalculator = () => {
       // Get selected category
       const selectedCategory = categoryTypes.find(cat => cat.id === formData.category);
       
-      // For air freight
+      // For air freight (using weight)
       if (formData.serviceType !== 'sea') {
-        // Minimum weight is 1kg
-        const weight = Math.max(parseFloat(formData.weight), 1);
+        // Minimum weight is 5kg
+
+        const weight = Math.max(parseFloat(formData.weight) || 0, 5);
         
         // Calculate based on selected category rate
         cost = weight * selectedCategory.rate;
@@ -104,7 +116,7 @@ const ShippingCalculator = () => {
         
         description = formData.serviceType === 'standard' ? '10-17 business days' : '7-9 business days';
       } 
-      // For sea freight
+      // For sea freight (using volume)
       else {
         // Calculate volume in CBM
         const lengthM = parseFloat(formData.length) / 100; // cm to m
@@ -124,19 +136,54 @@ const ShippingCalculator = () => {
 
       const serviceType = serviceTypes.find(s => s.id === formData.serviceType);
 
-      setQuote({
-        basePrice: cost.toFixed(2),
-        total: cost.toFixed(2),
-        service: serviceType,
-        category: selectedCategory.name,
-        estimatedDays: description,
-        isSeaFreight: formData.serviceType === 'sea',
-        volume: formData.serviceType === 'sea' ? 
-          `${((parseFloat(formData.length) * parseFloat(formData.width) * parseFloat(formData.height)) / 1000000).toFixed(2)} CBM` : 
-          null,
-        weight: formData.serviceType !== 'sea' ? `${Math.max(parseFloat(formData.weight), 1)} kg` : null
-      });
-      
+      // Prepare mock API response
+      const mockApiResponse = {
+        quote: {
+          basePrice: cost.toFixed(2),
+          total: cost.toFixed(2),
+          currency: "USD",
+          service: {
+            id: serviceType.id,
+            name: serviceType.name,
+            description: serviceType.description
+          },
+          category: selectedCategory.name,
+          estimatedDays: description,
+          route: {
+            origin: "Foshan, China",
+            destination: "Lusaka, Zambia"
+          },
+          measurements: formData.serviceType === 'sea' 
+            ? {
+                volume: ((parseFloat(formData.length) * parseFloat(formData.width) * parseFloat(formData.height)) / 1000000).toFixed(2),
+                unit: "CBM",
+                dimensions: {
+                  length: parseFloat(formData.length),
+                  width: parseFloat(formData.width),
+                  height: parseFloat(formData.height),
+                  unit: "cm"
+                }
+              }
+            : {
+                weight: Math.max(parseFloat(formData.weight) || 0, 5),
+                unit: selectedCategory.id === "phones" ? "pieces" : "kg"
+              },
+          priceBreakdown: {
+            baseCost: cost.toFixed(2),
+            fees: "0.00",
+            taxes: "0.00",
+            discounts: "0.00",
+            total: cost.toFixed(2)
+          },
+          additionalInfo: {
+            minCharge: formData.serviceType === 'sea' ? "0.1 CBM ($50)" : "1 kg",
+            storagePolicy: "Packages left unclaimed for more than 3 days will be charged $2 per day."
+          }
+        }
+      };
+
+      // Set the quote from our mock API response
+      setQuote(mockApiResponse.quote);
       setLoading(false);
     }, 1500);
   };
@@ -266,16 +313,16 @@ const ShippingCalculator = () => {
                   >
                     {formData.serviceType !== 'sea' ? (
                       // Air freight categories
-                      categoryTypes.filter(cat => !cat.id.startsWith('sea_')).map(category => (
+                      categoryTypes.filter(cat => cat.service === "air").map(category => (
                         <option key={category.id} value={category.id}>
-                          {category.name} - ${category.rate}/kg
+                          {category.name} - ${category.rate}/{category.unit || "kg"}
                         </option>
                       ))
                     ) : (
                       // Sea freight categories
-                      categoryTypes.filter(cat => cat.id.startsWith('sea_')).map(category => (
+                      categoryTypes.filter(cat => cat.service === "sea").map(category => (
                         <option key={category.id} value={category.id}>
-                          {category.name} - ${category.rate}/CBM
+                          {category.name} - ${category.rate}/{category.unit}
                         </option>
                       ))
                     )}
@@ -288,7 +335,9 @@ const ShippingCalculator = () => {
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
                   {formData.serviceType !== 'sea' 
-                    ? 'For air freight, minimum weight is 1kg.' 
+                    ? formData.category === 'phones'
+                      ? 'For phones, enter the number of pieces.'
+                      : 'For air freight, minimum weight is 5kg.' 
                     : 'For sea freight, minimum charge is $50 (0.1 CBM).'}
                 </p>
               </div>
@@ -298,20 +347,25 @@ const ShippingCalculator = () => {
                 <h3 className="text-lg font-medium text-gray-800 mb-4">Package Details</h3>
                 
                 {formData.serviceType !== 'sea' ? (
-                  // Weight field for air freight
+                  // Weight/pieces field for air freight
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Weight (kg) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {formData.category === 'phones' ? 'Number of Pieces *' : 'Weight (kg) *'}
+                    </label>
                     <input
                       type="number"
                       name="weight"
                       value={formData.weight}
                       onChange={handleInputChange}
-                      placeholder="1.0"
-                      min="1"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      placeholder={formData.category === 'phones' ? "1" : "5.0"}
+                      min="5"
+                      step={formData.category === 'phones' ? "1" : "0.1"}
+                      className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${weightWarning ? 'border-red-500' : ''}`}
                       required
                     />
+                    {weightWarning && (
+                      <div className="text-red-500 text-sm mt-2">{weightWarning}</div>
+                    )}
                   </div>
                 ) : (
                   // Dimensions fields for sea freight
@@ -409,7 +463,7 @@ const ShippingCalculator = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Route:</span>
-                    <span className="font-medium">China → Zambia</span>
+                    <span className="font-medium">{quote.route.origin} → {quote.route.destination}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -427,24 +481,24 @@ const ShippingCalculator = () => {
                     <span className="font-medium">{quote.estimatedDays}</span>
                   </div>
                   
-                  {quote.weight && (
+                  {quote.measurements.weight !== undefined && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Weight:</span>
-                      <span className="font-medium">{quote.weight}</span>
+                      <span className="text-gray-600">{quote.measurements.unit === "pieces" ? "Pieces:" : "Weight:"}</span>
+                      <span className="font-medium">{quote.measurements.weight} {quote.measurements.unit}</span>
                     </div>
                   )}
                   
-                  {quote.volume && (
+                  {quote.measurements.volume !== undefined && (
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Volume:</span>
-                      <span className="font-medium">{quote.volume}</span>
+                      <span className="font-medium">{quote.measurements.volume} {quote.measurements.unit}</span>
                     </div>
                   )}
                   
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-between text-lg font-semibold text-red-500 pt-2">
                       <span>Total Cost:</span>
-                      <span>${quote.total} USD</span>
+                      <span>${quote.total} {quote.currency}</span>
                     </div>
                   </div>
                   
@@ -475,7 +529,7 @@ const ShippingCalculator = () => {
                   
                   <div className="text-xs text-gray-500 mt-4">
                     <p>* This is an estimate. Final cost may vary based on actual weight, dimensions, and additional services.</p>
-                    <p>* Packages left unclaimed for more than 3 days will be charged $2 per day.</p>
+                    <p>* {quote.additionalInfo.storagePolicy}</p>
                   </div>
                 </div>
               </motion.div>
@@ -489,14 +543,22 @@ const ShippingCalculator = () => {
                 
                 <div className="mt-8 space-y-4">
                   <div className="border border-gray-200 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-700 mb-2">XY Cargo Zambia Rates:</h4>
+                    <h4 className="font-medium text-gray-700 mb-2">Air Services Pricing:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• Normal goods: $12/kg</li>
                       <li>• Wigs: $14/kg</li>
-                      <li>• Phones: $11/pcs</li>
-                      <li>• Battery/Cosmetics/Medicine: $14/kg</li>
+                      <li>• Phones: $11/piece</li>
+                      <li>• Battery/Cosmetics/Toner/Medicine: $14/kg</li>
                       <li>• Laptops & iPads: $16/kg</li>
-                      <li>• Sea freight: $300/CBM</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <h4 className="font-medium text-gray-700 mb-2">Sea Services Pricing:</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• General Goods: $300/CBM</li>
+                      <li>• Special Goods: $330/CBM</li>
+                      <li>• Minimum charge: $50 (0.1 CBM)</li>
                     </ul>
                   </div>
                   
