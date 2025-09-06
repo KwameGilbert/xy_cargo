@@ -38,14 +38,14 @@ const ShippingCalculator = () => {
       id: "express", 
       name: "Express Air Freight", 
       icon: Plane, 
-      description: "7-9 business days",
+      description: "3-5 business days",
       multiplier: 1.5
     },
     { 
       id: "sea", 
       name: "Sea Freight", 
       icon: Ship, 
-      description: "30-45 business days",
+      description: "45-60 business days",
       multiplier: 0.5
     }
   ];
