@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="/images/logo/xy-cargo-logo.svg" 
+                src="/images/logo/logo.png" 
                 alt="XY Cargo Zambia Logo" 
                 className="h-10 w-auto bg-white rounded-md p-1" 
               />

@@ -4,11 +4,13 @@ import { BrowserRouter } from "react-router-dom"
 import { HelmetProvider } from "react-helmet-async"
 import MainLayout from "./components/layout/MainLayout"
 import AppRoutes from "./routes/AppRoutes"
+import GlobalSEO from "./components/common/SEO/GlobalSEO"
 import "./index.css"
 
 const App = () => {
   return (
     <HelmetProvider>
+      <GlobalSEO />
       <BrowserRouter>
         <MainLayout>
           <AppRoutes />

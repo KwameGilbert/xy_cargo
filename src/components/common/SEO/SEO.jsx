@@ -15,7 +15,7 @@ const SEO = ({
   title,
   description,
   keywords,
-  ogImage = "/images/xy-cargo-og-image.jpg",
+  ogImage = "/images/logo/logo.jpg",
   canonical,
   type = "website",
 }) => {

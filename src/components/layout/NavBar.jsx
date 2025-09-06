@@ -30,11 +30,11 @@ const NavBar = () => {
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
           <img 
-            src="/images/logo/xy-cargo-logo.svg" 
+            src="/images/logo/logo.png" 
             alt="XY Cargo Zambia Logo" 
             className="h-12 w-auto" 
           />
-          <span className="text-xl font-bold text-gray-800 ml-2">ZAMBIA</span>
+          <span className="text-xl font-bold text-gray-800 ml-2">CARGO ZAMBIA</span>
         </Link>
       </div>
 
