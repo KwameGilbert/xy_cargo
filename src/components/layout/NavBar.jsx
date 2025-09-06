@@ -34,7 +34,7 @@ const NavBar = () => {
             alt="XY Cargo Zambia Logo" 
             className="h-12 w-auto" 
           />
-          <span className="text-xl font-bold text-gray-800 ml-2">CARGO ZAMBIA</span>
+          <span className="text-xl font-bold text-gray-800 ml-2">XY CARGO ZAMBIA</span>
         </Link>
       </div>
 

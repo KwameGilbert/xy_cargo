@@ -16,7 +16,7 @@ const Footer = () => {
                 className="h-10 w-auto bg-white rounded-md p-1" 
               />
               <div className="flex flex-col ml-2">
-                <span className="text-xl font-bold text-white">CARGO</span>
+                <span className="text-xl font-bold text-white">XY CARGO</span>
                 <span className="text-sm font-medium text-red-400">ZAMBIA</span>
               </div>
             </div>
