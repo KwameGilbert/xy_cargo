@@ -61,7 +61,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact & Support</h3>
             <ul className="space-y-2">
-              <li><Link to="/about-us" className="text-gray-400 hover:text-red-500">About XY Cargo Zambia</Link></li>
+              <li><Link to="/about" className="text-gray-400 hover:text-red-500">About XY Cargo Zambia</Link></li>
               <li><Link to="/locations" className="text-gray-400 hover:text-red-500">China Warehouse</Link></li>
               <li><a href="https://wa.me/260967379139" className="text-gray-400 hover:text-red-500">WhatsApp Support</a></li>
               <li><Link to="/contact" className="text-gray-400 hover:text-red-500">Contact Us</Link></li>

@@ -8,6 +8,7 @@ import Contact from "../pages/contact/Contact";
 import SupportPage from "../pages/support/Support";
 import ServicesPage from "../pages/services/Services";
 import HowWeWorkPage from "../pages/howwework/HowWeWork";
+import AboutPage from "../pages/about/About";
 
 const AppRoutes = () => {
   return (
@@ -18,9 +19,10 @@ const AppRoutes = () => {
       <Route path="/locations" element={<Locations />} />
       <Route path="/calculator" element={<ShippingCalculator />} />
       <Route path="/contact" element={<Contact />} />
-        <Route path="/support" element={<SupportPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/how-we-work" element={<HowWeWorkPage />} />
+      <Route path="/support" element={<SupportPage />} />
+      <Route path="/services" element={<ServicesPage />} />
+      <Route path="/how-we-work" element={<HowWeWorkPage />} />
+      <Route path="/about" element={<AboutPage />} />
     </Routes>
   );
 };

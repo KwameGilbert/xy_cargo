@@ -15,6 +15,7 @@ const NavBar = () => {
     { name: 'Pricing', path: '/pricing' },
     { name: 'Locations', path: '/locations' },
     { name: 'Support', path: '/support' },
+    { name: 'About', path: '/about' },
   ];
 
   const languages = [

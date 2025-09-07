@@ -1,7 +1,7 @@
 import React from "react";
 
 const team = [
-  { name: "Gilbert E. Kukah", role: "Founder & CEO", image: null },
+  { name: "Bright Asamoah", role: "Founder & CEO", image: null },
   { name: "Jane Mwansa", role: "Operations Manager", image: null },
   { name: "Chanda Phiri", role: "Customer Support Lead", image: null },
 ];
