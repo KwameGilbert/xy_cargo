@@ -37,8 +37,9 @@ const ShippingCalculator = ({ SEO }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "weight") {
-      if (value !== "" && parseFloat(value) < 5) {
-        setWeightWarning("Minimum allowed weight is 5kg.");
+      // Only show warning for express
+      if (formData.serviceType === "express" && value !== "" && parseFloat(value) < 5) {
+        setWeightWarning("Minimum allowed weight for Express is 5kg.");
       } else {
         setWeightWarning("");
       }
@@ -52,8 +53,9 @@ const ShippingCalculator = ({ SEO }) => {
         alert("Please enter weight for air freight");
         return;
       }
-      if (parseFloat(formData.weight) < 5) {
-        setWeightWarning("Minimum allowed weight is 5kg.");
+      // Only enforce minimum for express
+      if (formData.serviceType === 'express' && parseFloat(formData.weight) < 5) {
+        setWeightWarning("Minimum allowed weight for Express is 5kg.");
         return;
       }
     }
@@ -67,7 +69,10 @@ const ShippingCalculator = ({ SEO }) => {
       let description = '';
       const selectedCategory = categoryTypes.find(cat => cat.id === formData.category);
       if (formData.serviceType !== 'sea') {
-        const weight = Math.max(parseFloat(formData.weight) || 0, 5);
+        // Only apply minimum for express
+        const weight = formData.serviceType === 'express'
+          ? Math.max(parseFloat(formData.weight) || 0, 5)
+          : parseFloat(formData.weight) || 0;
         cost = weight * selectedCategory.rate;
         if (formData.serviceType === 'express') {
           cost *= 1.5;
@@ -114,7 +119,9 @@ const ShippingCalculator = ({ SEO }) => {
                 }
               }
             : {
-                weight: Math.max(parseFloat(formData.weight) || 0, 5),
+                weight: formData.serviceType === 'express'
+                  ? Math.max(parseFloat(formData.weight) || 0, 5)
+                  : parseFloat(formData.weight) || 0,
                 unit: selectedCategory.id === "phones" ? "pieces" : "kg"
               },
           priceBreakdown: {
@@ -255,7 +262,9 @@ const ShippingCalculator = ({ SEO }) => {
                   {formData.serviceType !== 'sea' 
                     ? formData.category === 'phones'
                       ? 'For phones, enter the number of pieces.'
-                      : 'For air freight, minimum weight is 5kg.' 
+                      : formData.serviceType === 'express'
+                        ? 'For express air freight, minimum weight is 5kg.'
+                        : 'For standard air freight, no minimum weight.'
                     : 'For sea freight, minimum charge is $50 (0.1 CBM).'}
                 </p>
               </div>
