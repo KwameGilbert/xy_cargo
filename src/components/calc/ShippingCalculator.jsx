@@ -21,7 +21,7 @@ const ShippingCalculator = ({ SEO }) => {
   const serviceTypes = [
     { id: "standard", name: "Standard Air Freight", icon: Plane, description: "10-17 business days", multiplier: 1.0 },
     { id: "express", name: "Express Air Freight", icon: Plane, description: "3-5 business days", multiplier: 1.5 },
-    { id: "sea", name: "Sea Freight", icon: Ship, description: "45-60 business days", multiplier: 1.0 }
+    { id: "sea", name: "Sea Freight", icon: Ship, description: "40-60 business days", multiplier: 1.0 }
   ];
 
   const categoryTypes = [
