@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import ShippingCalc from "../../components/pricing/ShippingCalc";
+import ShippingCalculator from "../../components/calc/ShippingCalculator";
 import ShippingPricing from "../../components/pricing/Pricing";
 import AdditionalServices from "../../components/pricing/AdditionalServices";
 import VolumeDiscounts from "../../components/pricing/VolumeDiscounts";
@@ -48,7 +48,7 @@ const Pricing = () => {
                 canonical="https://xycargozm.com/pricing"
             />
             <motion.div variants={sectionVariants}>
-                <ShippingCalc />
+                <ShippingCalculator />
             </motion.div>
             
             <motion.div variants={sectionVariants}>
