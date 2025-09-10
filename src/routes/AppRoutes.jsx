@@ -13,6 +13,7 @@ import AboutPage from "../pages/public_pages/about/About";
 
 // Client pages
 import ClientLogin from "../pages/client/auth/login";
+import ClientSignup from "../pages/client/auth/signup";
 import Dashboard from "../pages/client/dashboard/Dashboard";
 
 import MainLayout from "../components/public_pages/layout/MainLayout";
@@ -36,6 +37,7 @@ const AppRoutes = () => {
 
       {/* Client Routes - outside of MainLayout */}
       <Route path="/client/auth/login" element={<ClientLogin />} />
+      <Route path="/client/auth/signup" element={<ClientSignup />} />
       <Route path="/client/dashboard" element={<Dashboard />} />
     </Routes>
   );

@@ -1,50 +1,46 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Globe, User, UserPlus, Menu, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Globe, User, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  const toggleMobileMenu = () => setMobileMenuOpen((s) => !s);
 
   const menuItems = [
-    { name: 'Services', path: '/services' },
-    { name: 'How We Work', path: '/how-we-work' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'Locations', path: '/locations' },
-    { name: 'Support', path: '/support' },
-    { name: 'About', path: '/about' },
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: "How We Work", path: "/howwework" },
+    { name: "Pricing", path: "/pricing" },
+    { name: "Locations", path: "/locations" },
+    { name: "Support", path: "/support" },
+    { name: "About", path: "/about" },
   ];
 
   const languages = [
-    { code: 'en', label: 'EN' },
-    { code: 'fr', label: 'FR' },
-    { code: 'es', label: 'ES' },
-    { code: 'de', label: 'DE' },
+    { code: "en", label: "EN" },
+    { code: "fr", label: "FR" },
+    { code: "es", label: "ES" },
   ];
 
   return (
-    <nav className="flex items-center justify-between px-4 md:px-16 py-4 bg-white shadow-md">
-      {/* Logo */}
+    <motion.nav
+      className="flex items-center justify-between px-4 md:px-16 py-4 bg-white shadow-md"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
-          <img 
-            src="/images/logo/logo.png" 
-            alt="XY Cargo Zambia Logo" 
-            className="h-12 w-auto" 
-          />
+          <img src="/images/logo/logo.png" alt="XY Cargo Zambia Logo" className="h-12 w-auto" />
           <span className="text-xl font-bold text-gray-800 ml-2">XY CARGO ZAMBIA</span>
         </Link>
       </div>
 
       {/* Mobile menu button */}
       <div className="md:hidden">
-        <button 
-          onClick={toggleMobileMenu} 
-          className="text-gray-500 hover:text-red-500 focus:outline-none"
-        >
+        <button onClick={toggleMobileMenu} className="text-gray-500 hover:text-red-500 focus:outline-none">
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
@@ -59,14 +55,16 @@ const NavBar = () => {
           </li>
         ))}
       </ul>
-      
+
       {/* Desktop Right Section - Language & Auth */}
       <div className="hidden md:flex items-center space-x-4">
         <div className="flex items-center space-x-2 text-gray-600">
           <Globe className="w-5 h-5" />
           <select className="bg-transparent text-gray-600 focus:outline-none">
             {languages.map((lang) => (
-              <option key={lang.code} value={lang.code}>{lang.label}</option>
+              <option key={lang.code} value={lang.code}>
+                {lang.label}
+              </option>
             ))}
           </select>
         </div>
@@ -82,16 +80,19 @@ const NavBar = () => {
       </div>
 
       {/* Mobile Menu */}
+      <AnimatePresence>
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-white shadow-lg z-50">
+        <motion.div
+          className="md:hidden absolute top-16 left-0 right-0 bg-white shadow-lg z-50"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.2 }}
+        >
           <ul className="flex flex-col py-4">
             {menuItems.map((item) => (
               <li key={item.name} className="px-4 py-2">
-                <Link 
-                  to={item.path} 
-                  className="text-gray-600 hover:text-red-500 text-sm font-medium block"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link to={item.path} className="text-gray-600 hover:text-red-500 text-sm font-medium block" onClick={() => setMobileMenuOpen(false)}>
                   {item.name}
                 </Link>
               </li>
@@ -101,34 +102,29 @@ const NavBar = () => {
                 <Globe className="w-5 h-5" />
                 <select className="bg-transparent text-gray-600 focus:outline-none">
                   {languages.map((lang) => (
-                    <option key={lang.code} value={lang.code}>{lang.label}</option>
+                    <option key={lang.code} value={lang.code}>
+                      {lang.label}
+                    </option>
                   ))}
                 </select>
               </div>
             </li>
             <li className="px-4 py-2">
-              <Link 
-                to="/sign-in" 
-                className="flex items-center space-x-2 text-gray-600"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link to="/client/auth/login" className="flex items-center space-x-2 text-gray-600" onClick={() => setMobileMenuOpen(false)}>
                 <User className="w-5 h-5" />
                 <span className="text-sm font-medium">Sign In</span>
               </Link>
             </li>
             <li className="px-4 py-2">
-              <Link 
-                to="/sign-up" 
-                className="block bg-red-500 text-white py-2 px-4 rounded-lg text-center text-sm font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link to="/client/auth/signup" className="block bg-red-500 text-white py-2 px-4 rounded-lg text-center text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Sign Up
               </Link>
             </li>
           </ul>
-        </div>
+        </motion.div>
       )}
-    </nav>
+      </AnimatePresence>
+  </motion.nav>
   );
 };
 
