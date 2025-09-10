@@ -1,14 +1,14 @@
-import { Children } from "react";
+import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-const MainLayout = ({ children }) => {
+const MainLayout = () => {
   return (
     <div>
       <NavBar />
       <main>
         {/* Outlet for nested routes */}
-        {children}
+        <Outlet />
       </main>
       <Footer />
     </div>

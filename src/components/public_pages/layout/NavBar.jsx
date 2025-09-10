@@ -72,11 +72,11 @@ const NavBar = () => {
         </div>
         <div className="flex items-center space-x-2 text-gray-600">
           <User className="w-5 h-5" />
-          <Link to="/sign-in" className="text-gray-600 text-sm font-medium">
+          <Link to="/client/auth/login" className="text-gray-600 text-sm font-medium">
             Sign In
           </Link>
         </div>
-        <Link to="/sign-up" className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium">
+        <Link to="/client/auth/signup" className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-medium">
           Sign Up
         </Link>
       </div>

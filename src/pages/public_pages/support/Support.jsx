@@ -1,6 +1,6 @@
 import React from "react";
-import Support from "../../components/home/Support";
-import SEO from "../../components/common/SEO/SEO";
+import Support from "../../../components/public_pages/home/Support";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const SupportPage = () => {
   return (

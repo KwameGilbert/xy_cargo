@@ -1,5 +1,5 @@
-import ShippingCalculator from "../../components/calc/ShippingCalculator";
-import SEO from "../../components/common/SEO/SEO";
+import ShippingCalculator from "../../../components/public_pages/calc/ShippingCalculator";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const ShippingCalculatorPage = () => {
   return (

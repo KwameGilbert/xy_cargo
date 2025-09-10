@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import ShippingCalculator from "../../components/calc/ShippingCalculator";
-import ShippingPricing from "../../components/pricing/Pricing";
-import AdditionalServices from "../../components/pricing/AdditionalServices";
-import VolumeDiscounts from "../../components/pricing/VolumeDiscounts";
-import PriceMatch from "../../components/pricing/PriceMatch";
-import SEO from "../../components/common/SEO/SEO";
+import ShippingCalculator from "../../../components/public_pages/calc/ShippingCalculator";
+import ShippingPricing from "../../../components/public_pages/pricing/Pricing";
+import AdditionalServices from "../../../components/public_pages/pricing/AdditionalServices";
+import VolumeDiscounts from "../../../components/public_pages/pricing/VolumeDiscounts";
+import PriceMatch from "../../../components/public_pages/pricing/PriceMatch";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const Pricing = () => {
     const containerVariants = {

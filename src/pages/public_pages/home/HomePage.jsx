@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import NavBar from "../../components/layout/NavBar";
-import HeroSection from "../../components/home/HeroSection";
-import HowWeWork from "../../components/home/HowWeWork";
-import ShippingCalculator from "../../components/calc/ShippingCalculator";
-import Pricing from "../../components/pricing/Pricing";
-import Tracking from "../../components/home/Tracking";
-import SupportCenter from "../../components/home/SupportCenter";
-import SEO from "../../components/common/SEO/SEO";
+import NavBar from "../../../components/public_pages/layout/NavBar";
+import HeroSection from "../../../components/public_pages/home/HeroSection";
+import HowWeWork from "../../../components/public_pages/home/HowWeWork";
+import ShippingCalculator from "../../../components/public_pages/calc/ShippingCalculator";
+import Pricing from "../../../components/public_pages/pricing/Pricing";
+import Tracking from "../../../components/public_pages/home/Tracking";
+import SupportCenter from "../../../components/public_pages/home/SupportCenter";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const HomePage = () => {
   const containerVariants = {

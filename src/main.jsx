@@ -2,9 +2,9 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { HelmetProvider } from "react-helmet-async"
-import MainLayout from "./components/layout/MainLayout"
+import MainLayout from "./components/public_pages/layout/MainLayout"
 import AppRoutes from "./routes/AppRoutes"
-import GlobalSEO from "./components/common/SEO/GlobalSEO"
+import GlobalSEO from "./components/public_pages/common/SEO/GlobalSEO"
 import "./index.css"
 
 const App = () => {
@@ -12,9 +12,7 @@ const App = () => {
     <HelmetProvider>
       <GlobalSEO />
       <BrowserRouter>
-        <MainLayout>
-          <AppRoutes />
-        </MainLayout>
+        <AppRoutes />
       </BrowserRouter>
     </HelmetProvider>
   )

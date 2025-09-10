@@ -1,6 +1,6 @@
 import React from "react";
-import Services from "../../components/home/Services";
-import SEO from "../../components/common/SEO/SEO";
+import Services from "../../../components/public_pages/home/Services";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const ServicesPage = () => {
   return (

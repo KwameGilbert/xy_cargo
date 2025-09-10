@@ -1,6 +1,6 @@
 import React from "react";
-import HowWeWork from "../../components/home/HowWeWork";
-import SEO from "../../components/common/SEO/SEO";
+import HowWeWork from "../../../components/public_pages/home/HowWeWork";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const HowWeWorkPage = () => {
   return (

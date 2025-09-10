@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Search, Package, Truck, MapPin, CheckCircle, Clock } from "lucide-react";
-import SEO from "../../components/common/SEO/SEO";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const PackageTracking = () => {
   const [trackingNumber, setTrackingNumber] = useState("");

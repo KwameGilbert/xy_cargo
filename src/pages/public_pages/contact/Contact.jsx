@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle, HelpCircle } from "lucide-react";
-import SEO from "../../components/common/SEO/SEO";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const Contact = () => {
   const [formData, setFormData] = useState({

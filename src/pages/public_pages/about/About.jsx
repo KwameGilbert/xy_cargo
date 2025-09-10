@@ -1,10 +1,10 @@
 import React from "react";
-import AboutHero from "../../components/about/AboutHero";
-import AboutMission from "../../components/about/AboutMission";
-import AboutValues from "../../components/about/AboutValues";
-import AboutTeam from "../../components/about/AboutTeam";
-import AboutContact from "../../components/about/AboutContact";
-import SEO from "../../components/common/SEO/SEO";
+import AboutHero from "../../../components/public_pages/about/AboutHero";
+import AboutMission from "../../../components/public_pages/about/AboutMission";
+import AboutValues from "../../../components/public_pages/about/AboutValues";
+import AboutTeam from "../../../components/public_pages/about/AboutTeam";
+import AboutContact from "../../../components/public_pages/about/AboutContact";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const About = () => (
   <div className="min-h-screen bg-gray-50">

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MapPin, Clock, Phone, Mail, Globe } from "lucide-react";
-import SEO from "../../components/common/SEO/SEO";
+import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const Locations = () => {
   const locations = [
