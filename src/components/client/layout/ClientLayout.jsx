@@ -23,7 +23,7 @@ const ClientLayout = ({ children }) => {
         </div>
 
         {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-auto p-8 bg-gray-50">
+        <main className="flex-1 overflow-auto p-2 bg-gray-50">
           {children}
         </main>
       </div>

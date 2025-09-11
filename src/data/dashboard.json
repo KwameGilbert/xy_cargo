@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "activeShipments": {
+      "count": 12,
+      "icon": "package",
+      "label": "Active Shipments"
+    },
+    "pendingPayments": {
+      "count": 2450,
+      "currency": "$",
+      "icon": "dollar",
+      "label": "Pending Payments"
+    },
+    "deliveredThisMonth": {
+      "count": 28,
+      "icon": "check",
+      "label": "Delivered This Month"
+    },
+    "wareHouseItems": {
+      "count": 5,
+      "icon": "box",
+      "label": "Warehouse Items"
+    }
+  },
+  "recentShipments": [
+    {
+      "id": "LS2024001",
+      "status": "In Transit",
+      "destination": "New York, NY",
+      "date": "2024-01-15",
+      "statusColor": "blue"
+    },
+    {
+      "id": "LS2024002",
+      "status": "Processing",
+      "destination": "Los Angeles, CA",
+      "date": "2024-01-14",
+      "statusColor": "yellow"
+    },
+    {
+      "id": "LS2024003",
+      "status": "Delivered",
+      "destination": "Chicago, IL",
+      "date": "2024-01-13",
+      "statusColor": "green"
+    },
+    {
+      "id": "LS2024004",
+      "status": "Customs",
+      "destination": "Miami, FL",
+      "date": "2024-01-12",
+      "statusColor": "orange"
+    },
+    {
+      "id": "LS2024005",
+      "status": "Pending",
+      "destination": "Seattle, WA",
+      "date": "2024-01-11",
+      "statusColor": "gray"
+    }
+  ],
+  "notifications": [
+    {
+      "type": "shipment_update",
+      "message": "LS2024001 is now in transit",
+      "icon": "package"
+    },
+    {
+      "type": "delivery_confirmed",
+      "message": "LS2024003 delivered successfully",
+      "icon": "check"
+    },
+    {
+      "type": "payment_due",
+      "message": "Invoice #INV-2024-001 due in 3 days",
+      "icon": "alert"
+    }
+  ],
+  "welcomeMessage": "Welcome back! Here's an overview of your shipments and account."
+}
