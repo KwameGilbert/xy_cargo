@@ -44,7 +44,7 @@ const Dashboard = () => {
           <p className="text-gray-600 mt-1">{dashboardData.welcomeMessage}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
           {Object.entries(dashboardData.metrics).map(([key, metric]) => (
             <DashboardMetric
               key={key}
@@ -56,8 +56,8 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
             <ShipmentTable shipments={dashboardData.recentShipments} />
           </div>
           <div>

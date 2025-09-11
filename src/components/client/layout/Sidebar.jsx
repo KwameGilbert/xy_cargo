@@ -59,7 +59,7 @@ const Sidebar = () => {
       <aside
         className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-56 md:w-64 bg-white border-r border-gray-100 h-full flex flex-col transition-transform duration-300 ease-in-out`}
+        } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-56 lg:w-56 md:w-64 bg-white border-r border-gray-100 h-full flex flex-col transition-transform duration-300 ease-in-out`}
       >
         {/* Logo Section */}
         <div className="border-b border-gray-100 flex-shrink-0">

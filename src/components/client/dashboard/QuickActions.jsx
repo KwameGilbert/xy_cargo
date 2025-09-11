@@ -3,7 +3,7 @@ import { PlusIcon, Search, FileText, MessageCircle } from 'lucide-react';
 const QuickActions = () => {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-      <div className="px-6 py-4 border-b border-gray-100">
+      <div className="px-4 py-4 border-b border-gray-100">
         <h2 className="text-lg font-semibold">Quick Actions</h2>
       </div>
       <div className="p-4 flex flex-col space-y-3">
