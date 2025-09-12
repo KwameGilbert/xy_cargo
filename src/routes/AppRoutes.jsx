@@ -16,6 +16,8 @@ import ClientLogin from "../pages/client/auth/login";
 import ClientSignup from "../pages/client/auth/signup";
 import Dashboard from "../pages/client/dashboard/Dashboard";
 import ClientPackageTracking from "../pages/client/tracking/PackageTracking";
+import ClientPayments from "../pages/client/payments/Payments";
+import ClientAddresses from "../pages/client/addresses/Addresses";
 
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
@@ -41,6 +43,8 @@ const AppRoutes = () => {
       <Route path="/client/auth/signup" element={<ClientSignup />} />
       <Route path="/client/dashboard" element={<Dashboard />} />
       <Route path="/client/tracking" element={<ClientPackageTracking />} />
+      <Route path="/client/payments" element={<ClientPayments />} />
+      <Route path="/client/addresses" element={<ClientAddresses />} />
     </Routes>
   );
 };
