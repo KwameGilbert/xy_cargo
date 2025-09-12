@@ -1,60 +1,81 @@
 import React from 'react';
-import { MapPin, Calendar, ArrowRight, ChevronDown, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, Calendar, ArrowRight, ChevronDown, Package, Plane, Ship, Zap } from 'lucide-react';
 
-const ShipmentCard = ({ shipment, onClick, expanded }) => {
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'IN TRANSIT':
-        return 'bg-red-50 text-red-700';
-      case 'PROCESSING':
-        return 'bg-yellow-50 text-yellow-700';
-      case 'DELIVERED':
-        return 'bg-green-50 text-green-700';
-      case 'DELAYED':
-        return 'bg-red-50 text-red-700';
-      default:
-        return 'bg-gray-50 text-gray-700';
-    }
+
+// Status color mapping based on status text
+const getStatusColor = (status) => {
+  const statusMap = {
+    'delivered': { bg: 'bg-green-50', text: 'text-green-700', dot: 'bg-green-600' },
+    'in transit': { bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-600' },
+    'processing': { bg: 'bg-yellow-50', text: 'text-yellow-700', dot: 'bg-yellow-600' },
+    'picked up': { bg: 'bg-purple-50', text: 'text-purple-700', dot: 'bg-purple-600' },
+    'delayed': { bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-600' },
+    'customs': { bg: 'bg-orange-50', text: 'text-orange-700', dot: 'bg-orange-600' },
+    'pending': { bg: 'bg-gray-50', text: 'text-gray-700', dot: 'bg-gray-600' },
   };
+  const key = status?.toLowerCase() || 'pending';
+  return statusMap[key] || statusMap.pending;
+};
 
+// Get shipping type icon and color
+const getShippingTypeInfo = (type) => {
+  const typeMap = {
+    'air express': { icon: Zap, color: 'text-red-500', bg: 'bg-red-50' },
+    'air': { icon: Plane, color: 'text-blue-500', bg: 'bg-blue-50' },
+    'sea': { icon: Ship, color: 'text-cyan-500', bg: 'bg-cyan-50' },
+  };
+  const key = type?.toLowerCase() || 'air';
+  return typeMap[key] || typeMap.air;
+};
+
+const ShipmentCard = ({ shipment }) => {
+  const navigate = useNavigate();
   // Calculate simple progress for the route
   const calculateProgress = () => {
-    if (shipment.status === 'DELIVERED') return 100;
-    if (shipment.status === 'PROCESSING') return 15;
-    if (shipment.status === 'IN TRANSIT') {
-      // Simplified progress based on current location matching origin or destination
+    if (shipment.status?.toLowerCase() === 'delivered') return 100;
+    if (shipment.status?.toLowerCase() === 'processing') return 15;
+    if (shipment.status?.toLowerCase() === 'in transit') {
       if (shipment.currentLocation === shipment.route.origin) return 15;
       if (shipment.currentLocation === shipment.route.destination) return 90;
-      return 50; // Somewhere in the middle
+      return 50;
     }
-    return 10; // Default for other statuses
+    return 10;
   };
+
+  const statusColor = getStatusColor(shipment.status);
+  const shippingInfo = getShippingTypeInfo(shipment.shippingType);
+  const ShippingIcon = shippingInfo.icon;
+  const totalItems = shipment.items?.reduce((acc, it) => acc + it.qty, 0) || 0;
+  const totalWeight = shipment.items?.reduce((acc, it) => {
+    const w = parseFloat((it.weight || '').replace(/[a-zA-Z\s]/g, '')) || 0;
+    return acc + w;
+  }, 0) || 0;
 
   return (
     <div
-      className={`border border-gray-100 rounded-lg mb-3 py-4 px-4 transition-all duration-200 cursor-pointer ${
-        expanded ? 'bg-gray-50 shadow-md' : 'hover:bg-gray-50 hover:shadow-sm'
-      }`}
-      onClick={onClick}
+      className={`rounded-xl mb-3 py-4 px-4 transition-all duration-200 cursor-pointer shadow-sm bg-white hover:bg-gray-50 hover:shadow-md`}
+      onClick={() => navigate(`/client/tracking/${shipment.trackingNumber}`)}
       tabIndex={0}
       role="button"
-      aria-expanded={expanded}
     >
       <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <div className={`p-2 rounded-full mr-3 ${getStatusClass(shipment.status).split(' ')[0]}`}>
-            <Package className={`w-4 h-4 ${getStatusClass(shipment.status).split(' ')[1]}`} />
+        <div className="flex items-center gap-3">
+          <div className={`inline-flex items-center px-3 py-2 rounded-full ${statusColor.bg} ${statusColor.text} font-medium mr-2`}>
+            {shipment.status?.toLowerCase() === 'delivered' ? <Package className="w-4 h-4 mr-2" /> :
+              shipment.status?.toLowerCase() === 'in transit' ? <ArrowRight className="w-4 h-4 mr-2" /> :
+              <Calendar className="w-4 h-4 mr-2" />}
+            {shipment.status}
           </div>
           <h3 className="text-base font-semibold text-gray-900">{shipment.trackingNumber}</h3>
         </div>
-        <div className="flex items-center">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusClass(shipment.status)}`}>
-            {shipment.status}
-          </span>
-          <ChevronDown className={`ml-2 w-5 h-5 text-gray-500 transition-transform ${expanded ? 'transform rotate-180' : ''}`} />
+        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${shippingInfo.bg} ${shippingInfo.color} font-medium text-sm`}>
+          <ShippingIcon className="w-4 h-4" />
+          {shipment.shippingType || 'Air'}
         </div>
+  {/* <ChevronDown ... /> removed for navigation */}
       </div>
-      
+
       {/* Simple progress bar */}
       <div className="w-full bg-gray-100 rounded-full h-1.5 mb-4 overflow-hidden">
         <div 
@@ -62,8 +83,8 @@ const ShipmentCard = ({ shipment, onClick, expanded }) => {
           style={{ width: `${calculateProgress()}%` }}
         ></div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="flex items-start">
           <div className="mt-0.5 mr-2 text-gray-400">
             <ArrowRight className="w-4 h-4" />
@@ -91,6 +112,20 @@ const ShipmentCard = ({ shipment, onClick, expanded }) => {
           <div>
             <p className="text-xs font-medium text-gray-500 mb-1">Est. Delivery</p>
             <p className="text-sm font-medium">{shipment.estimatedDelivery}</p>
+          </div>
+        </div>
+        <div className="flex flex-col gap-1 justify-center">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">Items</span>
+            <span className="font-medium text-sm">{totalItems}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">Weight</span>
+            <span className="font-medium text-sm">{totalWeight.toFixed(2)} lbs</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">Cost</span>
+            <span className="font-semibold text-green-600 text-sm">${shipment.shippingCost?.toFixed(2)}</span>
           </div>
         </div>
       </div>

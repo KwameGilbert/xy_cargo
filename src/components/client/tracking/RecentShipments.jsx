@@ -63,7 +63,7 @@ const RecentShipments = ({ shipments }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 pb-4">
+    <div className="bg-white rounded-xl shadow-sm pb-4">
       <div className="px-6 py-4 border-b border-gray-100">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -127,18 +127,7 @@ const RecentShipments = ({ shipments }) => {
         {filteredShipments && filteredShipments.length > 0 ? (
           <div className="space-y-1">
             {filteredShipments.map((shipment) => (
-              <div key={shipment.trackingNumber} className="transition-all duration-300">
-                <ShipmentCard 
-                  shipment={shipment} 
-                  onClick={() => handleExpand(shipment.trackingNumber)} 
-                  expanded={expanded === shipment.trackingNumber}
-                />
-                {expanded === shipment.trackingNumber && (
-                  <div className="animate-fadeIn">
-                    <TrackingDetails shipment={shipment} onClose={() => setExpanded(null)} />
-                  </div>
-                )}
-              </div>
+              <ShipmentCard key={shipment.trackingNumber} shipment={shipment} />
             ))}
           </div>
         ) : (
