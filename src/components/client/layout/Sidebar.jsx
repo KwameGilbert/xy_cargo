@@ -22,9 +22,9 @@ const menuItems = [
   { path: "/client/tracking", label: "Track Shipment", icon: Package },
   { path: "/client/payments", label: "Payments & Invoices", icon: CreditCard },
   { path: "/client/addresses", label: "Addresses", icon: MapPin },
-  { path: "/client/consolidation", label: "Consolidation", icon: Building },
-  { path: "/client/support", label: "Support", icon: Headphones },
   { path: "/client/notifications", label: "Notifications", icon: Bell },
+  // { path: "/client/consolidation", label: "Consolidation", icon: Building },
+  { path: "/client/support", label: "Support", icon: Headphones },
   { path: "/client/settings", label: "Settings", icon: Settings },
 ];
 

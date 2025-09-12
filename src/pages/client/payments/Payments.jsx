@@ -47,7 +47,7 @@ const Payments = () => {
             <p className="text-gray-600 mt-1">{data?.pageDescription}</p>
           </div>
 
-          <PaymentsOverview summary={data.summary} />
+          {data?.summary && <PaymentsOverview summary={data.summary} />}
 
           <div className="bg-white rounded-lg p-4 mb-6">
             <div className="flex items-center gap-4">
