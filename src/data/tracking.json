@@ -1,0 +1,44 @@
+{
+  "pageTitle": "Track Your Shipments",
+  "pageDescription": "Enter your tracking number to get real-time updates on your package.",
+  "recentShipments": [
+    {
+      "trackingNumber": "TR001234567",
+      "status": "IN TRANSIT",
+      "route": {
+        "origin": "Miami, FL",
+        "destination": "New York, NY"
+      },
+      "currentLocation": "Atlanta, GA",
+      "estimatedDelivery": "2024-01-18"
+    },
+    {
+      "trackingNumber": "TR001234568",
+      "status": "PROCESSING",
+      "route": {
+        "origin": "Los Angeles, CA",
+        "destination": "Seattle, WA"
+      },
+      "currentLocation": "Los Angeles, CA",
+      "estimatedDelivery": "2024-01-19"
+    },
+    {
+      "trackingNumber": "TR001234569",
+      "status": "DELIVERED",
+      "route": {
+        "origin": "Chicago, IL",
+        "destination": "Dallas, TX"
+      },
+      "currentLocation": "Dallas, TX",
+      "estimatedDelivery": "2024-01-15",
+      "deliveredOn": "2024-01-15"
+    }
+  ],
+  "statusColors": {
+    "IN TRANSIT": "bg-blue-50 text-blue-700",
+    "PROCESSING": "bg-yellow-50 text-yellow-700",
+    "DELIVERED": "bg-green-50 text-green-700",
+    "DELAYED": "bg-red-50 text-red-700",
+    "ON HOLD": "bg-gray-50 text-gray-700"
+  }
+}

@@ -15,6 +15,7 @@ import AboutPage from "../pages/public_pages/about/About";
 import ClientLogin from "../pages/client/auth/login";
 import ClientSignup from "../pages/client/auth/signup";
 import Dashboard from "../pages/client/dashboard/Dashboard";
+import ClientPackageTracking from "../pages/client/tracking/PackageTracking";
 
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
@@ -39,6 +40,7 @@ const AppRoutes = () => {
       <Route path="/client/auth/login" element={<ClientLogin />} />
       <Route path="/client/auth/signup" element={<ClientSignup />} />
       <Route path="/client/dashboard" element={<Dashboard />} />
+      <Route path="/client/tracking" element={<ClientPackageTracking />} />
     </Routes>
   );
 };
