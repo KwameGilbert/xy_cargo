@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import createMockAdapter from '../../../services/mockAdapter';
+import addressesData from '../../../data/addresses.json';
 import { showToastSync as showToast } from '../../../utils/toast';
 import ClientLayout from '../../../components/client/layout/ClientLayout';
 import AddressesList from '../../../components/client/addresses/AddressesList';
@@ -15,15 +16,31 @@ const Addresses = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // configure axios mock adapter for in-memory API
+    // seed localStorage with addresses from source JSON if none exists
+    try {
+      const existing = localStorage.getItem(STORAGE_KEY);
+      if (!existing) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(addressesData.addresses || []));
+      }
+    } catch (e) {
+      // localStorage might not be available in some test environments
+      // ignore and continue - adapter will handle missing storage
+    }
+
+    // configure axios mock adapter for in-memory API (used for /api/addresses CRUD)
     axios.defaults.adapter = createMockAdapter(STORAGE_KEY);
 
+    // Use the JSON module directly for initial page data (more reliable than fetching '/src/...')
     const fetchData = async () => {
       try {
-        // fetch from API (mock adapter will read localStorage)
-        const res = await axios.get('/api/addresses');
-        setAddressesState(res.data || []);
-        setData({ addresses: res.data || [], pageTitle: 'Address Book', pageDescription: 'Manage your shipping and billing addresses for faster checkout.' });
+        const resData = addressesData;
+        setAddressesState(resData.addresses || []);
+        setData({
+          addresses: resData.addresses || [],
+          warehouseAddresses: resData.warehouseAddresses || [],
+          pageTitle: resData.pageTitle,
+          pageDescription: resData.pageDescription
+        });
       } catch (err) {
         console.error('Failed to load addresses', err);
       } finally {
@@ -135,6 +152,7 @@ const Addresses = () => {
   }
 
   const addresses = data?.addresses || [];
+  const warehouseAddresses = data?.warehouseAddresses || [];
 
   return (
     <ClientLayout>
@@ -143,6 +161,28 @@ const Addresses = () => {
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-gray-900">{data?.pageTitle}</h1>
             <p className="text-gray-600 mt-1">{data?.pageDescription}</p>
+          </div>
+
+          {/* Warehouse Addresses Section */}
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Warehouse Addresses</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {warehouseAddresses.map(addr => (
+                <div key={addr.id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+                  <div className="mb-2 text-sm text-gray-500">Shipping Type: <span className="font-semibold text-gray-900">{addr.shippingType}</span></div>
+                  <div className="mb-1 text-sm text-gray-500">Customer Name: <span className="font-semibold text-gray-900">{addr.customerName}</span></div>
+                  <div className="mb-1 text-sm text-gray-500">Customer ID: <span className="font-semibold text-gray-900">{addr.customerId}</span></div>
+                  <div className="mb-2">
+                    <div className="font-semibold text-gray-900">{addr.line1}</div>
+                    {addr.line2 && <div className="text-gray-700">{addr.line2}</div>}
+                    <div className="text-gray-700">{addr.city}, {addr.state} {addr.zip}</div>
+                    <div className="text-gray-700">{addr.country}</div>
+                  </div>
+                  <div className="text-sm text-gray-500">Phone: <span className="font-semibold text-gray-900">{addr.phone}</span></div>
+                </div>
+              ))}
+            </div>
+            <div className="text-xs text-gray-400 mt-2">Use the address and your customer ID for warehouse deliveries. This helps us identify and process your goods quickly.</div>
           </div>
 
           <div className="mb-6">
@@ -156,9 +196,9 @@ const Addresses = () => {
             <h2 className="text-xl font-semibold mb-4">Shipping Addresses</h2>
             <AddressesList addresses={addressesState} onEdit={handleEdit} onDelete={handleDelete} onSetDefault={handleSetDefault} />
           </div>
-  </div>
+        </div>
 
-  <AddressFormModal open={isFormOpen} address={editingAddress} onClose={() => setIsFormOpen(false)} onSave={handleSaveAddress} />
+        <AddressFormModal open={isFormOpen} address={editingAddress} onClose={() => setIsFormOpen(false)} onSave={handleSaveAddress} />
         <ConfirmDialog open={confirmOpen} title={confirmPayload?.action === 'delete' ? 'Delete address' : 'Set default address'} message={
           confirmPayload?.action === 'delete'
             ? `Are you sure you want to delete ${confirmPayload.address.name}? This cannot be undone.`
