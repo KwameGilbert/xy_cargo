@@ -1,0 +1,32 @@
+{
+  "pageTitle": "Address Book",
+  "pageDescription": "Manage your shipping and billing addresses for faster checkout.",
+  "addresses": [
+    {
+      "id": "addr-1",
+      "name": "John Smith",
+      "company": "Tech Solutions Inc.",
+      "line1": "123 Main Street",
+      "line2": "Suite 456",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10001",
+      "country": "United States",
+      "phone": "+1 (555) 123-4567",
+      "isDefault": true
+    },
+    {
+      "id": "addr-2",
+      "name": "Jane Smith",
+      "company": "",
+      "line1": "789 Pine Road",
+      "line2": "",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90210",
+      "country": "United States",
+      "phone": "+1 (555) 456-7890",
+      "isDefault": false
+    }
+  ]
+}

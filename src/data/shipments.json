@@ -1,0 +1,69 @@
+[
+  {
+    "id": "LS2024001",
+    "trackingNumber": "TR001234567",
+    "status": "In Transit",
+    "origin": "Los Angeles Warehouse",
+    "destination": "New York, NY",
+    "carrier": "FedEx Express",
+    "estimatedDelivery": "2024-01-18",
+    "shippingCost": 45.99,
+    "packageDetails": {
+      "weight": "2.5 lbs",
+      "dimensions": "12\" x 8\" x 4\""
+    },
+    "items": [
+      { "name": "Electronics Accessories", "qty": 3, "price": 129.99, "weight": "0.6 lbs" },
+      { "name": "Books", "qty": 2, "price": 39.99, "weight": "1.3 lbs" }
+    ],
+    "history": [
+      { "status": "In Transit", "description": "Package is on the way to destination", "location": "Phoenix, AZ", "date": "2024-01-15 14:30", "active": true },
+      { "status": "Departed", "description": "Left origin facility", "location": "Los Angeles, CA", "date": "2024-01-15 08:15", "active": false },
+      { "status": "Processing", "description": "Package processed at origin facility", "location": "Los Angeles, CA", "date": "2024-01-14 16:45", "active": false },
+      { "status": "Picked Up", "description": "Package picked up from shipper", "location": "Los Angeles, CA", "date": "2024-01-14 10:00", "active": false }
+    ]
+  },
+  {
+    "id": "LS2024002",
+    "trackingNumber": "TR001234568",
+    "status": "Processing",
+    "origin": "Los Angeles, CA",
+    "destination": "Seattle, WA",
+    "carrier": "USPS",
+    "estimatedDelivery": "2024-01-19",
+    "shippingCost": 18.5,
+    "packageDetails": {
+      "weight": "5.2 lbs",
+      "dimensions": "16\" x 12\" x 6\""
+    },
+    "items": [
+      { "name": "Clothing", "qty": 4, "price": 25.0, "weight": "4.8 lbs" }
+    ],
+    "history": [
+      { "status": "Processing", "description": "Arrived at sorting facility", "location": "Los Angeles, CA", "date": "2024-01-18 08:00", "active": true },
+      { "status": "Picked Up", "description": "Package picked up from origin", "location": "Los Angeles, CA", "date": "2024-01-17 15:00", "active": false }
+    ]
+  },
+  {
+    "id": "LS2024003",
+    "trackingNumber": "TR001234569",
+    "status": "Delivered",
+    "origin": "Chicago, IL",
+    "destination": "Dallas, TX",
+    "carrier": "DHL",
+    "estimatedDelivery": "2024-01-15",
+    "deliveredOn": "2024-01-15",
+    "shippingCost": 32.0,
+    "packageDetails": {
+      "weight": "3.1 lbs",
+      "dimensions": "14\" x 9\" x 5\""
+    },
+    "items": [
+      { "name": "Home Decor", "qty": 1, "price": 79.99, "weight": "3.1 lbs" }
+    ],
+    "history": [
+      { "status": "Delivered", "description": "Package delivered successfully", "location": "Dallas, TX", "date": "2024-01-15 10:00", "active": true },
+      { "status": "In Transit", "description": "Departed from facility", "location": "Oklahoma City, OK", "date": "2024-01-14 21:00", "active": false }
+    ]
+  }
+]
