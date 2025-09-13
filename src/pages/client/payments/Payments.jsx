@@ -13,7 +13,7 @@ const Payments = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('/src/data/payments.json');
+        const res = await axios.get('/data/payments.json');
         setData(res.data);
       } catch (err) {
         console.error('Failed to load payments data', err);

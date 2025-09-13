@@ -14,7 +14,7 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         // In production, this would be your API endpoint
-        const response = await axios.get('/src/data/dashboard.json');
+        const response = await axios.get('/data/dashboard.json');
         console.log('Fetched dashboard data:', response.data); // Log the data for debugging
         setDashboardData(response.data);
 

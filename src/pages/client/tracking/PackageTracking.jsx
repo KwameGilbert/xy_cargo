@@ -16,7 +16,7 @@ const PackageTracking = () => {
     const fetchTrackingData = async () => {
       try {
         // In production, this would be your API endpoint
-        const response = await axios.get('/src/data/tracking.json');
+        const response = await axios.get('/data/tracking.json');
         setTrackingData(response.data);
       } catch (err) {
         setError('Failed to load tracking data');

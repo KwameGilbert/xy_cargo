@@ -1,5 +1,5 @@
 // src/services/client/authService.js
-import { users } from "../../data/users.json.js";
+import { users } from "../../../public/data/users.json.js";
 
 // Toggle this to false when real API is ready
 const USE_MOCK = true;

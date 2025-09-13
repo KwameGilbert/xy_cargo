@@ -40,7 +40,7 @@ const ShipmentDetails = () => {
   useEffect(() => {
     const fetchShipment = async () => {
       try {
-        const res = await axios.get('/src/data/shipments.json');
+        const res = await axios.get('/data/shipments.json');
         const data = res.data || [];
         const found = data.find(s => s.id === id || s.trackingNumber === id);
         setShipment(found || null);
