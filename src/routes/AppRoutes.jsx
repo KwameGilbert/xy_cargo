@@ -18,7 +18,7 @@ import Dashboard from "../pages/client/dashboard/Dashboard";
 import ClientPackageTracking from "../pages/client/tracking/PackageTracking";
 import ShipmentDetails from "../pages/client/tracking/ShipmentDetails";
 import ClientPayments from "../pages/client/payments/Payments";
-import Notifications from "../pages/client/notifications/Notifications";
+import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
 
