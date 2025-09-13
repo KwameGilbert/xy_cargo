@@ -15,6 +15,7 @@ const Dashboard = () => {
       try {
         // In production, this would be your API endpoint
         const response = await axios.get('/src/data/dashboard.json');
+        console.log('Fetched dashboard data:', response.data); // Log the data for debugging
         setDashboardData(response.data);
 
       } catch (error) {
@@ -37,6 +38,9 @@ const Dashboard = () => {
     );
   }
 
+  // Convert metrics object to an array for mapping
+  const metrics = dashboardData.metrics ? Object.values(dashboardData.metrics) : [];
+
   return (
     <ClientLayout>
       <div className="p-2 bg-gray-50 min-h-screen">
@@ -46,7 +50,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
-          {dashboardData.metrics.map((metric, idx) => (
+          {metrics.map((metric, idx) => (
             <DashboardMetric
               key={idx}
               count={metric.count}
