@@ -18,6 +18,7 @@ import Dashboard from "../pages/client/dashboard/Dashboard";
 import ClientPackageTracking from "../pages/client/tracking/PackageTracking";
 import ShipmentDetails from "../pages/client/tracking/ShipmentDetails";
 import ClientPayments from "../pages/client/payments/Payments";
+import Notifications from "../pages/client/notifications/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
 
@@ -47,6 +48,7 @@ const AppRoutes = () => {
       <Route path="/client/tracking" element={<ClientPackageTracking />} />
   <Route path="/client/tracking/:id" element={<ShipmentDetails />} />
       <Route path="/client/payments" element={<ClientPayments />} />
+      <Route path="/client/notifications" element={<Notifications />} />
   <Route path="/client/addresses" element={<ClientAddresses />} />
   <Route path="/client/support" element={<ClientSupport />} />
     </Routes>
