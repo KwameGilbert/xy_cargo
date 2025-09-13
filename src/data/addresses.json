@@ -1,6 +1,47 @@
 {
   "pageTitle": "Address Book",
   "pageDescription": "Manage your shipping and billing addresses for faster checkout.",
+  "warehouseAddresses": [
+    {
+      "id": "wh-sea",
+      "shippingType": "Sea",
+      "customerName": "John Smith",
+      "customerId": "CUST-001",
+      "line1": "Sea Warehouse, 456 Dock Road",
+      "line2": "Attn: John Smith / CUST-001",
+      "city": "Houston",
+      "state": "TX",
+      "zip": "77001",
+      "country": "United States",
+      "phone": "+1 (555) 222-3333"
+    },
+    {
+      "id": "wh-air",
+      "shippingType": "Air",
+      "customerName": "John Smith",
+      "customerId": "CUST-001",
+      "line1": "Air Warehouse, 789 Skyway Blvd",
+      "line2": "Attn: John Smith / CUST-001",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30301",
+      "country": "United States",
+      "phone": "+1 (555) 444-5555"
+    },
+    {
+      "id": "wh-air-express",
+      "shippingType": "Air Express",
+      "customerName": "John Smith",
+      "customerId": "CUST-001",
+      "line1": "Express Air Warehouse, 321 Jet Ave",
+      "line2": "Attn: John Smith / CUST-001",
+      "city": "Miami",
+      "state": "FL",
+      "zip": "33101",
+      "country": "United States",
+      "phone": "+1 (555) 666-7777"
+    }
+  ],
   "addresses": [
     {
       "id": "addr-1",
