@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import createMockAdapter from '../../../services/mockAdapter';
-import addressesData from '../../../data/addresses.json';
+import addressesData from '/data/addresses.json';
 import { showToastSync as showToast } from '../../../utils/toast';
 import ClientLayout from '../../../components/client/layout/ClientLayout';
 import AddressesList from '../../../components/client/addresses/AddressesList';
