@@ -16,6 +16,7 @@ const Dashboard = () => {
         // In production, this would be your API endpoint
         const response = await axios.get('/src/data/dashboard.json');
         setDashboardData(response.data);
+        
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
