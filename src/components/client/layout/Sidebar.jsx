@@ -20,6 +20,7 @@ import { useState } from "react";
 const menuItems = [
   { path: "/client/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/client/tracking", label: "Track Shipment", icon: Package },
+  { path: "/client/warehouse", label: "Warehouse Parcels", icon: Warehouse },
   { path: "/client/payments", label: "Payments & Invoices", icon: CreditCard },
   { path: "/client/addresses", label: "Addresses", icon: MapPin },
   { path: "/client/notifications", label: "Notifications", icon: Bell },

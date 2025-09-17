@@ -21,6 +21,7 @@ import ClientPayments from "../pages/client/payments/Payments";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
+import WarehouseParcels from "../pages/client/warehouse/WarehouseParcels";
 
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
@@ -51,6 +52,7 @@ const AppRoutes = () => {
       <Route path="/client/notifications" element={<Notifications />} />
   <Route path="/client/addresses" element={<ClientAddresses />} />
   <Route path="/client/support" element={<ClientSupport />} />
+  <Route path="/client/warehouse" element={<WarehouseParcels />} />
     </Routes>
   );
 };
