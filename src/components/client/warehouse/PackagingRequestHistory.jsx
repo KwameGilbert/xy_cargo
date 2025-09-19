@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { Package, ArrowRight, CheckCircle, Clock, XCircle } from "lucide-react";
 
 const PackagingRequestHistory = ({ requests }) => {
@@ -60,6 +59,9 @@ const PackagingRequestHistory = ({ requests }) => {
           <h3 className="mt-2 text-sm font-medium text-gray-900">No packaging requests</h3>
           <p className="mt-1 text-sm text-gray-500">
             You haven't made any special packaging requests yet.
+          </p>
+          <p className="mt-4 text-sm text-gray-500">
+            Select a parcel and click "Request Special Packaging" to protect your items during shipping.
           </p>
         </div>
       </div>
@@ -176,23 +178,6 @@ const PackagingRequestHistory = ({ requests }) => {
       </div>
     </div>
   );
-};
-
-PackagingRequestHistory.propTypes = {
-  requests: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      parcelId: PropTypes.string.isRequired,
-      parcelInfo: PropTypes.object,
-      packagingType: PropTypes.string.isRequired,
-      additionalOptions: PropTypes.array,
-      cost: PropTypes.number.isRequired,
-      status: PropTypes.string.isRequired,
-      requestDate: PropTypes.string.isRequired,
-      completionDate: PropTypes.string,
-      notes: PropTypes.string
-    })
-  ).isRequired
 };
 
 export default PackagingRequestHistory;

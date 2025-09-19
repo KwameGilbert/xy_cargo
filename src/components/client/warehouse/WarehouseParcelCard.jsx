@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import { Package, FileText, AlertCircle, Check, Clock } from 'lucide-react';
+import { Package, FileText, AlertCircle, Check, Clock, ExternalLink } from 'lucide-react';
 
 const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
   const {
@@ -13,7 +12,8 @@ const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
     packagingRequested,
     packagingDetails,
     images,
-    contents
+    contents,
+    origin
   } = parcel;
 
   const getStatusBadge = () => {
@@ -45,7 +45,7 @@ const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
       {/* Image section */}
       <div className="h-40 overflow-hidden relative">
         <img 
@@ -56,6 +56,9 @@ const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
             e.target.src = "https://via.placeholder.com/300x200?text=No+Image";
           }}
         />
+        <div className="absolute top-2 left-2">
+          {getStatusBadge()}
+        </div>
         {isFragile && (
           <div className="absolute top-2 right-2 bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-medium flex items-center">
             <AlertCircle size={14} className="mr-1" />
@@ -66,13 +69,13 @@ const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
 
       {/* Content section */}
       <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
+        <div className="mb-2">
           <h3 className="text-lg font-semibold text-gray-800 truncate">{description}</h3>
-          {getStatusBadge()}
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-500">ID: {id}</p>
+            <p className="text-sm text-gray-500">Arrived: {arrival_date}</p>
+          </div>
         </div>
-
-        <p className="text-sm text-gray-500 mb-1">ID: {id}</p>
-        <p className="text-sm text-gray-500 mb-1">Arrived: {arrival_date}</p>
 
         {/* Details section */}
         <div className="mt-3 pt-3 border-t border-gray-100">
@@ -86,6 +89,16 @@ const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
               <span className="ml-1 text-gray-800">{dimensions}</span>
             </div>
           </div>
+          
+          {origin && (
+            <div className="mt-2 text-sm">
+              <span className="text-gray-600 font-medium">Origin:</span>
+              <span className="ml-1 text-gray-800 flex items-center">
+                {origin}
+                <ExternalLink size={12} className="ml-1 text-gray-400" />
+              </span>
+            </div>
+          )}
 
           {/* Contents preview */}
           <div className="mt-3">
@@ -145,31 +158,6 @@ const WarehouseParcelCard = ({ parcel, onRequestPackaging }) => {
       </div>
     </div>
   );
-};
-
-WarehouseParcelCard.propTypes = {
-  parcel: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    arrival_date: PropTypes.string.isRequired,
-    weight: PropTypes.number.isRequired,
-    dimensions: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    origin: PropTypes.string.isRequired,
-    isFragile: PropTypes.bool.isRequired,
-    isPackaged: PropTypes.bool.isRequired,
-    packagingRequested: PropTypes.bool,
-    packagingDetails: PropTypes.object,
-    images: PropTypes.arrayOf(PropTypes.string),
-    contents: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        quantity: PropTypes.number.isRequired,
-        value: PropTypes.number.isRequired
-      })
-    ).isRequired
-  }).isRequired,
-  onRequestPackaging: PropTypes.func.isRequired
 };
 
 export default WarehouseParcelCard;
