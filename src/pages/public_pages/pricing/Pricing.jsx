@@ -4,7 +4,7 @@ import ShippingPricing from "../../../components/public_pages/pricing/Pricing";
 import AdditionalServices from "../../../components/public_pages/pricing/AdditionalServices";
 import VolumeDiscounts from "../../../components/public_pages/pricing/VolumeDiscounts";
 import PriceMatch from "../../../components/public_pages/pricing/PriceMatch";
-import SEO from "../../../components/public_pages/common/SEO/SEO";
+// import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const Pricing = () => {
     const containerVariants = {
@@ -41,12 +41,12 @@ const Pricing = () => {
             initial="hidden"
             animate="visible"
         >
-            <SEO 
+            {/* <SEO 
                 title="Pricing"
                 description="XY Cargo Zambia shipping rates and pricing. Get competitive rates for air freight, sea freight, and special goods shipping from China to Zambia."
                 keywords="shipping rates, freight pricing, air freight cost, sea freight cost, China to Zambia shipping prices"
                 canonical="https://xycargozm.com/pricing"
-            />
+            /> */}
             <motion.div variants={sectionVariants}>
                 <ShippingCalculator />
             </motion.div>

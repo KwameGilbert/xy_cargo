@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MapPin, Clock, Phone, Mail, Globe } from "lucide-react";
-import SEO from "../../../components/public_pages/common/SEO/SEO";
+// import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const Locations = () => {
   const locations = [
@@ -81,12 +81,12 @@ const Locations = () => {
       animate="visible"
       className="min-h-screen bg-gray-50 py-16"
     >
-      <SEO 
+      {/* <SEO 
         title="Our Locations"
         description="XY Cargo Zambia office locations and warehouse addresses. Find our shipping hubs in Lusaka, Zambia for all your logistics needs."
         keywords="shipping locations, Lusaka office, warehouse address, shipping centers, cargo pickup points"
         canonical="https://xycargozm.com/locations"
-      />
+      /> */}
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <motion.div variants={headerVariants} className="text-center mb-16">

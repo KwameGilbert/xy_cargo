@@ -1,0 +1,278 @@
+[
+  {
+    "id": "WP-2024-001",
+    "waybillNumber": "WP-2024-001",
+    "trackingNumber": "TR001234567",
+    "description": "Electronics Package from Shenzhen",
+    "arrival_date": "2024-09-05",
+    "weight": 3.5,
+    "dimensions": "45cm x 30cm x 20cm",
+    "status": "IN_TRANSIT",
+    "currentLocation": "Atlanta, GA",
+    "origin": "Shenzhen, China",
+    "destination": "New York, NY",
+    "estimatedDelivery": "2024-01-18",
+    "shippingCost": 125.50,
+    "paymentStatus": "PAID",
+    "lastUpdate": "2024-01-16 at 09:30 AM",
+    "isFragile": true,
+    "isPackaged": true,
+    "packagingRequested": true,
+    "trackingHistory": [
+      {
+        "status": "In Transit",
+        "description": "Package is in transit to next facility",
+        "location": "Atlanta, GA",
+        "date": "2024-01-16 at 09:30 AM",
+        "active": true
+      },
+      {
+        "status": "In Transit",
+        "description": "Departed from facility",
+        "location": "Jacksonville, FL",
+        "date": "2024-01-15 at 11:45 PM",
+        "active": false
+      },
+      {
+        "status": "Processing",
+        "description": "Arrived at sorting facility",
+        "location": "Jacksonville, FL",
+        "date": "2024-01-15 at 06:20 PM",
+        "active": false
+      },
+      {
+        "status": "Picked Up",
+        "description": "Package picked up from origin",
+        "location": "Miami, FL",
+        "date": "2024-01-15 at 02:15 PM",
+        "active": false
+      }
+    ],
+    "contents": [
+      {
+        "name": "Laptop",
+        "quantity": 1,
+        "value": 800
+      },
+      {
+        "name": "Wireless Headphones",
+        "quantity": 2,
+        "value": 150
+      }
+    ]
+  },
+  {
+    "id": "WP-2024-002",
+    "waybillNumber": "WP-2024-002",
+    "trackingNumber": "TR001234568",
+    "description": "Clothing Items",
+    "arrival_date": "2024-09-07",
+    "weight": 2.1,
+    "dimensions": "40cm x 30cm x 15cm",
+    "status": "PROCESSING",
+    "currentLocation": "Los Angeles, CA",
+    "origin": "Guangzhou, China",
+    "destination": "Seattle, WA",
+    "estimatedDelivery": "2024-01-19",
+    "shippingCost": 85.00,
+    "paymentStatus": "UNPAID",
+    "lastUpdate": "2024-01-18 at 08:00 AM",
+    "isFragile": false,
+    "isPackaged": false,
+    "packagingRequested": false,
+    "trackingHistory": [
+      {
+        "status": "Processing",
+        "description": "Arrived at sorting facility",
+        "location": "Los Angeles, CA",
+        "date": "2024-01-18 at 08:00 AM",
+        "active": true
+      },
+      {
+        "status": "Picked Up",
+        "description": "Package picked up from origin",
+        "location": "Los Angeles, CA",
+        "date": "2024-01-17 at 03:00 PM",
+        "active": false
+      }
+    ],
+    "contents": [
+      {
+        "name": "T-shirts",
+        "quantity": 10,
+        "value": 120
+      },
+      {
+        "name": "Jeans",
+        "quantity": 3,
+        "value": 90
+      }
+    ]
+  },
+  {
+    "id": "WP-2024-003",
+    "waybillNumber": "WP-2024-003",
+    "trackingNumber": "TR001234569",
+    "description": "Kitchenware Set",
+    "arrival_date": "2024-09-08",
+    "weight": 5.3,
+    "dimensions": "60cm x 40cm x 30cm",
+    "status": "DELIVERED",
+    "currentLocation": "Dallas, TX",
+    "origin": "Yiwu, China",
+    "destination": "Dallas, TX",
+    "estimatedDelivery": "2024-01-15",
+    "deliveredOn": "2024-01-15",
+    "shippingCost": 95.75,
+    "paymentStatus": "PAID",
+    "lastUpdate": "2024-01-15 at 10:00 AM",
+    "isFragile": true,
+    "isPackaged": true,
+    "packagingRequested": true,
+    "trackingHistory": [
+      {
+        "status": "Delivered",
+        "description": "Package delivered successfully",
+        "location": "Dallas, TX",
+        "date": "2024-01-15 at 10:00 AM",
+        "active": true
+      },
+      {
+        "status": "In Transit",
+        "description": "Departed from facility",
+        "location": "Oklahoma City, OK",
+        "date": "2024-01-14 at 09:00 PM",
+        "active": false
+      },
+      {
+        "status": "Processing",
+        "description": "Arrived at sorting facility",
+        "location": "Oklahoma City, OK",
+        "date": "2024-01-14 at 02:00 PM",
+        "active": false
+      },
+      {
+        "status": "Picked Up",
+        "description": "Package picked up from origin",
+        "location": "Chicago, IL",
+        "date": "2024-01-13 at 11:00 AM",
+        "active": false
+      }
+    ],
+    "contents": [
+      {
+        "name": "Ceramic Plates",
+        "quantity": 8,
+        "value": 160
+      },
+      {
+        "name": "Glass Cups",
+        "quantity": 6,
+        "value": 75
+      },
+      {
+        "name": "Cutlery Set",
+        "quantity": 1,
+        "value": 45
+      }
+    ]
+  },
+  {
+    "id": "WP-2024-004",
+    "waybillNumber": "WP-2024-004",
+    "trackingNumber": "TR001234570",
+    "description": "Mobile Phone Accessories",
+    "arrival_date": "2024-09-10",
+    "weight": 1.2,
+    "dimensions": "25cm x 20cm x 10cm",
+    "status": "DELAYED",
+    "currentLocation": "Customs - Miami, FL",
+    "origin": "Shenzhen, China",
+    "destination": "Miami, FL",
+    "estimatedDelivery": "2024-01-20",
+    "shippingCost": 45.00,
+    "paymentStatus": "UNPAID",
+    "lastUpdate": "2024-01-17 at 02:30 PM",
+    "isFragile": false,
+    "isPackaged": false,
+    "packagingRequested": false,
+    "trackingHistory": [
+      {
+        "status": "Delayed",
+        "description": "Package held at customs for inspection",
+        "location": "Customs - Miami, FL",
+        "date": "2024-01-17 at 02:30 PM",
+        "active": true
+      },
+      {
+        "status": "In Transit",
+        "description": "Package in transit",
+        "location": "Miami, FL",
+        "date": "2024-01-16 at 08:00 AM",
+        "active": false
+      },
+      {
+        "status": "Processing",
+        "description": "Package processed at origin",
+        "location": "Shenzhen, China",
+        "date": "2024-01-15 at 10:00 AM",
+        "active": false
+      }
+    ],
+    "contents": [
+      {
+        "name": "Phone Cases",
+        "quantity": 15,
+        "value": 150
+      },
+      {
+        "name": "Screen Protectors",
+        "quantity": 20,
+        "value": 100
+      },
+      {
+        "name": "Charging Cables",
+        "quantity": 10,
+        "value": 50
+      }
+    ]
+  },
+  {
+    "id": "WP-2024-005",
+    "waybillNumber": "WP-2024-005",
+    "trackingNumber": "TR001234571",
+    "description": "Computer Parts",
+    "arrival_date": "2024-09-11",
+    "weight": 4.8,
+    "dimensions": "50cm x 40cm x 25cm",
+    "status": "AT_WAREHOUSE",
+    "currentLocation": "Warehouse",
+    "origin": "Shanghai, China",
+    "destination": "San Francisco, CA",
+    "estimatedDelivery": "TBD",
+    "shippingCost": 0,
+    "paymentStatus": "UNPAID",
+    "lastUpdate": "2024-09-11 at 10:00 AM",
+    "isFragile": true,
+    "isPackaged": false,
+    "packagingRequested": false,
+    "trackingHistory": [],
+    "contents": [
+      {
+        "name": "Graphics Card",
+        "quantity": 1,
+        "value": 450
+      },
+      {
+        "name": "RAM Modules",
+        "quantity": 2,
+        "value": 120
+      },
+      {
+        "name": "SSD Drive",
+        "quantity": 1,
+        "value": 85
+      }
+    ]
+  }
+]

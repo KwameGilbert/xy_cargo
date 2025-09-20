@@ -6,7 +6,7 @@ import ShippingCalculator from "../../../components/public_pages/calc/ShippingCa
 import Pricing from "../../../components/public_pages/pricing/Pricing";
 import Tracking from "../../../components/public_pages/home/Tracking";
 import SupportCenter from "../../../components/public_pages/home/SupportCenter";
-import SEO from "../../../components/public_pages/common/SEO/SEO";
+// import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const HomePage = () => {
   const containerVariants = {
@@ -41,12 +41,12 @@ const HomePage = () => {
       initial="hidden"
       animate="visible"
     >
-      <SEO 
+      {/* <SEO 
         title="Home"
         description="XY Cargo Zambia - Your trusted shipping partner from China to Zambia. Fast and reliable air freight, sea freight and express shipping services."
         keywords="shipping, cargo, China to Zambia, freight forwarding, logistics, import from China"
         canonical="https://xycargozm.com"
-      />
+      /> */}
       <motion.div variants={sectionVariants}>
         <HeroSection />
       </motion.div>

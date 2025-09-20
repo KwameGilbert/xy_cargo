@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Search, Package, Truck, MapPin, CheckCircle, Clock } from "lucide-react";
-import SEO from "../../../components/public_pages/common/SEO/SEO";
+// import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const PackageTracking = () => {
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -93,12 +93,12 @@ const PackageTracking = () => {
       animate="visible"
       className="min-h-screen bg-gray-50 py-16"
     >
-      <SEO 
+      {/* <SEO 
         title="Track Your Package"
         description="Track your XY Cargo Zambia shipment in real-time. Enter your tracking number to get delivery status and updates on your package."
         keywords="package tracking, shipment tracking, delivery status, tracking number, shipping updates"
         canonical="https://xycargozm.com/tracking"
-      />
+      /> */}
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <motion.div variants={sectionVariants} className="text-center mb-12">

@@ -13,16 +13,18 @@ import {
   Headphones, 
   Bell, 
   Settings, 
-  LogOut 
+  LogOut,
+  Home
 } from "lucide-react";
 import { useState } from "react";
 
 const menuItems = [
   { path: "/client/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/client/tracking", label: "Track Shipment", icon: Package },
-  { path: "/client/warehouse", label: "Warehouse Parcels", icon: Warehouse },
+  { path: "/client/parcels", label: "Parcels", icon: Package },
+  { path: "/client/tracking", label: "Track Shipment", icon: MapPin },
+  { path: "/client/warehouse", label: "Warehouse", icon: Warehouse },
   { path: "/client/payments", label: "Payments & Invoices", icon: CreditCard },
-  { path: "/client/addresses", label: "Addresses", icon: MapPin },
+  { path: "/client/addresses", label: "Addresses", icon: Home },
   { path: "/client/notifications", label: "Notifications", icon: Bell },
   // { path: "/client/consolidation", label: "Consolidation", icon: Building },
   { path: "/client/support", label: "Support", icon: Headphones },
@@ -106,8 +108,7 @@ const Sidebar = () => {
           <nav className="flex-1 py-2 overflow-y-auto">
             <div>
               {menuItems.map(({ path, label, icon: Icon }) => {
-                const isActive = location.pathname === path || 
-                  (path === "/client/tracking" && location.pathname === "/client/parcels");
+                const isActive = location.pathname === path;
                 return (
                   <Link
                     key={path}
