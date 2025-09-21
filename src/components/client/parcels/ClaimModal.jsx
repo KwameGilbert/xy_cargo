@@ -1,122 +1,80 @@
 import React, { useState } from 'react';
-import { X } from 'react-feather';
+import { X, FileText, AlertTriangle } from 'lucide-react';
 
-const ClaimModal = ({ isOpen, onClose, parcel }) => {
-  const [claimType, setClaimType] = useState('delayed');
+const ClaimModal = ({ parcel, onClose }) => {
+  const [claimType, setClaimType] = useState('damage');
   const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  if (!isOpen || !parcel) return null;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      // Simulate claim submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Implement actual claim submission
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    // Simulate claim submission
+    setTimeout(() => {
+      setSubmitting(false);
       onClose();
-    } catch (error) {
-      console.error('Claim submission failed:', error);
-      // Show error message
-    } finally {
-      setLoading(false);
-    }
+    }, 2000);
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Submit Claim</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-500 focus:outline-none"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        <div className="mb-6">
-          <h4 className="font-medium text-gray-700 mb-2">Parcel Details</h4>
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-600">Waybill No:</span>
-              <span className="font-medium">{parcel.waybillNo}</span>
-            </div>
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-600">Status:</span>
-              <span className="font-medium">{parcel.status}</span>
-            </div>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Claim Type
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setClaimType('delayed')}
-                className={`p-4 border rounded-lg text-center ${
-                  claimType === 'delayed'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 text-gray-600 hover:border-blue-500'
-                }`}
-              >
-                Delayed Delivery
-              </button>
-              <button
-                type="button"
-                onClick={() => setClaimType('damaged')}
-                className={`p-4 border rounded-lg text-center ${
-                  claimType === 'damaged'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 text-gray-600 hover:border-blue-500'
-                }`}
-              >
-                Damaged Parcel
-              </button>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Please describe your issue in detail..."
-              className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32 resize-none"
-              required
-            />
-          </div>
-
-          <div className="flex justify-end gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 focus:outline-none"
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className={`px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={loading}
-            >
-              {loading ? 'Submitting...' : 'Submit Claim'}
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="fixed inset-0 bg-black/25 backdrop-blur-sm" />
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-medium text-gray-900">Open Claim</h3>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+              <X className="h-5 w-5" />
             </button>
           </div>
-        </form>
+          
+          <div className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="text-sm text-gray-600">Parcel {parcel.waybillNumber}</div>
+              <div className="text-sm text-gray-600">Status: {parcel.status}</div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Claim Type</label>
+              <select
+                value={claimType}
+                onChange={(e) => setClaimType(e.target.value)}
+                className="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              >
+                <option value="damage">Damage</option>
+                <option value="delay">Delay</option>
+                <option value="loss">Loss</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="Describe the issue..."
+              />
+            </div>
+            
+            <div className="flex space-x-3">
+              <button
+                onClick={onClose}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting || !description.trim()}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+              >
+                {submitting ? 'Submitting...' : 'Submit Claim'}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
