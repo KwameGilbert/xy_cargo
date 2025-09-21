@@ -17,6 +17,7 @@ import ClientLogin from "../pages/client/auth/login";
 import ClientSignup from "../pages/client/auth/signup";
 import Dashboard from "../pages/client/dashboard/Dashboard";
 import ParcelsPage from "../pages/client/parcels/ParcelsPage";
+import ParcelDetailsPage from "../pages/client/parcels/ParcelDetailsPage";
 import ClientPayments from "../pages/client/payments/Payments";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
@@ -48,7 +49,8 @@ const AppRoutes = () => {
       {/* Client Routes - wrapped in ClientLayout */}
       <Route element={<ClientLayout />}>
         <Route path="/client/dashboard" element={<Dashboard />} />
-        <Route path="/client/parcels" element={<ParcelsPage />} />
+  <Route path="/client/parcels" element={<ParcelsPage />} />
+  <Route path="/client/parcels/:id" element={<ParcelDetailsPage />} />
         <Route path="/client/payments" element={<ClientPayments />} />
         <Route path="/client/notifications" element={<Notifications />} />
         <Route path="/client/addresses" element={<ClientAddresses />} />
