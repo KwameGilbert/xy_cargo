@@ -1,0 +1,291 @@
+{
+  "WP-2024-001": {
+    "id": "WP-2024-001",
+    "waybillNumber": "WP-2024-001",
+    "trackingNumber": "TR001234567",
+    "description": "Electronics Package from Shenzhen",
+    "arrival_date": "2024-09-05",
+    "weight": 3.5,
+    "dimensions": "45cm x 30cm x 20cm",
+    "status": "IN_TRANSIT",
+    "currentLocation": "Atlanta, GA",
+    "origin": "Shenzhen, China",
+    "destination": "New York, NY",
+    "estimatedDelivery": "2024-01-18",
+    "shippingCost": 125.50,
+    "paymentStatus": "PAID",
+    "lastUpdate": "2024-01-16 at 09:30 AM",
+    "isFragile": true,
+    "isPackaged": true,
+    "packagingRequested": true,
+    "declaredValue": 950,
+    "customerName": "John Smith",
+    "customerPhone": "+1 (555) 987-6543",
+    "customerEmail": "john.smith@email.com",
+    "recipient": {
+      "name": "Sarah Johnson",
+      "phone": "+1 (555) 123-4567",
+      "email": "sarah.johnson@email.com",
+      "address": "123 Main St, New York, NY 10001"
+    },
+    "originWarehouse": "Shenzhen Warehouse",
+    "destinationWarehouse": "New York Warehouse",
+    "specialTags": ["Fragile", "High Value"],
+    "trackingHistory": [
+      {
+        "status": "In Transit",
+        "description": "Package is in transit to next facility",
+        "location": "Atlanta, GA",
+        "date": "2024-01-16 at 09:30 AM",
+        "active": true,
+        "handler": "FedEx Express"
+      },
+      {
+        "status": "In Transit",
+        "description": "Departed from facility",
+        "location": "Jacksonville, FL",
+        "date": "2024-01-15 at 11:45 PM",
+        "active": false,
+        "handler": "FedEx Express"
+      },
+      {
+        "status": "Processing",
+        "description": "Arrived at sorting facility",
+        "location": "Jacksonville, FL",
+        "date": "2024-01-15 at 06:20 PM",
+        "active": false,
+        "handler": "FedEx Express"
+      },
+      {
+        "status": "Picked Up",
+        "description": "Package picked up from origin",
+        "location": "Miami, FL",
+        "date": "2024-01-15 at 02:15 PM",
+        "active": false,
+        "handler": "FedEx Express"
+      }
+    ],
+    "items": [
+      {
+        "id": "item-001",
+        "name": "MacBook Pro 16-inch",
+        "description": "Apple MacBook Pro with M3 chip, 16GB RAM, 512GB SSD",
+        "quantity": 1,
+        "weight": 2.0,
+        "dimensions": "35cm x 25cm x 2cm",
+        "declaredValue": 800,
+        "specialPackaging": false,
+        "status": "Normal",
+        "separatedParcelId": null,
+        "category": "Electronics",
+        "condition": "New",
+        "notes": "Original packaging included"
+      },
+      {
+        "id": "item-002",
+        "name": "AirPods Pro",
+        "description": "Apple AirPods Pro 2nd generation with active noise cancellation",
+        "quantity": 2,
+        "weight": 0.3,
+        "dimensions": "10cm x 8cm x 5cm",
+        "declaredValue": 150,
+        "specialPackaging": true,
+        "status": "Separated into new parcel",
+        "separatedParcelId": "WP-2024-001A",
+        "category": "Electronics",
+        "condition": "New",
+        "notes": "Requires special handling due to lithium battery"
+      }
+    ],
+    "separatedParcels": [
+      {
+        "id": "WP-2024-001A",
+        "waybillNumber": "WP-2024-001A",
+        "description": "AirPods Pro - Special Packaging",
+        "status": "IN_TRANSIT",
+        "createdDate": "2024-01-15 at 11:30 AM",
+        "reason": "Special packaging required for lithium battery"
+      }
+    ],
+    "history": [
+      {
+        "action": "Created",
+        "description": "Parcel created and registered",
+        "date": "2024-01-15 at 10:00 AM",
+        "user": "System",
+        "details": "Initial parcel registration completed"
+      },
+      {
+        "action": "Item Separated",
+        "description": "AirPods Pro separated into special packaging",
+        "date": "2024-01-15 at 11:30 AM",
+        "user": "Warehouse Staff",
+        "details": "Item flagged for special packaging due to lithium battery regulations"
+      },
+      {
+        "action": "Payment Made",
+        "description": "Payment of $125.50 processed successfully",
+        "date": "2024-01-15 at 12:00 PM",
+        "user": "John Smith",
+        "details": "Payment processed via credit card ending in 1234"
+      },
+      {
+        "action": "Shipped",
+        "description": "Parcel shipped from origin warehouse",
+        "date": "2024-01-15 at 02:15 PM",
+        "user": "FedEx Express",
+        "details": "Package picked up and in transit"
+      }
+    ],
+    "documents": [
+      {
+        "type": "Invoice",
+        "name": "Invoice_WP-2024-001.pdf",
+        "url": "/documents/invoices/WP-2024-001.pdf",
+        "createdDate": "2024-01-15 at 10:00 AM"
+      },
+      {
+        "type": "Receipt",
+        "name": "Receipt_WP-2024-001.pdf",
+        "url": "/documents/receipts/WP-2024-001.pdf",
+        "createdDate": "2024-01-15 at 12:00 PM"
+      }
+    ],
+    "supportContacts": [
+      {
+        "type": "Customer Service",
+        "phone": "+1 (555) 123-4567",
+        "email": "support@xycargo.com",
+        "hours": "24/7"
+      },
+      {
+        "type": "Warehouse",
+        "phone": "+1 (555) 987-6543",
+        "email": "warehouse@xycargo.com",
+        "hours": "Mon-Fri 8AM-6PM"
+      }
+    ]
+  },
+  "WP-2024-002": {
+    "id": "WP-2024-002",
+    "waybillNumber": "WP-2024-002",
+    "trackingNumber": "TR001234568",
+    "description": "Clothing Items",
+    "arrival_date": "2024-09-07",
+    "weight": 2.1,
+    "dimensions": "40cm x 30cm x 15cm",
+    "status": "PROCESSING",
+    "currentLocation": "Los Angeles, CA",
+    "origin": "Guangzhou, China",
+    "destination": "Seattle, WA",
+    "estimatedDelivery": "2024-01-19",
+    "shippingCost": 85.00,
+    "paymentStatus": "UNPAID",
+    "lastUpdate": "2024-01-18 at 08:00 AM",
+    "isFragile": false,
+    "isPackaged": false,
+    "packagingRequested": false,
+    "declaredValue": 210,
+    "customerName": "Mike Wilson",
+    "customerPhone": "+1 (206) 555-1234",
+    "customerEmail": "mike.wilson@email.com",
+    "recipient": {
+      "name": "Lisa Chen",
+      "phone": "+1 (206) 555-7890",
+      "email": "lisa.chen@email.com",
+      "address": "456 Pine St, Seattle, WA 98101"
+    },
+    "originWarehouse": "Guangzhou Warehouse",
+    "destinationWarehouse": "Seattle Warehouse",
+    "specialTags": [],
+    "trackingHistory": [
+      {
+        "status": "Processing",
+        "description": "Arrived at sorting facility",
+        "location": "Los Angeles, CA",
+        "date": "2024-01-18 at 08:00 AM",
+        "active": true,
+        "handler": "UPS"
+      },
+      {
+        "status": "Picked Up",
+        "description": "Package picked up from origin",
+        "location": "Los Angeles, CA",
+        "date": "2024-01-17 at 03:00 PM",
+        "active": false,
+        "handler": "UPS"
+      }
+    ],
+    "items": [
+      {
+        "id": "item-003",
+        "name": "T-shirts",
+        "description": "Cotton t-shirts various sizes (S, M, L, XL)",
+        "quantity": 10,
+        "weight": 1.5,
+        "dimensions": "30cm x 25cm x 10cm",
+        "declaredValue": 120,
+        "specialPackaging": false,
+        "status": "Normal",
+        "separatedParcelId": null,
+        "category": "Clothing",
+        "condition": "New",
+        "notes": "Various colors and sizes"
+      },
+      {
+        "id": "item-004",
+        "name": "Jeans",
+        "description": "Denim jeans various sizes (30, 32, 34, 36)",
+        "quantity": 3,
+        "weight": 0.6,
+        "dimensions": "35cm x 30cm x 5cm",
+        "declaredValue": 90,
+        "specialPackaging": false,
+        "status": "Normal",
+        "separatedParcelId": null,
+        "category": "Clothing",
+        "condition": "New",
+        "notes": "Blue denim, various waist sizes"
+      }
+    ],
+    "separatedParcels": [],
+    "history": [
+      {
+        "action": "Created",
+        "description": "Parcel created and registered",
+        "date": "2024-01-17 at 09:00 AM",
+        "user": "System",
+        "details": "Initial parcel registration completed"
+      },
+      {
+        "action": "Shipped",
+        "description": "Parcel shipped from origin warehouse",
+        "date": "2024-01-17 at 03:00 PM",
+        "user": "UPS",
+        "details": "Package picked up and in transit"
+      }
+    ],
+    "documents": [
+      {
+        "type": "Invoice",
+        "name": "Invoice_WP-2024-002.pdf",
+        "url": "/documents/invoices/WP-2024-002.pdf",
+        "createdDate": "2024-01-17 at 09:00 AM"
+      }
+    ],
+    "supportContacts": [
+      {
+        "type": "Customer Service",
+        "phone": "+1 (555) 123-4567",
+        "email": "support@xycargo.com",
+        "hours": "24/7"
+      },
+      {
+        "type": "Warehouse",
+        "phone": "+1 (555) 987-6543",
+        "email": "warehouse@xycargo.com",
+        "hours": "Mon-Fri 8AM-6PM"
+      }
+    ]
+  }
+}

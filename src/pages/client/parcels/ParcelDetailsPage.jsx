@@ -1,6 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Package, Truck, CheckCircle, AlertTriangle, Clock, MapPin, Download, FileText, Phone, User, Home, Mail, X } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
+import ParcelSummary from '../../../components/client/parcels/ParcelSummary';
+import ItemsList from '../../../components/client/parcels/ItemsList';
+import TrackingTimeline from '../../../components/client/parcels/TrackingTimeline';
+import ParcelActions from '../../../components/client/parcels/ParcelActions';
+import PaymentModal from '../../../components/client/parcels/PaymentModal';
+import ClaimModal from '../../../components/client/parcels/ClaimModal';
 
 const ParcelDetailsPage = () => {
   const { id } = useParams();
@@ -8,12 +14,30 @@ const ParcelDetailsPage = () => {
   const [parcel, setParcel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedParcel, setSelectedParcel] = useState(null);
+  const [modalType, setModalType] = useState(null);
 
   useEffect(() => {
     const fetchParcel = async () => {
       try {
         setError(null);
         setLoading(true);
+        // Try to fetch from detailed data first
+        try {
+          const res = await fetch('/data/parcel-details.json');
+          if (res.ok) {
+            const data = await res.json();
+            const found = data[id];
+            if (found) {
+              setParcel(found);
+              return;
+            }
+          }
+        } catch (e) {
+          console.log('Detailed data not available, falling back to basic data');
+        }
+        
+        // Fallback to basic parcels data
         const res = await fetch('/data/parcels.json');
         if (!res.ok) throw new Error('Failed to fetch parcel');
         const data = await res.json();
@@ -28,100 +52,155 @@ const ParcelDetailsPage = () => {
     fetchParcel();
   }, [id]);
 
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
-  if (error) return <div className="p-8 text-center text-red-600">{error}</div>;
-  if (!parcel) return <div className="p-8 text-center text-gray-500">Parcel not found.</div>;
-
-  const getStatusBadge = (status) => {
-    const statusMap = {
-      'AT_WAREHOUSE': { bg: 'bg-gray-100', text: 'text-gray-700', icon: Package },
-      'IN_TRANSIT': { bg: 'bg-blue-100', text: 'text-blue-700', icon: Truck },
-      'DELIVERED': { bg: 'bg-green-100', text: 'text-green-700', icon: CheckCircle },
-      'DELAYED': { bg: 'bg-red-100', text: 'text-red-700', icon: AlertTriangle },
-      'PROCESSING': { bg: 'bg-yellow-100', text: 'text-yellow-700', icon: Clock }
-    };
-    const config = statusMap[status] || statusMap['AT_WAREHOUSE'];
-    const Icon = config.icon;
-    return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bg} ${config.text}`}>
-        <Icon className="w-3 h-3 mr-1" />
-        {status.replace('_', ' ')}
-      </span>
-    );
+  const handlePayNow = (parcel) => {
+    setSelectedParcel(parcel);
+    setModalType('payment');
   };
 
-  return (
-    <div className="max-w-2xl mx-auto p-4">
-      <button onClick={() => navigate(-1)} className="mb-4 text-gray-500 hover:text-gray-700 flex items-center">
-        <X className="h-5 w-5 mr-2" /> Back
-      </button>
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Parcel Details</h2>
-          {getStatusBadge(parcel.status)}
-        </div>
-        <div className="mb-4">
-          <div className="font-semibold">Waybill: {parcel.waybillNumber}</div>
-          <div className="text-sm text-gray-500">{parcel.description}</div>
-          <div className="text-sm text-gray-500">Origin: {parcel.origin}</div>
-          <div className="text-sm text-gray-500">Destination: {parcel.destination}</div>
-          <div className="text-sm text-gray-500">Weight: {parcel.weight} kg</div>
-          <div className="text-sm text-gray-500">Cost: ${parcel.shippingCost.toFixed(2)}</div>
-        </div>
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Recipient</h4>
-          <div className="flex flex-col gap-1">
-            <span className="flex items-center text-sm"><User className="h-4 w-4 mr-2 text-gray-400" /> John Smith</span>
-            <span className="flex items-center text-sm"><Phone className="h-4 w-4 mr-2 text-gray-400" /> +1 (555) 123-4567</span>
-            <span className="flex items-center text-sm"><Mail className="h-4 w-4 mr-2 text-gray-400" /> john@example.com</span>
-            <span className="flex items-center text-sm"><Home className="h-4 w-4 mr-2 text-gray-400" /> 123 Main St, New York, NY 10001</span>
-          </div>
-        </div>
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Payment</h4>
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${parcel.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-            {parcel.paymentStatus === 'PAID' ? <CheckCircle className="w-3 h-3 mr-1" /> : <Clock className="w-3 h-3 mr-1" />}
-            {parcel.paymentStatus}
-          </span>
-          {parcel.paymentStatus === 'UNPAID' && (
-            <button className="w-full mt-3 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm">Pay Now</button>
-          )}
-        </div>
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Tracking Timeline</h4>
-          <div className="space-y-4">
-            {parcel.trackingHistory && parcel.trackingHistory.length > 0 ? (
-              parcel.trackingHistory.map((event, idx) => (
-                <div key={idx} className="flex items-start">
-                  <div className="flex-shrink-0">
-                    <div className={`w-3 h-3 rounded-full ${event.active ? 'bg-red-500' : 'bg-gray-300'}`}></div>
-                    {idx < parcel.trackingHistory.length - 1 && (
-                      <div className="w-0.5 h-8 bg-gray-200 ml-1.5"></div>
-                    )}
-                  </div>
-                  <div className="ml-4 flex-1">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className={`text-sm font-medium ${event.active ? 'text-red-700' : 'text-gray-700'}`}>{event.status}</p>
-                        <p className="text-xs text-gray-600">{event.description}</p>
-                        <p className="text-xs text-gray-500 flex items-center mt-1"><MapPin className="h-3 w-3 mr-1" />{event.location}</p>
-                      </div>
-                      <div className="text-xs text-gray-500">{event.date}</div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-gray-500 text-sm">No tracking information available yet.</div>
-            )}
-          </div>
-        </div>
-        <div className="space-y-2">
-          <button className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm"><Download className="h-4 w-4 mr-2" />Download Invoice</button>
-          {parcel.status === 'DELAYED' && (<button className="w-full flex items-center justify-center px-4 py-2 border border-red-300 text-red-700 rounded-md hover:bg-red-50 text-sm"><FileText className="h-4 w-4 mr-2" />Open Claim</button>)}
-          <button className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm"><Phone className="h-4 w-4 mr-2" />Contact Support</button>
+  const handleOpenClaim = (parcel) => {
+    setSelectedParcel(parcel);
+    setModalType('claim');
+  };
+
+  const handleRequestSpecialPackaging = (item) => {
+    console.log('Requesting special packaging for item:', item.name);
+    // Implement special packaging request logic
+  };
+
+  const handleViewSeparateParcel = (parcelId) => {
+    navigate(`/client/parcels/${parcelId}`);
+  };
+
+  const handleDownloadInvoice = (parcel) => {
+    console.log('Downloading invoice for parcel:', parcel.waybillNumber);
+    // Implement download logic
+  };
+
+  const handleContactSupport = (parcel) => {
+    console.log('Contacting support for parcel:', parcel.waybillNumber);
+    // Implement support contact logic
+  };
+
+  const handleViewSeparatedParcels = (parcel) => {
+    console.log('Viewing separated parcels for:', parcel.waybillNumber);
+    // Implement separated parcels view logic
+  };
+
+  const closeModal = () => {
+    setSelectedParcel(null);
+    setModalType(null);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Loading parcel details...</p>
         </div>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-lg font-medium">{error}</div>
+          <button
+            onClick={() => navigate('/client/parcels')}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Back to Parcels
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!parcel) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-500 text-lg font-medium">Parcel not found.</div>
+          <button
+            onClick={() => navigate('/client/parcels')}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Back to Parcels
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <button
+                onClick={() => navigate('/client/parcels')}
+                className="flex items-center text-gray-500 hover:text-gray-700 mr-4"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Parcels
+              </button>
+              <h1 className="text-xl font-semibold text-gray-900">
+                Parcel #{parcel.waybillNumber}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Parcel Summary */}
+            <ParcelSummary 
+              parcel={parcel} 
+              onPayNow={handlePayNow}
+            />
+
+            {/* Items List */}
+            {parcel.items && parcel.items.length > 0 && (
+              <ItemsList
+                items={parcel.items}
+                onRequestSpecialPackaging={handleRequestSpecialPackaging}
+                onViewSeparateParcel={handleViewSeparateParcel}
+              />
+            )}
+
+            {/* Tracking Timeline */}
+            <TrackingTimeline trackingHistory={parcel.trackingHistory} />
+          </div>
+
+          {/* Right Column - Actions */}
+          <div className="space-y-8">
+            <ParcelActions
+              parcel={parcel}
+              onDownloadInvoice={handleDownloadInvoice}
+              onOpenClaim={handleOpenClaim}
+              onContactSupport={handleContactSupport}
+              onViewSeparatedParcels={handleViewSeparatedParcels}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Modals */}
+      {modalType === 'payment' && selectedParcel && (
+        <PaymentModal parcel={selectedParcel} onClose={closeModal} />
+      )}
+      
+      {modalType === 'claim' && selectedParcel && (
+        <ClaimModal parcel={selectedParcel} onClose={closeModal} />
+      )}
     </div>
   );
 };
