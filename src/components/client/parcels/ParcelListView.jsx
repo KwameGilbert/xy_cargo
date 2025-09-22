@@ -1,5 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { 
   Package, 
   Truck, 
@@ -218,12 +216,5 @@ const ParcelListView = ({
   );
 };
 
-ParcelListView.propTypes = {
-  parcels: PropTypes.array.isRequired,
-  onViewDetails: PropTypes.func.isRequired,
-  onPay: PropTypes.func.isRequired,
-  onTrack: PropTypes.func.isRequired,
-  isMobile: PropTypes.bool
-};
 
 export default ParcelListView;
