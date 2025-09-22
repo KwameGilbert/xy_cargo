@@ -1,0 +1,1 @@
+Review the selected page and or section and refactor all errors and bring to best practices standards

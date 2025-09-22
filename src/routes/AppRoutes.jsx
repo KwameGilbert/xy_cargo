@@ -1,4 +1,6 @@
-import { Routes, Route } from "react-router";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
 // Public pages
 import HomePage from "../pages/public_pages/home/HomePage";
 import Pricing from "../pages/public_pages/pricing/Pricing";
@@ -25,39 +27,37 @@ import ClientSupport from "../pages/client/support/ClientSupport";
 
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
-const AppRoutes = () => {
-  return (
-    <Routes>
-      {/* Public Routes - wrapped in MainLayout */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/tracking" element={<PackageTracking />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/calculator" element={<ShippingCalculator />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/support" element={<SupportPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/how-we-work" element={<HowWeWorkPage />} />
-        <Route path="/about" element={<AboutPage />} />
-      </Route>
+const AppRoutes = () => (
+  <Routes>
+    {/* Public Routes - wrapped in MainLayout */}
+    <Route element={<MainLayout />}>
+      <Route index element={<HomePage />} />
+      <Route path="pricing" element={<Pricing />} />
+      <Route path="tracking" element={<PackageTracking />} />
+      <Route path="locations" element={<Locations />} />
+      <Route path="calculator" element={<ShippingCalculator />} />
+      <Route path="contact" element={<Contact />} />
+      <Route path="support" element={<SupportPage />} />
+      <Route path="services" element={<ServicesPage />} />
+      <Route path="how-we-work" element={<HowWeWorkPage />} />
+      <Route path="about" element={<AboutPage />} />
+    </Route>
 
-      {/* Auth Routes */}
-      <Route path="/client/auth/login" element={<ClientLogin />} />
-      <Route path="/client/auth/signup" element={<ClientSignup />} />
+    {/* Auth Routes */}
+    <Route path="client/auth/login" element={<ClientLogin />} />
+    <Route path="client/auth/signup" element={<ClientSignup />} />
 
-      {/* Client Routes - wrapped in ClientLayout */}
-      <Route element={<ClientLayout />}>
-        <Route path="/client/dashboard" element={<Dashboard />} />
-        <Route path="/client/parcels" element={<ParcelsPage />} />
-        <Route path="/client/parcels/:id" element={<ParcelDetailsPage />} />
-        <Route path="/client/payments" element={<ClientPayments />} />
-        <Route path="/client/notifications" element={<Notifications />} />
-        <Route path="/client/addresses" element={<ClientAddresses />} />
-        <Route path="/client/support" element={<ClientSupport />} />
-      </Route>
-    </Routes>
-  );
-};
+    {/* Client Routes - wrapped in ClientLayout */}
+    <Route element={<ClientLayout />}>
+      <Route path="client/dashboard" element={<Dashboard />} />
+      <Route path="client/parcels" element={<ParcelsPage />} />
+      <Route path="client/parcels/:id" element={<ParcelDetailsPage />} />
+      <Route path="client/payments" element={<ClientPayments />} />
+      <Route path="client/notifications" element={<Notifications />} />
+      <Route path="client/addresses" element={<ClientAddresses />} />
+      <Route path="client/support" element={<ClientSupport />} />
+    </Route>
+  </Routes>
+);
 
 export default AppRoutes;

@@ -1,4 +1,5 @@
 // src/components/client/layout/ClientLayout.jsx
+import React from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
