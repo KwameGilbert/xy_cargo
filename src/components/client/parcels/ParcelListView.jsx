@@ -20,9 +20,9 @@ const ParcelListView = ({
     const statusMap = {
       'AT_WAREHOUSE': { bg: 'bg-gray-100', text: 'text-gray-700', icon: Package },
       'IN_TRANSIT': { bg: 'bg-blue-100', text: 'text-blue-700', icon: Truck },
+      'PROCESSING': { bg: 'bg-yellow-100', text: 'text-yellow-700', icon: Clock },
       'DELIVERED': { bg: 'bg-green-100', text: 'text-green-700', icon: CheckCircle },
-      'DELAYED': { bg: 'bg-red-100', text: 'text-red-700', icon: AlertTriangle },
-      'PROCESSING': { bg: 'bg-yellow-100', text: 'text-yellow-700', icon: Clock }
+      'DELAYED': { bg: 'bg-red-100', text: 'text-red-700', icon: AlertTriangle }
     };
     
     const statusKey = status.toUpperCase();
@@ -53,7 +53,7 @@ const ParcelListView = ({
     return (
       <div className="space-y-4">
         {parcels.map((parcel) => (
-          <div key={parcel.id} className="bg-white rounded-lg shadow-sm border p-4">
+          <div key={parcel.id} className="bg-white rounded-lg shadow-sm border border-gray-300 p-4">
             {/* Card Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center">
@@ -121,9 +121,8 @@ const ParcelListView = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="bg-white rounded-lg shadow-sm border-gray-300 max-w-full overflow-x-auto">
+        <table className="divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -159,7 +158,7 @@ const ParcelListView = ({
                     </div>
                     <div className="ml-2">
                       <div className="text-base font-semibold text-gray-900">{parcel.waybillNumber}</div>
-                      <div className="text-xs text-gray-500">{parcel.description}</div>
+                      <div className="text-xs text-gray-500 whitespace-pre-wrap">{parcel.description}</div>
                     </div>
                   </div>
                 </td>
@@ -177,7 +176,7 @@ const ParcelListView = ({
                 <td className="px-4 py-4 whitespace-nowrap">
                   {getPaymentBadge(parcel.paymentStatus)}
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap text-xs text-gray-500">
+                <td className="px-4 py-4 whitespace-pre-wrap text-xs text-gray-500">
                   {parcel.lastUpdate}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -212,9 +211,7 @@ const ParcelListView = ({
           </tbody>
         </table>
       </div>
-    </div>
   );
 };
-
 
 export default ParcelListView;

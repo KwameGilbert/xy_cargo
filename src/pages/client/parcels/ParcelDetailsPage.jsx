@@ -1,12 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, X } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import ParcelSummary from '../../../components/client/parcels/ParcelSummary';
 import ItemsList from '../../../components/client/parcels/ItemsList';
 import TrackingTimeline from '../../../components/client/parcels/TrackingTimeline';
 import ParcelActions from '../../../components/client/parcels/ParcelActions';
 import PaymentModal from '../../../components/client/parcels/PaymentModal';
-import ClaimModal from '../../../components/client/parcels/ClaimModal';
+import ClientLayout from '../../../components/client/layout/ClientLayout';
 
 const ParcelDetailsPage = () => {
   const { id } = useParams();
@@ -57,11 +57,6 @@ const ParcelDetailsPage = () => {
     setModalType('payment');
   };
 
-  const handleOpenClaim = (parcel) => {
-    setSelectedParcel(parcel);
-    setModalType('claim');
-  };
-
   const handleRequestSpecialPackaging = (item) => {
     console.log('Requesting special packaging for item:', item.name);
     // Implement special packaging request logic
@@ -93,17 +88,20 @@ const ParcelDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <ClientLayout>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
           <p className="mt-2 text-gray-600">Loading parcel details...</p>
         </div>
       </div>
+    </ClientLayout>
     );
   }
 
   if (error) {
     return (
+      <ClientLayout>
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-600 text-lg font-medium">{error}</div>
@@ -115,12 +113,14 @@ const ParcelDetailsPage = () => {
           </button>
         </div>
       </div>
+      </ClientLayout>
     );
   }
 
   if (!parcel) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+     <ClientLayout>
+       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="text-gray-500 text-lg font-medium">Parcel not found.</div>
           <button
@@ -131,11 +131,13 @@ const ParcelDetailsPage = () => {
           </button>
         </div>
       </div>
+     </ClientLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <ClientLayout>
+       <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -185,7 +187,6 @@ const ParcelDetailsPage = () => {
             <ParcelActions
               parcel={parcel}
               onDownloadInvoice={handleDownloadInvoice}
-              onOpenClaim={handleOpenClaim}
               onContactSupport={handleContactSupport}
               onViewSeparatedParcels={handleViewSeparatedParcels}
             />
@@ -193,15 +194,12 @@ const ParcelDetailsPage = () => {
         </div>
       </div>
 
-      {/* Modals */}
+      {/* Payment Modal */}
       {modalType === 'payment' && selectedParcel && (
         <PaymentModal parcel={selectedParcel} onClose={closeModal} />
       )}
-      
-      {modalType === 'claim' && selectedParcel && (
-        <ClaimModal parcel={selectedParcel} onClose={closeModal} />
-      )}
     </div>
+    </ClientLayout>
   );
 };
 

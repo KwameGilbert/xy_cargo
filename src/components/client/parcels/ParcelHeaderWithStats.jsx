@@ -8,7 +8,7 @@ const ParcelHeaderWithStats = ({
   onExport 
 }) => {
   return (
-    <div className="mb-6">
+    <div className="mb-4">
       {/* Title Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <div className="mb-4 sm:mb-0">
@@ -32,7 +32,7 @@ const ParcelHeaderWithStats = ({
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-        <div className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-300 hover:shadow-md transition-shadow">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Package className="h-6 w-6 text-blue-600" />
@@ -44,7 +44,7 @@ const ParcelHeaderWithStats = ({
           </div>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 rounded-lg shadow-sm border-gray-300 hover:shadow-md transition-shadow">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Package className="h-6 w-6 text-green-600" />
@@ -56,7 +56,7 @@ const ParcelHeaderWithStats = ({
           </div>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 rounded-lg shadow-sm border-gray-300 hover:shadow-md transition-shadow">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Package className="h-6 w-6 text-red-600" />
@@ -68,7 +68,7 @@ const ParcelHeaderWithStats = ({
           </div>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 rounded-lg shadow-sm border-gray-300 hover:shadow-md transition-shadow">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Package className="h-6 w-6 text-green-600" />

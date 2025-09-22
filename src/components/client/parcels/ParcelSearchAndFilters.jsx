@@ -13,7 +13,7 @@ const ParcelSearchAndFilters = ({
   placeholder = "Search by waybill, recipient, or status..."
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-4 mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-300 p-4 mb-4">
       {/* Search Bar */}
       <div className="mb-4">
         <div className="relative">
@@ -105,7 +105,7 @@ const ParcelSearchAndFilters = ({
 
       {/* Filter Options */}
       {showFilters && (
-        <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="mt-6 pt-6 border-t border-gray-300">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Status Filter */}
             <div>
