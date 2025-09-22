@@ -1,20 +1,51 @@
 import React from 'react';
-import { Filter, ChevronDown, ChevronRight, X } from 'lucide-react';
+import { Search, X, Filter, ChevronDown, ChevronRight } from 'lucide-react';
 
-const ParcelFilters = ({ 
+const ParcelSearchAndFilters = ({ 
+  searchQuery, 
+  onSearchChange, 
+  onClearSearch,
   filters, 
   onFilterChange, 
   showFilters, 
   onToggleFilters,
-  onClearFilters 
+  onClearFilters,
+  placeholder = "Search by waybill, recipient, or status..."
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-4">
-      <div className="flex flex-col md:flex-row gap-4">
+    <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+      {/* Search Bar */}
+      <div className="mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base"
+            placeholder={placeholder}
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+          {searchQuery && (
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <button
+                onClick={onClearSearch}
+                className="text-gray-400 hover:text-gray-600 focus:outline-none"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Filters Section */}
+      <div className="flex flex-col gap-4">
         {/* Filter Toggle Button */}
         <button
           onClick={onToggleFilters}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors w-fit"
         >
           <Filter className="h-4 w-4 mr-2" />
           Filters
@@ -74,11 +105,11 @@ const ParcelFilters = ({
 
       {/* Filter Options */}
       {showFilters && (
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Status Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
               <select
                 value={filters.status}
                 onChange={(e) => onFilterChange({ ...filters, status: e.target.value })}
@@ -95,7 +126,7 @@ const ParcelFilters = ({
 
             {/* Payment Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Payment</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Payment</label>
               <select
                 value={filters.payment}
                 onChange={(e) => onFilterChange({ ...filters, payment: e.target.value })}
@@ -109,7 +140,7 @@ const ParcelFilters = ({
 
             {/* Warehouse Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Warehouse</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Warehouse</label>
               <select
                 value={filters.warehouse}
                 onChange={(e) => onFilterChange({ ...filters, warehouse: e.target.value })}
@@ -125,7 +156,7 @@ const ParcelFilters = ({
 
             {/* Date Range Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
               <select
                 value={filters.dateRange}
                 onChange={(e) => onFilterChange({ ...filters, dateRange: e.target.value })}
@@ -141,7 +172,7 @@ const ParcelFilters = ({
           </div>
 
           {/* Clear Filters Button */}
-          <div className="mt-4 flex justify-end">
+          <div className="mt-6 flex justify-end">
             <button
               onClick={onClearFilters}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm font-medium transition-colors"
@@ -155,4 +186,4 @@ const ParcelFilters = ({
   );
 };
 
-export default ParcelFilters;
+export default ParcelSearchAndFilters;
