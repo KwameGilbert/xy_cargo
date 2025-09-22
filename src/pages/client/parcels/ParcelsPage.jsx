@@ -142,7 +142,7 @@ const ParcelsPage = () => {
   if (loading) {
     return (
       <ClientLayout>
-        <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="p-2 bg-gray-50 min-h-screen">
           <ParcelLoadingState />
         </div>
       </ClientLayout>
@@ -151,7 +151,7 @@ const ParcelsPage = () => {
 
   return (
     <ClientLayout>
-      <div className="p-2 bg-gray-50 min-h-screen w-full">
+      <div className="p-2 bg-gray-50 min-h-screen">
         <div className="mx-auto">
           {/* Header with Stats */}
           <ParcelHeaderWithStats

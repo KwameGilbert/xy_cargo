@@ -1,19 +1,17 @@
-import React from 'react';
-import { Package, Plus, Download } from 'lucide-react';
+import { Package, Download } from 'lucide-react';
 
 const ParcelHeaderWithStats = ({ 
   totalParcels, 
   inTransitCount, 
   unpaidCount, 
   deliveredCount,
-  onNewParcel,
   onExport 
 }) => {
   return (
-    <div className="mb-4">
+    <div className="mb-6">
       {/* Title Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="mb-4 sm:mb-0">
           <h1 className="text-2xl font-bold text-gray-900">Parcels</h1>
           <p className="text-gray-600 mt-1 text-sm">
             Manage and track all your parcels in one place
@@ -21,15 +19,7 @@ const ParcelHeaderWithStats = ({
         </div>
         
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-0">
-          <button
-            onClick={onNewParcel}
-            className="inline-flex items-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-medium text-sm"
-          >
-            <Plus className="h-4 w-4 mr-1.5" />
-            New Parcel
-          </button>
-          
+        <div className="flex items-center">
           <button
             onClick={onExport}
             className="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-medium text-sm"
@@ -41,7 +31,7 @@ const ParcelHeaderWithStats = ({
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
         <div className="bg-white p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
           <div className="flex items-center">
             <div className="flex-shrink-0">
