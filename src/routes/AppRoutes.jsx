@@ -48,7 +48,7 @@ const AppRoutes = () => (
     <Route path="client/auth/signup" element={<ClientSignup />} />
 
     {/* Client Routes - wrapped in ClientLayout */}
-    <Route element={<ClientLayout />}>
+   
       <Route path="client/dashboard" element={<Dashboard />} />
       <Route path="client/parcels" element={<ParcelsPage />} />
       <Route path="client/parcels/:id" element={<ParcelDetailsPage />} />
@@ -56,7 +56,7 @@ const AppRoutes = () => (
       <Route path="client/notifications" element={<Notifications />} />
       <Route path="client/addresses" element={<ClientAddresses />} />
       <Route path="client/support" element={<ClientSupport />} />
-    </Route>
+ 
   </Routes>
 );
 

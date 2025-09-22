@@ -152,7 +152,7 @@ const ParcelsPage = () => {
 
   return (
     <ClientLayout>
-      <div className="p-4 bg-gray-50 min-h-screen">
+      <div className="p-2 bg-gray-50 min-h-screen">
         {/* Header */}
         <ParcelHeader
           totalParcels={totalParcels}
