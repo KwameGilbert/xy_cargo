@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import createMockAdapter from '../../../services/mockAdapter';
-import addressesData from '../../../../public/data/addresses.json';
 import { showToastSync as showToast } from '../../../utils/toast';
 import ClientLayout from '../../../components/client/layout/ClientLayout';
 import AddressesList from '../../../components/client/addresses/AddressesList';
@@ -33,7 +32,8 @@ const Addresses = () => {
     // Use the JSON module directly for initial page data (more reliable than fetching '/src/...')
     const fetchData = async () => {
       try {
-        const resData = addressesData;
+        const response = await fetch('/data/addresses.json');
+        const resData = await response.json();
         setAddressesState(resData.addresses || []);
         setData({
           addresses: resData.addresses || [],

@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ClientLayout from '../../../components/client/layout/ClientLayout';
-import ParcelHeader from '../../../components/client/parcels/ParcelHeader';
-import ParcelSearchBar from '../../../components/client/parcels/ParcelSearchBar';
-import ParcelFilters from '../../../components/client/parcels/ParcelFilters';
-import ParcelList from '../../../components/client/parcels/ParcelList';
+import ParcelHeaderWithStats from '../../../components/client/parcels/ParcelHeaderWithStats';
+import ParcelSearchAndFilters from '../../../components/client/parcels/ParcelSearchAndFilters';
+import ParcelListView from '../../../components/client/parcels/ParcelListView';
 import ParcelLoadingState from '../../../components/client/parcels/ParcelLoadingState';
 import ParcelEmptyState from '../../../components/client/parcels/ParcelEmptyState';
 import PaymentModal from '../../../components/client/parcels/PaymentModal';
@@ -143,7 +142,7 @@ const ParcelsPage = () => {
   if (loading) {
     return (
       <ClientLayout>
-        <div className="p-4 bg-gray-50 min-h-screen">
+        <div className="p-2 bg-gray-50 min-h-screen">
           <ParcelLoadingState />
         </div>
       </ClientLayout>
@@ -153,70 +152,62 @@ const ParcelsPage = () => {
   return (
     <ClientLayout>
       <div className="p-2 bg-gray-50 min-h-screen">
-        {/* Header */}
-        <ParcelHeader
-          totalParcels={totalParcels}
-          inTransitCount={inTransitCount}
-          unpaidCount={unpaidCount}
-          deliveredCount={deliveredCount}
-          onNewParcel={handleNewParcel}
-          onExport={handleExport}
-        />
+        <div className="max-w-6xl mx-auto">
+          {/* Header with Stats */}
+          <ParcelHeaderWithStats
+            totalParcels={totalParcels}
+            inTransitCount={inTransitCount}
+            unpaidCount={unpaidCount}
+            deliveredCount={deliveredCount}
+            onNewParcel={handleNewParcel}
+            onExport={handleExport}
+          />
 
-        {/* Search and Filters */}
-        <div className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
-            <div className="flex-grow">
-              <ParcelSearchBar
-                searchQuery={searchQuery}
-                onSearchChange={handleSearchChange}
-                onClearSearch={handleClearSearch}
-                placeholder="Search by waybill, recipient, or status..."
-              />
-            </div>
-          </div>
-          
-          <ParcelFilters
+          {/* Search and Filters */}
+          <ParcelSearchAndFilters
+            searchQuery={searchQuery}
+            onSearchChange={handleSearchChange}
+            onClearSearch={handleClearSearch}
             filters={filters}
             onFilterChange={handleFilterChange}
             showFilters={showFilters}
             onToggleFilters={handleToggleFilters}
             onClearFilters={handleClearFilters}
+            placeholder="Search by waybill, recipient, or status..."
           />
+
+          {/* Parcels List */}
+          {filteredParcels.length === 0 ? (
+            <ParcelEmptyState
+              hasFilters={hasActiveFilters || searchQuery}
+              onClearFilters={handleClearFilters}
+              onNewParcel={handleNewParcel}
+            />
+          ) : (
+            <ParcelListView
+              parcels={filteredParcels}
+              onViewDetails={handleViewDetails}
+              onPay={handlePay}
+              onClaim={handleClaim}
+              onTrack={handleTrack}
+              expandedParcel={expandedParcel}
+              onToggleExpanded={setExpandedParcel}
+              isMobile={isMobile}
+            />
+          )}
+
+          {/* Modals */}
+          {modalType === 'payment' && selectedParcel && (
+            <PaymentModal parcel={selectedParcel} onClose={closeModal} />
+          )}
+          
+          {modalType === 'claim' && selectedParcel && (
+            <ClaimModal parcel={selectedParcel} onClose={closeModal} />
+          )}
         </div>
-
-        {/* Parcels List */}
-        {filteredParcels.length === 0 ? (
-          <ParcelEmptyState
-            hasFilters={hasActiveFilters || searchQuery}
-            onClearFilters={handleClearFilters}
-            onNewParcel={handleNewParcel}
-          />
-        ) : (
-          <ParcelList
-            parcels={filteredParcels}
-            onViewDetails={handleViewDetails}
-            onPay={handlePay}
-            onClaim={handleClaim}
-            onTrack={handleTrack}
-            expandedParcel={expandedParcel}
-            onToggleExpanded={setExpandedParcel}
-            isMobile={isMobile}
-          />
-        )}
-
-        {/* Modals */}
-        {modalType === 'payment' && selectedParcel && (
-          <PaymentModal parcel={selectedParcel} onClose={closeModal} />
-        )}
-        
-        {modalType === 'claim' && selectedParcel && (
-          <ClaimModal parcel={selectedParcel} onClose={closeModal} />
-        )}
       </div>
     </ClientLayout>
   );
 };
-
 
 export default ParcelsPage;
