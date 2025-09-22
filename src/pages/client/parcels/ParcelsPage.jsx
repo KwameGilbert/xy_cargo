@@ -152,7 +152,7 @@ const ParcelsPage = () => {
   return (
     <ClientLayout>
       <div className="p-2 bg-gray-50 min-h-screen">
-        <div className="mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Header with Stats */}
           <ParcelHeaderWithStats
             totalParcels={totalParcels}
@@ -209,6 +209,5 @@ const ParcelsPage = () => {
     </ClientLayout>
   );
 };
-
 
 export default ParcelsPage;
