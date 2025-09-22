@@ -151,8 +151,8 @@ const ParcelsPage = () => {
 
   return (
     <ClientLayout>
-      <div className="p-6 bg-gray-50 min-h-screen">
-        <div className="max-w-7xl mx-auto">
+      <div className="p-2 bg-gray-50 min-h-screen w-full">
+        <div className="mx-auto">
           {/* Header with Stats */}
           <ParcelHeaderWithStats
             totalParcels={totalParcels}
