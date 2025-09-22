@@ -8,13 +8,11 @@ import ParcelListView from '../../../components/client/parcels/ParcelListView';
 import ParcelLoadingState from '../../../components/client/parcels/ParcelLoadingState';
 import ParcelEmptyState from '../../../components/client/parcels/ParcelEmptyState';
 import PaymentModal from '../../../components/client/parcels/PaymentModal';
-import ClaimModal from '../../../components/client/parcels/ClaimModal';
 
 const ParcelsPage = () => {
   const navigate = useNavigate();
   const [parcels, setParcels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedParcel, setExpandedParcel] = useState(null);
   const [filters, setFilters] = useState({
     status: 'all',
     payment: 'all',
@@ -31,7 +29,8 @@ const ParcelsPage = () => {
     const fetchData = async () => {
       try {
         const parcelsRes = await axios.get('/data/parcels.json');
-        setParcels(parcelsRes.data);
+        const parcels = Array.isArray(parcelsRes.data) ? parcelsRes.data : [];
+        setParcels(parcels);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -54,20 +53,21 @@ const ParcelsPage = () => {
   }, []);
 
   // Filter parcels based on search and filters
+  const normalizedSearchQuery = searchQuery.toLowerCase();
   const filteredParcels = parcels.filter(parcel => {
     const matchesSearch = !searchQuery || 
-      parcel.waybillNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      parcel.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      parcel.trackingNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (parcel.recipient?.name && parcel.recipient.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      parcel.waybillNumber.toLowerCase().includes(normalizedSearchQuery) ||
+      parcel.description.toLowerCase().includes(normalizedSearchQuery) ||
+      parcel.trackingNumber.toLowerCase().includes(normalizedSearchQuery) ||
+      (parcel.recipient?.name && parcel.recipient.name.toLowerCase().includes(normalizedSearchQuery));
 
     const matchesStatus = filters.status === 'all' || 
       parcel.status === filters.status;
 
     const matchesPayment = filters.payment === 'all' || 
       parcel.paymentStatus === filters.payment;
-
     const matchesWarehouse = filters.warehouse === 'all' || 
+      parcel.originWarehouse === filters.warehouse ||
       parcel.originWarehouse?.includes(filters.warehouse);
 
     return matchesSearch && matchesStatus && matchesPayment && matchesWarehouse;
@@ -88,23 +88,16 @@ const ParcelsPage = () => {
     setModalType('payment');
   };
 
-  const handleClaim = (parcel) => {
-    setSelectedParcel(parcel);
-    setModalType('claim');
-  };
-
   const handleTrack = (parcel) => {
-    setExpandedParcel(expandedParcel === parcel.id ? null : parcel.id);
-  };
-
-  const handleNewParcel = () => {
-    // Navigate to new parcel creation page
-    navigate('/client/parcels/new');
+    // For now, navigate to the same details page
+    // Later this can be updated to a dedicated tracking page
+    navigate(`/client/parcels/${parcel.id}`);
   };
 
   const handleExport = () => {
     // Implement export functionality
-    console.log('Export parcels');
+    // TODO: Implement export functionality for parcels
+        console.log('Export parcels');
   };
 
   const handleSearchChange = (query) => {
@@ -159,7 +152,6 @@ const ParcelsPage = () => {
             inTransitCount={inTransitCount}
             unpaidCount={unpaidCount}
             deliveredCount={deliveredCount}
-            onNewParcel={handleNewParcel}
             onExport={handleExport}
           />
 
@@ -179,19 +171,15 @@ const ParcelsPage = () => {
           {/* Parcels List */}
           {filteredParcels.length === 0 ? (
             <ParcelEmptyState
-              hasFilters={hasActiveFilters || searchQuery}
+              hasFilters={hasActiveFilters || !!searchQuery}
               onClearFilters={handleClearFilters}
-              onNewParcel={handleNewParcel}
             />
           ) : (
             <ParcelListView
               parcels={filteredParcels}
               onViewDetails={handleViewDetails}
               onPay={handlePay}
-              onClaim={handleClaim}
               onTrack={handleTrack}
-              expandedParcel={expandedParcel}
-              onToggleExpanded={setExpandedParcel}
               isMobile={isMobile}
             />
           )}
@@ -199,10 +187,6 @@ const ParcelsPage = () => {
           {/* Modals */}
           {modalType === 'payment' && selectedParcel && (
             <PaymentModal parcel={selectedParcel} onClose={closeModal} />
-          )}
-          
-          {modalType === 'claim' && selectedParcel && (
-            <ClaimModal parcel={selectedParcel} onClose={closeModal} />
           )}
         </div>
       </div>

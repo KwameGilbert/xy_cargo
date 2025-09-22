@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { 
   Package, 
   Truck, 
@@ -6,21 +7,15 @@ import {
   AlertTriangle, 
   Clock, 
   Eye, 
-  CreditCard, 
-  FileText,
-  MapPin,
-  Calendar,
-  DollarSign
+  CreditCard,
+  MapPin
 } from 'lucide-react';
 
 const ParcelListView = ({ 
   parcels, 
   onViewDetails, 
   onPay, 
-  onClaim, 
   onTrack,
-  expandedParcel,
-  onToggleExpanded,
   isMobile = false 
 }) => {
   const getStatusBadge = (status) => {
@@ -60,7 +55,7 @@ const ParcelListView = ({
     return (
       <div className="space-y-4">
         {parcels.map((parcel) => (
-          <div key={parcel.id} className="bg-white rounded-lg shadow-sm border p-4 hover:shadow-md transition-shadow">
+          <div key={parcel.id} className="bg-white rounded-lg shadow-sm border p-4">
             {/* Card Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center">
@@ -93,7 +88,7 @@ const ParcelListView = ({
               </div>
             </div>
 
-            {/* Card Footer */}
+            {/* Updated Card Footer */}
             <div className="flex justify-between items-center pt-3 border-t border-gray-100">
               <div className="flex space-x-4">
                 <button
@@ -112,20 +107,12 @@ const ParcelListView = ({
                     Pay
                   </button>
                 )}
-                {parcel.status === 'DELAYED' && (
-                  <button
-                    onClick={() => onClaim(parcel)}
-                    className="text-red-600 hover:text-red-900 flex items-center text-sm font-medium"
-                  >
-                    <FileText className="h-3.5 w-3.5 mr-1" />
-                    Claim
-                  </button>
-                )}
               </div>
               <button
                 onClick={() => onTrack(parcel)}
-                className="text-gray-600 hover:text-gray-900 text-sm font-medium"
+                className="text-gray-600 hover:text-gray-900 flex items-center text-sm font-medium"
               >
+                <MapPin className="h-3.5 w-3.5 mr-1" />
                 Track
               </button>
             </div>
@@ -136,9 +123,9 @@ const ParcelListView = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-auto">
+    <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="max-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -166,123 +153,77 @@ const ParcelListView = ({
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {parcels.map((parcel) => (
-              <React.Fragment key={parcel.id}>
-                <tr className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <Package className="h-6 w-6 text-gray-400" />
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-base font-semibold text-gray-900">{parcel.waybillNumber}</div>
-                        <div className="text-xs text-gray-500">{parcel.description}</div>
-                      </div>
+              <tr key={parcel.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Package className="h-6 w-6 text-gray-400" />
                     </div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    {getStatusBadge(parcel.status)}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{parcel.recipient?.name || 'N/A'}</div>
-                    <div className="text-xs text-gray-500">{parcel.recipient?.phone || ''}</div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{parcel.weight} kg</div>
-                    <div className="text-xs text-gray-500">${parcel.shippingCost.toFixed(2)}</div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    {getPaymentBadge(parcel.paymentStatus)}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-xs text-gray-500">
-                    {parcel.lastUpdate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2.5">
+                    <div className="ml-2">
+                      <div className="text-base font-semibold text-gray-900">{parcel.waybillNumber}</div>
+                      <div className="text-xs text-gray-500">{parcel.description}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap">
+                  {getStatusBadge(parcel.status)}
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{parcel.recipient?.name || 'N/A'}</div>
+                  <div className="text-xs text-gray-500">{parcel.recipient?.phone || ''}</div>
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{parcel.weight} kg</div>
+                  <div className="text-xs text-gray-500">${parcel.shippingCost.toFixed(2)}</div>
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap">
+                  {getPaymentBadge(parcel.paymentStatus)}
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap text-xs text-gray-500">
+                  {parcel.lastUpdate}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex space-x-2.5">
+                    <button
+                      onClick={() => onViewDetails(parcel)}
+                      className="text-blue-600 hover:text-blue-900 flex items-center font-medium text-sm"
+                    >
+                      <Eye className="h-3.5 w-3.5 mr-1" />
+                      View
+                    </button>
+                    {parcel.paymentStatus === 'UNPAID' && (
                       <button
-                        onClick={() => onViewDetails(parcel)}
-                        className="text-blue-600 hover:text-blue-900 flex items-center font-medium text-sm"
+                        onClick={() => onPay(parcel)}
+                        className="text-green-600 hover:text-green-900 flex items-center font-medium text-sm"
                       >
-                        <Eye className="h-3.5 w-3.5 mr-1" />
-                        View
+                        <CreditCard className="h-3.5 w-3.5 mr-1" />
+                        Pay
                       </button>
-                      {parcel.paymentStatus === 'UNPAID' && (
-                        <button
-                          onClick={() => onPay(parcel)}
-                          className="text-green-600 hover:text-green-900 flex items-center font-medium text-sm"
-                        >
-                          <CreditCard className="h-3.5 w-3.5 mr-1" />
-                          Pay
-                        </button>
-                      )}
-                      {parcel.status === 'DELAYED' && (
-                        <button
-                          onClick={() => onClaim(parcel)}
-                          className="text-red-600 hover:text-red-900 flex items-center font-medium text-sm"
-                        >
-                          <FileText className="h-3.5 w-3.5 mr-1" />
-                          Claim
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                
-                {/* Expanded Tracking Timeline */}
-                {expandedParcel === parcel.id && (
-                  <tr>
-                    <td colSpan="7" className="px-6 py-4 bg-gray-50">
-                      <div className="border-l-4 border-red-500 pl-4">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-4">Tracking Timeline</h4>
-                        <div className="space-y-4">
-                          {parcel.trackingHistory && parcel.trackingHistory.length > 0 ? (
-                            parcel.trackingHistory.map((event, idx) => (
-                              <div key={idx} className="flex items-start">
-                                <div className="flex-shrink-0">
-                                  <div className={`w-3.5 h-3.5 rounded-full ${
-                                    event.active ? 'bg-red-500' : 'bg-gray-300'
-                                  }`}></div>
-                                  {idx < parcel.trackingHistory.length - 1 && (
-                                    <div className="w-0.5 h-8 bg-gray-200 ml-2"></div>
-                                  )}
-                                </div>
-                                <div className="ml-4 flex-1">
-                                  <div className="flex justify-between items-start">
-                                    <div>
-                                      <p className={`font-semibold text-base ${
-                                        event.active ? 'text-red-700' : 'text-gray-700'
-                                      }`}>
-                                        {event.status}
-                                      </p>
-                                      <p className="text-gray-600 mt-0.5 text-sm">{event.description}</p>
-                                      <p className="text-xs text-gray-500 flex items-center mt-1.5">
-                                        <MapPin className="h-3.5 w-3.5 mr-1" />
-                                        {event.location}
-                                      </p>
-                                    </div>
-                                    <div className="text-xs text-gray-500">
-                                      {event.date}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="text-gray-500 text-sm">
-                              No tracking information available yet.
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
+                    )}
+                    <button
+                      onClick={() => onTrack(parcel)}
+                      className="text-gray-600 hover:text-gray-900 flex items-center font-medium text-sm"
+                    >
+                      <MapPin className="h-3.5 w-3.5 mr-1" />
+                      Track
+                    </button>
+                  </div>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
       </div>
     </div>
   );
+};
+
+ParcelListView.propTypes = {
+  parcels: PropTypes.array.isRequired,
+  onViewDetails: PropTypes.func.isRequired,
+  onPay: PropTypes.func.isRequired,
+  onTrack: PropTypes.func.isRequired,
+  isMobile: PropTypes.bool
 };
 
 export default ParcelListView;
