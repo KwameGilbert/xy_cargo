@@ -14,7 +14,6 @@ import HowWeWorkPage from "../pages/public_pages/howwework/HowWeWork";
 import AboutPage from "../pages/public_pages/about/About";
 
 // Client pages
-import ClientLayout from "../components/client/layout/ClientLayout";
 import ClientLogin from "../pages/client/auth/login";
 import ClientSignup from "../pages/client/auth/signup";
 import Dashboard from "../pages/client/dashboard/Dashboard";
@@ -24,8 +23,11 @@ import ClientPayments from "../pages/client/payments/Payments";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
-
 import MainLayout from "../components/public_pages/layout/MainLayout";
+
+
+//Warehouse Pages
+import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard";
 
 const AppRoutes = () => (
   <Routes>
@@ -43,7 +45,7 @@ const AppRoutes = () => (
       <Route path="about" element={<AboutPage />} />
     </Route>
 
-    {/* Auth Routes */}
+    {/* Client Auth Routes */}
     <Route path="client/auth/login" element={<ClientLogin />} />
     <Route path="client/auth/signup" element={<ClientSignup />} />
 
@@ -56,7 +58,11 @@ const AppRoutes = () => (
       <Route path="client/notifications" element={<Notifications />} />
       <Route path="client/addresses" element={<ClientAddresses />} />
       <Route path="client/support" element={<ClientSupport />} />
- 
+
+
+
+    {/* Warehouse Routes - wrapped in WarehouseLayout */}
+      <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />
   </Routes>
 );
 
