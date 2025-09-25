@@ -30,7 +30,7 @@ const RecentActivityFeed = ({ activities }) => {
               onClick={() => console.log('Navigate to', activity.link)}
             >
               <div className="flex-shrink-0 mr-3">
-                <Icon className="w-5 h-5 text-gray-600" />
+                <Icon className="w-5 h-5 text-red-500" />
               </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-800">{activity.message}</p>
