@@ -28,6 +28,10 @@ import MainLayout from "../components/public_pages/layout/MainLayout";
 
 //Warehouse Pages
 import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard";
+import WarehouseParcelsPage from "../pages/warehouse/parcels/WarehouseParcelsPage";
+import WarehouseParcelDetailPage from "../pages/warehouse/parcels/WarehouseParcelDetailPage";
+import CreateWarehouseParcelPage from "../pages/warehouse/parcels/CreateWarehouseParcelPage";
+import BulkUpdatePage from "../pages/warehouse/parcels/BulkUpdatePage";
 
 const AppRoutes = () => (
   <Routes>
@@ -63,6 +67,11 @@ const AppRoutes = () => (
 
     {/* Warehouse Routes - wrapped in WarehouseLayout */}
       <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />
+      <Route path="warehouse/parcels" element={<WarehouseParcelsPage />} />
+      <Route path="warehouse/parcels/create" element={<CreateWarehouseParcelPage />} />
+      <Route path="warehouse/parcels/bulk-update" element={<BulkUpdatePage />} />
+      <Route path="warehouse/parcels/:id" element={<WarehouseParcelDetailPage />} />
+
   </Routes>
 );
 
