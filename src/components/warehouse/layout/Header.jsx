@@ -6,7 +6,7 @@ const Header = () => {
 
   // Fallback to localStorage since AuthProvider may not be present
   const stored = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-  const currentUser = stored ? JSON.parse(stored) : { name: "Client" };
+  const currentUser = stored ? JSON.parse(stored) : { name: "Warehouse Manager" };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
