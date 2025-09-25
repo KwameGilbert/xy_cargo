@@ -29,7 +29,7 @@ const ParcelTable = ({
     return (
       <div className="bg-white shadow rounded-lg">
         <div className="text-center py-8">
-          <p className="text-gray-500 text-sm">No parcels found</p>
+          <p className="text-red-500 text-sm">No parcels found</p>
         </div>
       </div>
     );
@@ -61,9 +61,8 @@ const ParcelTable = ({
   };
 
   return (
-    <div className="bg-white shadow rounded-lg overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
+    <div className="bg-white shadow rounded-lg overflow-x-auto">
+        <table className="max-w-full">
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-3 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
@@ -189,7 +188,6 @@ const ParcelTable = ({
             ))}
           </tbody>
         </table>
-      </div>
     </div>
   );
 };
