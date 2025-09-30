@@ -1,14 +1,33 @@
-import React, { useState } from 'react';
-import { Plus, Minus, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Minus, AlertTriangle, Search, User, Package } from 'lucide-react';
+import mockCustomersData from './mockCustomerData';
 
 const CreateParcel = ({ onSubmit, onCancel }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [customerCode, setCustomerCode] = useState('');
+  const [customerSearchTerm, setCustomerSearchTerm] = useState('');
+  const [showCustomerResults, setShowCustomerResults] = useState(false);
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedShipmentType, setSelectedShipmentType] = useState(null);
+  
   const [formData, setFormData] = useState({
     customerDetails: {
+      id: '',
       name: '',
       phone: '',
       email: '',
-      address: ''
+      address: '',
+      addressId: ''
+    },
+    shipmentDetails: {
+      type: '',
+      code: '',
+      origin: {
+        warehouse: '',
+        address: ''
+      }
     },
     items: [
       {
@@ -27,6 +46,182 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
     specialInstructions: ''
   });
 
+  // Parse customer code and fetch customer + shipment type info
+  const handleCustomerCodeSearch = () => {
+    if (customerCode.trim() === '') return;
+    
+    // Parse the customer code (format: CUST-001-STD, CUST-001-EXP, etc.)
+    const codeParts = customerCode.split('-');
+    if (codeParts.length < 3) {
+      // Invalid code format
+      resetCustomerAndShipment();
+      return;
+    }
+    
+    const customerId = `${codeParts[0]}-${codeParts[1]}`;
+    const shipmentCode = codeParts[2];
+    
+    // Find customer
+    const customer = mockCustomersData.getCustomerById(customerId);
+    if (!customer) {
+      resetCustomerAndShipment();
+      return;
+    }
+    
+    // Find shipment type
+    const shipmentType = mockCustomersData.getShipmentTypeByCode(shipmentCode);
+    if (!shipmentType) {
+      resetCustomerAndShipment();
+      return;
+    }
+    
+    setSelectedCustomer(customer);
+    setSelectedShipmentType(shipmentType);
+    
+    const defaultAddress = mockCustomersData.getDefaultAddress(customer.id);
+    setSelectedAddress(defaultAddress);
+    
+    setFormData({
+      ...formData,
+      customerDetails: {
+        id: customer.id,
+        name: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        address: defaultAddress ? mockCustomersData.getFormattedAddress(defaultAddress) : '',
+        addressId: defaultAddress ? defaultAddress.id : ''
+      },
+      shipmentDetails: {
+        type: shipmentType.name,
+        code: shipmentType.code,
+        origin: {
+          warehouse: shipmentType.origin.warehouse,
+          address: shipmentType.origin.address
+        }
+      }
+    });
+  };
+  
+  const resetCustomerAndShipment = () => {
+    setSelectedCustomer(null);
+    setSelectedShipmentType(null);
+    setSelectedAddress(null);
+    setFormData({
+      ...formData,
+      customerDetails: {
+        id: '',
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
+        addressId: ''
+      },
+      shipmentDetails: {
+        type: '',
+        code: '',
+        origin: {
+          warehouse: '',
+          address: ''
+        }
+      }
+    });
+  };
+  
+  // Handle customer name search
+  const handleCustomerSearch = (e) => {
+    const searchTerm = e.target.value;
+    setCustomerSearchTerm(searchTerm);
+    
+    if (searchTerm.trim() === '') {
+      setFilteredCustomers([]);
+      setShowCustomerResults(false);
+      return;
+    }
+    
+    const filtered = mockCustomersData.customers.filter(customer =>
+      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.phone.includes(searchTerm) ||
+      customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    setFilteredCustomers(filtered);
+    setShowCustomerResults(true);
+  };
+  
+  // Handle customer selection from search results
+  const handleSelectCustomer = (customer) => {
+    setSelectedCustomer(customer);
+    setCustomerSearchTerm(customer.name);
+    setShowCustomerResults(false);
+    
+    const defaultAddress = mockCustomersData.getDefaultAddress(customer.id);
+    setSelectedAddress(defaultAddress);
+    
+    // Set default shipment type if available
+    const defaultShipmentType = mockCustomersData.getDefaultShipmentType();
+    
+    setFormData({
+      ...formData,
+      customerDetails: {
+        id: customer.id,
+        name: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        address: defaultAddress ? mockCustomersData.getFormattedAddress(defaultAddress) : '',
+        addressId: defaultAddress ? defaultAddress.id : ''
+      },
+      shipmentDetails: defaultShipmentType ? {
+        type: defaultShipmentType.name,
+        code: defaultShipmentType.code,
+        origin: {
+          warehouse: defaultShipmentType.origin.warehouse,
+          address: defaultShipmentType.origin.address
+        }
+      } : formData.shipmentDetails
+    });
+  };
+  
+  // Handle address selection
+  const handleAddressChange = (e) => {
+    const addressId = e.target.value;
+    if (!selectedCustomer) return;
+    
+    const address = selectedCustomer.addresses.find(addr => addr.id === addressId);
+    if (address) {
+      setSelectedAddress(address);
+      setFormData({
+        ...formData,
+        customerDetails: {
+          ...formData.customerDetails,
+          address: mockCustomersData.getFormattedAddress(address),
+          addressId: address.id
+        }
+      });
+    }
+  };
+
+  // Handle shipment type selection
+  const handleShipmentTypeChange = (e) => {
+    const shipmentCode = e.target.value;
+    const shipmentType = mockCustomersData.getShipmentTypeByCode(shipmentCode);
+    
+    if (shipmentType) {
+      setSelectedShipmentType(shipmentType);
+      setFormData({
+        ...formData,
+        shipmentDetails: {
+          type: shipmentType.name,
+          code: shipmentType.code,
+          origin: {
+            warehouse: shipmentType.origin.warehouse,
+            address: shipmentType.origin.address
+          }
+        }
+      });
+    }
+  };
+  
+  // Handle manual customer detail changes
   const handleCustomerChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -152,7 +347,7 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
               <div className={`flex items-center justify-center h-8 w-8 rounded-full ${currentStep >= 1 ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
                 1
               </div>
-              <div className="ml-2 text-sm font-medium text-gray-900">Customer Details</div>
+              <div className="ml-2 text-sm font-medium text-gray-900">Customer & Shipping</div>
             </div>
             <div className="hidden sm:block w-16 h-0.5 bg-gray-200"></div>
             <div className="flex items-center">
@@ -173,12 +368,89 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
       </div>
       
       <form onSubmit={handleSubmit}>
-        {/* Step 1: Customer Details */}
+        {/* Step 1: Customer & Shipping Details */}
         {currentStep === 1 && (
           <div className="p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Customer Information</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Customer & Shipping Information</h3>
             
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {/* Customer Code Lookup */}
+            <div className="bg-gray-50 p-4 rounded-md mb-6">
+              <h4 className="text-md font-medium text-gray-900 mb-2">Quick Lookup by Customer Code</h4>
+              <div className="flex mb-4">
+                <div className="flex-grow mr-2">
+                  <label htmlFor="customerCode" className="block text-sm font-medium text-gray-700 mb-1">
+                    Customer-Shipment Code
+                  </label>
+                  <input
+                    type="text"
+                    id="customerCode"
+                    value={customerCode}
+                    onChange={(e) => setCustomerCode(e.target.value)}
+                    placeholder="Enter customer-shipment code (e.g., CUST-001-STD)"
+                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Format: CustomerID-ShipmentCode (e.g., CUST-001-STD, CUST-001-EXP)
+                  </p>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    type="button"
+                    onClick={handleCustomerCodeSearch}
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    <Search className="h-4 w-4 mr-1" />
+                    Find
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Customer Search Section */}
+            <div className="bg-gray-50 p-4 rounded-md mb-6">
+              <h4 className="text-md font-medium text-gray-900 mb-2">Customer Search</h4>
+              
+              {/* Customer Name/Phone/Email Search */}
+              <div className="mb-4 relative">
+                <label htmlFor="customerSearch" className="block text-sm font-medium text-gray-700 mb-1">
+                  Search by Name, Phone, or Email
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="customerSearch"
+                    value={customerSearchTerm}
+                    onChange={handleCustomerSearch}
+                    placeholder="Start typing to search customers..."
+                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 pl-10 pr-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-4 w-4 text-gray-400" />
+                  </div>
+                </div>
+                
+                {/* Search Results Dropdown */}
+                {showCustomerResults && filteredCustomers.length > 0 && (
+                  <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-auto">
+                    <ul className="py-1">
+                      {filteredCustomers.map(customer => (
+                        <li
+                          key={customer.id}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => handleSelectCustomer(customer)}
+                        >
+                          <div className="font-medium">{customer.name}</div>
+                          <div className="text-sm text-gray-500">{customer.phone} | {customer.email}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Customer Details Form */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Customer Name
@@ -188,9 +460,9 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                   id="name"
                   name="name"
                   value={formData.customerDetails.name}
-                  onChange={handleCustomerChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100"
                   required
+                  disabled
                 />
               </div>
               
@@ -223,6 +495,27 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                 />
               </div>
               
+              {/* Address Selection Dropdown */}
+              {selectedCustomer && selectedCustomer.addresses.length > 0 && (
+                <div>
+                  <label htmlFor="addressSelect" className="block text-sm font-medium text-gray-700">
+                    Select Recipient Address
+                  </label>
+                  <select
+                    id="addressSelect"
+                    value={selectedAddress ? selectedAddress.id : ''}
+                    onChange={handleAddressChange}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  >
+                    {selectedCustomer.addresses.map(address => (
+                      <option key={address.id} value={address.id}>
+                        {address.type}: {address.street}, {address.city}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              
               <div className="sm:col-span-2">
                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                   Address
@@ -236,6 +529,46 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                   required
                 ></textarea>
+              </div>
+            </div>
+            
+            {/* Shipment Type Selection */}
+            <div className="bg-gray-50 p-4 rounded-md">
+              <h4 className="text-md font-medium text-gray-900 mb-2">Shipment Type</h4>
+              
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label htmlFor="shipmentType" className="block text-sm font-medium text-gray-700">
+                    Shipping Method
+                  </label>
+                  <select
+                    id="shipmentType"
+                    value={formData.shipmentDetails.code}
+                    onChange={handleShipmentTypeChange}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                    required
+                  >
+                    <option value="">Select a shipment type</option>
+                    {mockCustomersData.shipmentTypes.map(type => (
+                      <option key={type.code} value={type.code}>
+                        {type.name} ({type.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {formData.shipmentDetails.origin.warehouse && (
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center mb-2">
+                      <Package className="h-4 w-4 text-red-600 mr-2" />
+                      <span className="text-sm font-medium text-gray-900">Origin Warehouse</span>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      <div className="font-medium">{formData.shipmentDetails.origin.warehouse}</div>
+                      <div>{formData.shipmentDetails.origin.address}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
@@ -440,6 +773,24 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                 <div className="sm:col-span-2">
                   <p className="text-sm font-medium text-gray-500">Address</p>
                   <p className="text-sm text-gray-900">{formData.customerDetails.address}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-md mb-6">
+              <h4 className="text-md font-medium text-gray-900 mb-2">Shipping Information</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Shipment Type</p>
+                  <p className="text-sm text-gray-900">{formData.shipmentDetails.type} ({formData.shipmentDetails.code})</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Origin Warehouse</p>
+                  <p className="text-sm text-gray-900">{formData.shipmentDetails.origin.warehouse}</p>
+                </div>
+                <div className="sm:col-span-2">
+                  <p className="text-sm font-medium text-gray-500">Origin Address</p>
+                  <p className="text-sm text-gray-900">{formData.shipmentDetails.origin.address}</p>
                 </div>
               </div>
             </div>
