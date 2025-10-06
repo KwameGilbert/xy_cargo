@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, Links, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, Truck } from 'lucide-react';
 
 const WarehouseLogin = () => {
@@ -131,9 +131,11 @@ const WarehouseLogin = () => {
                 </label>
               </div>
               <div className="text-sm">
-                <a href="#" className="font-medium text-red-600 hover:text-red-500 transition-colors">
-                  Forgot password?
-                </a>
+                <Link to="/warehouse/auth/forgot-password" className="hover:underline text-red-500">
+                  <p className="font-medium text-red-600 hover:text-red-500 transition-colors">
+                    Forgot password?
+                  </p>
+                </Link>
               </div>
             </div>
 
@@ -166,7 +168,7 @@ const WarehouseLogin = () => {
             <p className="text-sm text-gray-600">
               Need help? Contact{' '}
               <a href="mailto:support@warehouse.com" className="font-medium text-red-600 hover:text-red-500">
-                support@warehouse.com
+                support@xycargo.com
               </a>
             </p>
           </div>

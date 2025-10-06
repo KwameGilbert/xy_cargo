@@ -28,6 +28,7 @@ import MainLayout from "../components/public_pages/layout/MainLayout";
 
 //Warehouse Pages
 import WarehouseLogin from "../pages/warehouse/auth/WarehouseLogin";
+import WarehouseForgotPassword from "../pages/warehouse/auth/WarehouseForgotPassword";
 import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard";
 import WarehouseParcelsPage from "../pages/warehouse/parcels/WarehouseParcelsPage";
 import WarehouseParcelDetailPage from "../pages/warehouse/parcels/WarehouseParcelDetailPage";
@@ -74,6 +75,7 @@ const AppRoutes = () => (
 
     {/* Warehouse Auth Routes */}
     <Route path="warehouse/auth/login" element={<WarehouseLogin />} />
+    <Route path="warehouse/auth/forgot-password" element={<WarehouseForgotPassword />} />
 
     {/* Warehouse Routes - wrapped in WarehouseLayout */}
       <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />
