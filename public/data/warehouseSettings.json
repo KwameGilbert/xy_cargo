@@ -1,0 +1,36 @@
+{
+  "user": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1234567890",
+    "role": "Warehouse Manager"
+  },
+  "notificationPreferences": [
+    {
+      "name": "Email Notifications",
+      "enabled": true
+    },
+    {
+      "name": "SMS Notifications",
+      "enabled": false
+    },
+    {
+      "name": "Push Notifications",
+      "enabled": true
+    }
+  ],
+  "systemPreferences": [
+    {
+      "name": "Enable Auto-Updates",
+      "enabled": true
+    },
+    {
+      "name": "Allow API Access",
+      "enabled": false
+    },
+    {
+      "name": "Enable Dark Mode",
+      "enabled": false
+    }
+  ]
+}

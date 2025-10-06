@@ -38,6 +38,7 @@ import WarehouseShipmentDetailPage from "../pages/warehouse/shipments/WarehouseS
 import WarehouseNotificationPage from "../pages/warehouse/notifications/WarehouseNotificationPage";
 import WarehouseSupportPage from "../pages/warehouse/support/WarehouseSupportPage";
 import WarehouseBulkUpdatePage from "../pages/warehouse/parcels/WarehouseBulkUpdatePage";
+import WarehouseSettingsPage from "../pages/warehouse/settings/WarehouseSettingsPage";
 
 const AppRoutes = () => (
   <Routes>
@@ -83,6 +84,7 @@ const AppRoutes = () => (
       <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />
       <Route path="warehouse/support" element={<WarehouseSupportPage />} />
       <Route path="warehouse/bulk-updates"element={<WarehouseBulkUpdatePage />} />
+      <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
   </Routes>
