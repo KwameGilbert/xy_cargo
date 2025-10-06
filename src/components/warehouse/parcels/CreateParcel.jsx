@@ -221,18 +221,6 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
     }
   };
   
-  // Handle manual customer detail changes
-  const handleCustomerChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      customerDetails: {
-        ...formData.customerDetails,
-        [name]: value
-      }
-    });
-  };
-
   const handleItemChange = (index, field, value) => {
     const updatedItems = [...formData.items];
     
@@ -475,9 +463,9 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                   id="phone"
                   name="phone"
                   value={formData.customerDetails.phone}
-                  onChange={handleCustomerChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100"
                   required
+                  disabled
                 />
               </div>
               
@@ -490,8 +478,8 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                   id="email"
                   name="email"
                   value={formData.customerDetails.email}
-                  onChange={handleCustomerChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100"
+                  disabled
                 />
               </div>
               
@@ -525,9 +513,9 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                   name="address"
                   rows="3"
                   value={formData.customerDetails.address}
-                  onChange={handleCustomerChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100"
                   required
+                  disabled
                 ></textarea>
               </div>
             </div>
