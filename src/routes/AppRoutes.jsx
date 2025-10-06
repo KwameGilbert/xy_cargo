@@ -27,6 +27,7 @@ import MainLayout from "../components/public_pages/layout/MainLayout";
 
 
 //Warehouse Pages
+import WarehouseLogin from "../pages/warehouse/auth/WarehouseLogin";
 import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard";
 import WarehouseParcelsPage from "../pages/warehouse/parcels/WarehouseParcelsPage";
 import WarehouseParcelDetailPage from "../pages/warehouse/parcels/WarehouseParcelDetailPage";
@@ -71,6 +72,8 @@ const AppRoutes = () => (
       <Route path="client/support" element={<ClientSupport />} />
 
 
+    {/* Warehouse Auth Routes */}
+    <Route path="warehouse/auth/login" element={<WarehouseLogin />} />
 
     {/* Warehouse Routes - wrapped in WarehouseLayout */}
       <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />

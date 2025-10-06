@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Settings, User, Bell, Sliders, Loader2 } from "lucide-react";
+import { Settings, User, Bell, Sliders, Shield, Loader2 } from "lucide-react";
 import WarehouseLayout from "../../../components/warehouse/layout/WarehouseLayout";
 
-// Mock components for demonstration
+// Mock Account Settings
 const AccountSettings = ({ userData }) => (
-
   <div className="space-y-6">
     <div>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Information</h3>
@@ -41,6 +40,7 @@ const AccountSettings = ({ userData }) => (
   </div>
 );
 
+// Mock Notification Settings
 const NotificationSettings = ({ notificationPreferences }) => (
   <div className="space-y-6">
     <div>
@@ -71,6 +71,7 @@ const NotificationSettings = ({ notificationPreferences }) => (
   </div>
 );
 
+// Mock System Settings
 const SystemSettings = ({ systemPreferences }) => (
   <div className="space-y-6">
     <div>
@@ -108,6 +109,57 @@ const SystemSettings = ({ systemPreferences }) => (
   </div>
 );
 
+// NEW Security Settings
+const SecuritySettings = () => (
+  <div className="space-y-6">
+    <div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Security Settings</h3>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+          <input
+            type="password"
+            placeholder="Enter current password"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+            <input
+              type="password"
+              placeholder="Enter new password"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+            <input
+              type="password"
+              placeholder="Confirm new password"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button className="px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all font-medium shadow-sm">
+      Change Password
+    </button>
+
+    <div className="pt-8 border-t border-gray-200">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Two-Factor Authentication</h3>
+      <p className="text-sm text-gray-600 mb-4">
+        Add an extra layer of protection to your account by enabling two-factor authentication.
+      </p>
+      <button className="px-6 py-2.5 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-lg hover:from-gray-800 hover:to-gray-900 transition-all font-medium shadow-sm">
+        Enable 2FA
+      </button>
+    </div>
+  </div>
+);
+
 const WarehouseSettingsPage = () => {
   const [activeTab, setActiveTab] = useState("account");
   const [settingsData, setSettingsData] = useState(null);
@@ -116,14 +168,10 @@ const WarehouseSettingsPage = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        // Simulate API call with mock data
+        // Simulate API call
         setTimeout(() => {
           setSettingsData({
-            user: {
-              name: "John Doe",
-              email: "john@warehouse.com",
-              phone: "+233 XX XXX XXXX"
-            },
+            user: { name: "John Doe", email: "john@warehouse.com", phone: "+233 XX XXX XXXX" },
             notificationPreferences: {},
             systemPreferences: {}
           });
@@ -134,14 +182,14 @@ const WarehouseSettingsPage = () => {
         setLoading(false);
       }
     };
-
     fetchSettings();
   }, []);
 
   const tabs = [
     { id: "account", label: "Account", icon: User },
     { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "system", label: "System", icon: Sliders }
+    { id: "system", label: "System", icon: Sliders },
+    { id: "security", label: "Security", icon: Shield },
   ];
 
   if (loading) {
@@ -159,80 +207,63 @@ const WarehouseSettingsPage = () => {
 
   return (
     <WarehouseLayout>
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-            <div className="mb-8">
+          <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-red-100 rounded-lg">
+              <div className="p-2 bg-red-100 rounded-lg">
                 <Settings className="w-6 h-6 text-red-600" />
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Settings</h1>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Settings</h1>
             </div>
             <p className="text-gray-600 ml-14">Manage your account and preferences</p>
-            </div>
+          </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Tabs Navigation */}
             <div className="border-b border-gray-200 bg-gray-50">
-                <nav className="flex overflow-x-auto">
+              <nav className="flex overflow-x-auto">
                 {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    return (
+                  const Icon = tab.icon;
+                  return (
                     <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-6 py-4 font-medium text-sm whitespace-nowrap transition-all relative ${
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-6 py-4 font-medium text-sm whitespace-nowrap transition-all relative ${
                         activeTab === tab.id
-                            ? "text-red-600 bg-white"
-                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                        }`}
+                          ? "text-red-600 bg-white"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      }`}
                     >
-                        <Icon className="w-5 h-5" />
-                        <span>{tab.label}</span>
-                        {activeTab === tab.id && (
+                      <Icon className="w-5 h-5" />
+                      <span>{tab.label}</span>
+                      {activeTab === tab.id && (
                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600" />
-                        )}
+                      )}
                     </button>
-                    );
+                  );
                 })}
-                </nav>
+              </nav>
             </div>
 
             {/* Tab Content */}
             <div className="p-6 sm:p-8">
-                <div className="max-w-2xl">
-                {activeTab === "account" && (
-                    <AccountSettings userData={settingsData.user} />
-                )}
+              <div className="max-w-2xl">
+                {activeTab === "account" && <AccountSettings userData={settingsData.user} />}
                 {activeTab === "notifications" && (
-                    <NotificationSettings notificationPreferences={settingsData.notificationPreferences} />
+                  <NotificationSettings
+                    notificationPreferences={settingsData.notificationPreferences}
+                  />
                 )}
                 {activeTab === "system" && (
-                    <SystemSettings systemPreferences={settingsData.systemPreferences} />
+                  <SystemSettings systemPreferences={settingsData.systemPreferences} />
                 )}
-                </div>
+                {activeTab === "security" && <SecuritySettings />}
+              </div>
             </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="mt-6 grid sm:grid-cols-2 gap-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
-                <h3 className="font-semibold text-gray-900 mb-2">Security</h3>
-                <p className="text-sm text-gray-600 mb-3">Manage password and security settings</p>
-                <button className="text-sm text-red-600 hover:text-red-700 font-medium">
-                Change Password →
-                </button>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
-                <h3 className="font-semibold text-gray-900 mb-2">Data & Privacy</h3>
-                <p className="text-sm text-gray-600 mb-3">Control your data and privacy preferences</p>
-                <button className="text-sm text-red-600 hover:text-red-700 font-medium">
-                Manage Privacy →
-                </button>
-            </div>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </WarehouseLayout>
   );
 };
