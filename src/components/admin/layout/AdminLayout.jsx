@@ -7,7 +7,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div className="h-screen bg-gray-50 lg:flex">
       {/* Fixed Sidebar - Full height on desktop */}
-      <div className="hidden lg:block h-full sticky top-0">
+      <div className="hidden lg:block h-screen sticky top-0">
         <Sidebar />
       </div>
 
@@ -17,14 +17,14 @@ const AdminLayout = ({ children }) => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-screen">
+      <div className="flex flex-1 flex-col h-screen">
         {/* Sticky Header */}
         <div className="sticky top-0 z-10">
           <Header />
         </div>
 
         {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-auto p-2 bg-gray-50">
+        <main className="flex-1 overflow-y-auto w-fit p-2 bg-gray-50">
           {children}
         </main>
       </div>
