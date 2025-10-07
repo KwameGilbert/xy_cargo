@@ -44,7 +44,10 @@ import WarehouseSettingsPage from "../pages/warehouse/settings/WarehouseSettings
 
 
 // Admin Pages
+import AdminLayout from "../components/admin/layout/AdminLayout";
 import AdminLogin from "../pages/admin/auth/AdminLogin";
+import AdminForgotPassword from "../pages/admin/auth/AdminForgotPassword";
+import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
 
 
 const AppRoutes = () => (
@@ -98,15 +101,18 @@ const AppRoutes = () => (
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
 
-      {/* Admin Auth Routes */}
-      <Route path="admin/auth/login" element={<AdminLogin />} />
-      <Route path="admin/auth/forgot-password" element={<AdminForgotPassword />} />
+        {/* Admin Auth Routes */}
+        <Route path="admin/auth/login" element={<AdminLogin />} />
+        <Route path="admin/auth/forgot-password" element={<AdminForgotPassword />} />
 
-      {/* Admin Routes - wrapped in AdminLayout */}
-      {/* <Route path="admin/dashboard" element={<AdminDashboard />} /> */}
-      {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
-      {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
-      {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
+        {/* Admin Routes*/}
+        {/* <Route element={<AdminLayout />}> */}
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
+          {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
+          {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
+          {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
+        {/* </Route> */}
+
   </Routes>
 );
 

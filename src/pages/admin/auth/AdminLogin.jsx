@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, Mail, Shield } from "lucide-react";
 
 const AdminLogin = () => {
-
+    
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -135,13 +136,13 @@ const AdminLogin = () => {
                 </label>
               </div>
               <div className="text-sm">
-                <a
-                  href="#"
+                <Link
+                  to="/admin/auth/forgot-password"
                   className="font-medium text-gray-900 hover:text-gray-700 transition-colors"
                   tabIndex={0}
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -177,7 +178,7 @@ const AdminLogin = () => {
                 href="mailto:admin-support@example.com"
                 className="font-medium text-gray-900 hover:text-gray-700"
               >
-                admin-support@example.com
+                admin-support@xycargo.com
               </a>
             </p>
           </div>

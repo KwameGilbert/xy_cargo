@@ -1,13 +1,13 @@
-// src/components/client/layout/ClientLayout.jsx
+// src/components/admin/layout/AdminLayout.jsx
 import React from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
 const AdminLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gray-50 lg:flex">
+    <div className="h-screen bg-gray-50 lg:flex">
       {/* Fixed Sidebar - Full height on desktop */}
-      <div className="hidden lg:block h-screen sticky top-0">
+      <div className="hidden lg:block h-full sticky top-0">
         <Sidebar />
       </div>
 
@@ -32,4 +32,4 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-export default ClientLayout;
+export default AdminLayout;
