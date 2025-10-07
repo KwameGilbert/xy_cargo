@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { LayoutDashboard,
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { 
+  LayoutDashboard,
   Package,
   Ship,
   Warehouse,
@@ -30,7 +32,7 @@ import { LayoutDashboard,
   Menu,
   X,
 } from "lucide-react";
-import { motion, AnimatePresence } from 'framer-motion'; // Add this import
+import { motion } from 'framer-motion';
 
 // -------------------------------------------------------------------
 // 1. NAVIGATION DATA CONFIGURATION
@@ -139,81 +141,117 @@ const NAV_ITEMS = [
 // Helper function to find the group of a given path
 const findActiveGroup = (path) => {
   for (const item of NAV_ITEMS) {
-    if (item.group && item.children.some(child => child.path === path)) {
+    if (item.group && item.children?.some(child => child.path === path)) {
       return item.group;
     }
   }
   return null;
 };
 
-const AdminSidebar = ({ currentPath, setCurrentPath }) => {
+const AdminSidebar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState(() => findActiveGroup(location.pathname));
 
-  // Initialize openGroup based on the current path
-  const [openGroup, setOpenGroup] = useState(() => findActiveGroup(currentPath));
-
-  // Effect to automatically open the correct group if the path changes externally
+  // Effect to automatically open the correct group when the path changes
   useEffect(() => {
-    const activeGroup = findActiveGroup(currentPath);
+    const activeGroup = findActiveGroup(location.pathname);
     if (activeGroup && openGroup !== activeGroup) {
       setOpenGroup(activeGroup);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath]);
+  }, [location.pathname]);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const toggleGroup = (group) => setOpenGroup(openGroup === group ? null : group);
 
   const handleNavigation = (path) => {
-    setCurrentPath(path);
+    navigate(path);
     setIsMobileMenuOpen(false);
   };
 
-  // Custom handler for logout to avoid forbidden alert()
   const handleLogout = () => {
     console.log('Logout attempt: Simulating session clear and redirect.');
-    // Simulate navigation to a login path, which triggers the message in App
-    setCurrentPath('/admin/auth/login');
+    // In a real app, you would clear authentication tokens here
+    navigate('/admin/auth/login');
     setIsMobileMenuOpen(false);
   };
 
-  // Base link styling function
+  // Base link styling function - ADD 'group' for group-hover support
   const linkClass = (isActive) =>
-    `flex items-center text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors cursor-pointer w-full ${isActive
-      ? "bg-red-50 text-red-700 font-semibold border-r-4 border-red-600 shadow-sm"
-      : "text-gray-700 hover:bg-gray-100/70"
+    `flex items-center text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors cursor-pointer w-full group ${
+      isActive
+        ? "bg-red-50 text-red-700 font-semibold border-r-4 border-red-600 shadow-sm"
+        : "text-gray-700 hover:text-red-700 hover:bg-red-100/50"
     }`;
 
-  // Submenu link styling function
+  // Submenu link styling function - ADD 'group' for group-hover support
   const subLinkClass = (isActive) =>
-    `flex items-center text-xs px-3 py-2 rounded-lg transition-colors cursor-pointer w-full ${isActive
-      ? "text-red-600 font-medium bg-red-50"
-      : "text-gray-600 hover:text-red-700 hover:bg-red-100/50"
+    `flex items-center text-xs px-3 py-2 rounded-lg transition-colors cursor-pointer w-full group ${
+      isActive
+        ? "text-red-600 font-medium bg-red-50"
+        : "text-gray-600 hover:text-red-700 hover:bg-red-100/50"
+    }`;
+
+  // Group button styling - ADD 'group' for group-hover support
+  const groupButtonClass = (isParentActive) =>
+    `flex items-center justify-between w-full text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors group ${
+      isParentActive 
+        ? "bg-gray-100 text-gray-800" 
+        : "text-gray-700 hover:text-red-700 hover:bg-red-100/50"
     }`;
 
   // Universal Navigation Link Component
-  const NavLink = ({ to, children, className = "" }) => (
+  const NavLink = ({ to, children, className = "", ...props }) => (
     <button
       type="button"
       onClick={() => handleNavigation(to)}
-      className={className || linkClass(currentPath === to)}
+      className={className}
       tabIndex={0}
       aria-label={typeof children === "string" ? children : undefined}
+      {...props}
     >
       {children}
     </button>
   );
+
+  // Animation variants for the submenu
+  const submenuVariants = {
+    hidden: {
+      height: 0,
+      opacity: 0,
+      transition: {
+        height: { duration: 0.3, ease: "easeInOut" },
+        opacity: { duration: 0.2, ease: "easeInOut" }
+      }
+    },
+    visible: {
+      height: "auto",
+      opacity: 1,
+      transition: {
+        height: { duration: 0.3, ease: "easeInOut" },
+        opacity: { duration: 0.2, delay: 0.1, ease: "easeInOut" }
+      }
+    }
+  };
 
   // Main Group/Link Renderer Component
   const NavItemRenderer = ({ item }) => {
     const isGroup = item.children && item.children.length > 0;
 
     if (!isGroup) {
-      // Render simple link (unchanged)
+      // Render simple link
       const Icon = item.icon;
+      const isActive = location.pathname === item.path;
+      
       return (
-        <NavLink to={item.path}>
-          <Icon className={`h-4 w-4 mr-3 ${currentPath === item.path ? 'text-red-600' : 'text-gray-500'}`} />
+        <NavLink 
+          to={item.path} 
+          className={linkClass(isActive)}
+          aria-current={isActive ? "page" : undefined}
+        >
+          {/* UPDATED: Use group-hover for consistent icon highlighting */}
+          <Icon className={`h-4 w-4 mr-3 transition-colors ${isActive ? 'text-red-600' : 'text-gray-500 group-hover:text-red-500'}`} />
           {item.name}
         </NavLink>
       );
@@ -222,97 +260,61 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
     // Render collapsible group
     const Icon = item.icon;
     const isOpen = openGroup === item.group;
-
-    // Check if any child link is currently active
-    const isParentActive = item.children.some(child => child.path === currentPath);
-
-    // Define animation variants for the submenu
-    const submenuVariants = {
-      hidden: { 
-        height: 0, 
-        opacity: 0, 
-        paddingTop: 0, 
-        paddingBottom: 0 
-      },
-      visible: { 
-        height: "auto", 
-        opacity: 1, 
-        paddingTop: "0.5rem", 
-        paddingBottom: "0.5rem",
-        transition: { 
-          duration: 0.3, 
-          ease: "easeInOut",
-          height: { duration: 0.3 }, // Smooth height animation
-          opacity: { duration: 0.2, delay: 0.1 } // Slight delay for opacity
-        }
-      },
-      exit: { 
-        height: 0, 
-        opacity: 0, 
-        paddingTop: 0, 
-        paddingBottom: 0,
-        transition: { 
-          duration: 0.3, 
-          ease: "easeInOut",
-          height: { duration: 0.3 }, // Ensure height animates out
-          opacity: { duration: 0.2 } // Opacity fades out without delay for closing
-        }
-      }
-    };
+    const isParentActive = item.children.some(child => child.path === location.pathname);
 
     return (
-      <div>
+      <div className="mb-1">
         <button
           onClick={() => toggleGroup(item.group)}
-          className={`flex items-center justify-between w-full text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors ${isParentActive ? "bg-gray-100 text-gray-800" : "text-gray-700 hover:bg-gray-100/70"
-            }`}
+          className={groupButtonClass(isParentActive)}
           aria-expanded={isOpen}
           aria-controls={`${item.group}-submenu`}
         >
           <div className="flex items-center">
-            <Icon className={`h-4 w-4 mr-3 ${isParentActive ? 'text-red-600' : 'text-gray-500'}`} />
+            {/* UPDATED: Use group-hover for consistent icon highlighting */}
+            <Icon className={`h-4 w-4 mr-3 transition-colors ${isParentActive ? 'text-red-600' : 'text-gray-500 group-hover:text-red-500'}`} />
             {item.name}
           </div>
+          {/* UPDATED: Use group-hover for chevron highlighting */}
           <ChevronRight
-            className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
+            className={`h-4 w-4 text-gray-400 group-hover:text-red-500 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
           />
         </button>
 
-        {/* Replace the old submenu div with AnimatePresence and motion.div */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              key={`${item.group}-submenu`} // Unique key for AnimatePresence
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={submenuVariants}
-              className="overflow-hidden" // Keep overflow-hidden to prevent layout shifts
-            >
-              {/* Submenu container (unchanged) */}
-              <div className="ml-5 space-y-1 border-l border-gray-200 pl-3">
-                {item.children.map((child, idx) => {
-                  const ChildIcon = child.icon;
-                  const isActive = currentPath === child.path;
-                  return (
-                    <NavLink key={idx} to={child.path} className={subLinkClass(isActive)}>
-                      <ChildIcon className={`h-3 w-3 mr-2 ${isActive ? 'text-red-600' : 'text-gray-500'}`} />
-                      {child.name}
-                    </NavLink>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        {/* Animated submenu container */}
+        <motion.div
+          id={`${item.group}-submenu`}
+          initial="hidden"
+          animate={isOpen ? "visible" : "hidden"}
+          variants={submenuVariants}
+          className="overflow-hidden"
+        >
+          {/* Submenu content */}
+          <div className="ml-5 space-y-1 border-l border-gray-200 pl-3">
+            {item.children.map((child, idx) => {
+              const ChildIcon = child.icon;
+              const isActive = location.pathname === child.path;
+              return (
+                <NavLink 
+                  key={idx} 
+                  to={child.path} 
+                  className={subLinkClass(isActive)}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {/* UPDATED: Use group-hover for consistent icon highlighting */}
+                  <ChildIcon className={`h-3 w-3 mr-2 transition-colors ${isActive ? 'text-red-600' : 'text-gray-500 group-hover:text-red-500'}`} />
+                  {child.name}
+                </NavLink>
+              );
+            })}
+          </div>
+        </motion.div>
+       </div>
     );
   };
 
   return (
-    // The min-h-screen container for fixed/relative layout
     <div className="bg-gray-50 flex flex-col min-h-screen">
-
       {/* Mobile Menu Toggle */}
       <button
         onClick={toggleMobileMenu}
@@ -334,12 +336,13 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
         />
       )}
 
-      {/* Sidebar Container (Fixed height, column layout) */}
+      {/* Sidebar Container */}
       <aside
-        className={`${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 flex flex-col shadow-xl lg:shadow-none transition-transform duration-300 ease-in-out h-screen`}
+        className={`${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 flex flex-col shadow-xl lg:shadow-none transition-transform duration-300 ease-in-out h-screen`}
       >
-        {/* Logo (Sticks to top) */}
+        {/* Logo */}
         <div className="border-b border-gray-200 flex-shrink-0">
           <div className="px-6 py-5 flex items-center">
             <div className="p-2 bg-red-600 rounded-lg flex items-center justify-center shadow-lg">
@@ -349,7 +352,7 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
           </div>
         </div>
 
-        {/* Profile Section (Sticks to top) */}
+        {/* Profile Section */}
         <div className="px-6 py-4 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-semibold text-sm shadow-md">
@@ -362,17 +365,16 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
           </div>
         </div>
 
-        {/* Navigation - Scrollable Content (Takes up all available space and scrolls) */}
+        {/* Navigation - Scrollable Content */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           <nav className="flex-1 py-4 space-y-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            {/* Loop through the NAV_ITEMS array to render all links/groups */}
             {NAV_ITEMS.map((item, index) => (
               <NavItemRenderer key={index} item={item} />
             ))}
           </nav>
         </div>
 
-        {/* Logout at Bottom (Sticks to bottom) */}
+        {/* Logout at Bottom */}
         <div className="flex-shrink-0 border-t border-gray-200 p-2">
           <button
             onClick={handleLogout}
@@ -382,7 +384,6 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
             <span className="text-sm font-medium">Sign Out</span>
           </button>
         </div>
-
       </aside>
     </div>
   );
