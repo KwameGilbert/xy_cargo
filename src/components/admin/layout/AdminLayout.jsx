@@ -8,7 +8,7 @@ const AdminLayout = ({ children }) => {
     <div className="min-h-screen bg-gray-50 lg:flex">
 
       {/* 2. Sidebar */}
-      <div className="lg:w-60 lg:flex-shrink-0 top-0 bottom-0 lg:sticky lg:h-screen border-r border-gray-200 bg-white">
+      <div className="lg:flex-shrink-0 top-0 bottom-0 lg:sticky lg:h-screen border-r border-gray-200 bg-white">
         <AdminSidebar />
       </div>
 

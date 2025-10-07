@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -12,7 +11,6 @@ import {
   Settings,
   Shield,
   LogOut,
-  ChevronDown,
   ChevronRight,
   Plus,
   FileText,
@@ -30,6 +28,8 @@ import {
   Eye,
   Bell,
   ShieldCheck,
+  Menu,
+  X,
 } from "lucide-react";
 
 // -------------------------------------------------------------------
@@ -136,35 +136,65 @@ const NAV_ITEMS = [
   },
 ];
 
+// Helper function to find the group of a given path
+const findActiveGroup = (path) => {
+  for (const item of NAV_ITEMS) {
+    if (item.group && item.children.some(child => child.path === path)) {
+      return item.group;
+    }
+  }
+  return null;
+};
+
+
 // -------------------------------------------------------------------
-// 2. SIDEBAR COMPONENT
+// 2. SIDEBAR COMPONENT LOGIC (Internal to App)
 // -------------------------------------------------------------------
-const AdminSidebar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+const AdminSidebar = ({ currentPath, setCurrentPath }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [openGroup, setOpenGroup] = useState(null);
+
+  // Initialize openGroup based on the current path
+  const [openGroup, setOpenGroup] = useState(() => findActiveGroup(currentPath));
+
+  // Effect to automatically open the correct group if the path changes externally
+  useEffect(() => {
+    const activeGroup = findActiveGroup(currentPath);
+    if (activeGroup && openGroup !== activeGroup) {
+      setOpenGroup(activeGroup);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPath]);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const toggleGroup = (group) => setOpenGroup(openGroup === group ? null : group);
 
   const handleNavigation = (path) => {
-    navigate(path);
+    setCurrentPath(path);
+    setIsMobileMenuOpen(false); // Close mobile menu on navigation
+  };
+
+  // Custom handler for logout to avoid forbidden alert()
+  const handleLogout = () => {
+    console.log('Logout attempt: Simulating session clear and redirect.');
+    // Simulate navigation to a login path, which triggers the message in App
+    setCurrentPath('/admin/auth/login');
     setIsMobileMenuOpen(false);
   };
 
   // Base link styling function
   const linkClass = (isActive) =>
-    `flex items-center text-sm px-3 py-2.5 mx-3 rounded-md transition-colors cursor-pointer ${isActive
-      ? "bg-red-50 text-red-600 border-r-2 border-red-600"
-      : "text-gray-700 hover:bg-gray-50"
+    `flex items-center text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors cursor-pointer w-full ${ // <-- Added w-full here
+    isActive
+      ? "bg-red-50 text-red-700 font-semibold border-r-4 border-red-600 shadow-sm"
+      : "text-gray-700 hover:bg-gray-100/70"
     }`;
 
   // Submenu link styling function
   const subLinkClass = (isActive) =>
-    `flex items-center text-sm px-3 py-2.5 rounded-md transition-colors cursor-pointer ${isActive
+    `flex items-center text-xs px-3 py-2 rounded-lg transition-colors cursor-pointer w-full ${ // <-- Added w-full here
+    isActive
       ? "text-red-600 font-medium bg-red-50"
-      : "text-gray-600 hover:text-red-600 hover:bg-red-50"
+      : "text-gray-600 hover:text-red-700 hover:bg-red-100/50"
     }`;
 
   // Universal Navigation Link Component
@@ -172,7 +202,7 @@ const AdminSidebar = () => {
     <button
       type="button"
       onClick={() => handleNavigation(to)}
-      className={className || linkClass(location.pathname === to)}
+      className={className || linkClass(currentPath === to)}
       tabIndex={0}
       aria-label={typeof children === "string" ? children : undefined}
     >
@@ -189,7 +219,7 @@ const AdminSidebar = () => {
       const Icon = item.icon;
       return (
         <NavLink to={item.path}>
-          <Icon className="h-4 w-4 mr-3 text-gray-500" />
+          <Icon className={`h-4 w-4 mr-3 ${currentPath === item.path ? 'text-red-600' : 'text-gray-500'}`} />
           {item.name}
         </NavLink>
       );
@@ -199,33 +229,50 @@ const AdminSidebar = () => {
     const Icon = item.icon;
     const isOpen = openGroup === item.group;
 
+    // Check if any child link is currently active
+    const isParentActive = item.children.some(child => child.path === currentPath);
+
+    // Dynamic height calculation for smooth transition
+    const maxSubmenuHeight = item.children.length * 40 + 32;
+
     return (
       <div>
+        {/* The group button already uses w-full and mx-3, giving it a block appearance */}
         <button
           onClick={() => toggleGroup(item.group)}
-          className="flex items-center justify-between w-full text-sm px-3 py-2.5 mx-3 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+          className={`flex items-center justify-between w-full text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors ${isParentActive ? "bg-gray-100 text-gray-800" : "text-gray-700 hover:bg-gray-100/70"
+            }`}
           aria-expanded={isOpen}
           aria-controls={`${item.group}-submenu`}
         >
           <div className="flex items-center">
-            <Icon className="h-4 w-4 mr-3 text-gray-500" />
+            <Icon className={`h-4 w-4 mr-3 ${isParentActive ? 'text-red-600' : 'text-gray-500'}`} />
             {item.name}
           </div>
-          <ChevronDown
-            className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          <ChevronRight
+            className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}
           />
         </button>
         <div
           id={`${item.group}-submenu`}
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0" // Increased max-h for safety
-            }`}
+          // Use explicit transition for a smoother, stylish animation
+          className={`overflow-hidden transition-[max-height,opacity,padding] duration-500 ease-out`}
+          style={{
+            maxHeight: isOpen ? `${maxSubmenuHeight}px` : '0px',
+            opacity: isOpen ? 1 : 0,
+            paddingTop: isOpen ? '0.5rem' : '0rem',
+            paddingBottom: isOpen ? '0.5rem' : '0rem',
+          }}
         >
-          <div className="ml-5 mt-1 space-y-1 border-l border-gray-200 pl-3">
+          {/* Submenu container manages the left indentation */}
+          <div className="ml-5 space-y-1 border-l border-gray-200 pl-3">
             {item.children.map((child, idx) => {
               const ChildIcon = child.icon;
+              const isActive = currentPath === child.path;
               return (
-                <NavLink key={idx} to={child.path} className={subLinkClass(location.pathname === child.path)}>
-                  <ChildIcon className="h-3 w-3 mr-2" />
+                // NavLink uses subLinkClass, which now has w-full
+                <NavLink key={idx} to={child.path} className={subLinkClass(isActive)}>
+                  <ChildIcon className={`h-3 w-3 mr-2 ${isActive ? 'text-red-600' : 'text-gray-500'}`} />
                   {child.name}
                 </NavLink>
               );
@@ -237,58 +284,61 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="bg-gray-50 flex flex-col">
+    // The min-h-screen container for fixed/relative layout
+    <div className="bg-gray-50 flex flex-col min-h-screen">
+
       {/* Mobile Menu Toggle */}
       <button
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 rounded-xl bg-white text-gray-700 shadow-xl border border-gray-100 hover:scale-[1.03] transition-transform duration-150"
         aria-label="Toggle mobile menu"
       >
         {isMobileMenuOpen ? (
-          <ChevronRight className="h-5 w-5 text-gray-700" />
+          <X className="h-5 w-5" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-700" />
+          <Menu className="h-5 w-5" />
         )}
       </button>
 
       {/* Backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
+      {/* Sidebar Container (Fixed height, column layout) */}
       <aside
         className={`${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-60 bg-white border-r border-gray-200 flex flex-col transition-transform duration-300 ease-in-out`}
+          } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 flex flex-col shadow-xl lg:shadow-none transition-transform duration-300 ease-in-out h-screen`}
       >
-        {/* Logo */}
+        {/* Logo (Sticks to top) */}
         <div className="border-b border-gray-200 flex-shrink-0">
-          <div className="px-4 py-4 flex items-center">
-            <div className="p-2 bg-red-600 rounded-md flex items-center justify-center">
+          <div className="px-6 py-5 flex items-center">
+            <div className="p-2 bg-red-600 rounded-lg flex items-center justify-center shadow-lg">
               <Package className="h-5 w-5 text-white" />
             </div>
-            <span className="ml-2 text-lg font-bold text-gray-900">XY Cargo ZM</span>
+            <span className="ml-3 text-xl font-extrabold text-gray-900 tracking-wide">XY Cargo ZM</span>
           </div>
         </div>
 
-        {/* Profile Section */}
-        <div className="px-4 py-3 border-t border-gray-200">
+        {/* Profile Section (Sticks to top) */}
+        <div className="px-6 py-4 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-semibold">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-semibold text-sm shadow-md">
               BS
             </div>
             <div className="ml-3 flex-1">
-              <h3 className="font-medium text-gray-900 text-sm">Bright Smith</h3>
-              <p className="text-xs text-gray-500">ID: XY-CU-2833</p>
+              <h3 className="font-semibold text-gray-900 text-sm">Bright Smith</h3>
+              <p className="text-xs text-gray-500 truncate">Admin | ID: XY-CU-2833</p>
             </div>
           </div>
         </div>
 
-        {/* Navigation - Scrollable */}
-        <div className="flex-1 flex flex-col min-h-0">
-          <nav className="flex-1 py-2 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        {/* Navigation - Scrollable Content (Takes up all available space and scrolls) */}
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          <nav className="flex-1 py-4 space-y-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {/* Loop through the NAV_ITEMS array to render all links/groups */}
             {NAV_ITEMS.map((item, index) => (
               <NavItemRenderer key={index} item={item} />
@@ -296,18 +346,15 @@ const AdminSidebar = () => {
           </nav>
         </div>
 
-        {/*Logout at Bottom */}
-        <div className="flex-shrink-0  border-t border-gray-200">
-          <div
-            onClick={() => {
-              alert('Logged out successfully! In a real app, this would clear session data.');
-              handleNavigation('/admin/auth/login');
-            }}
-            className="flex items-center px-3 py-2.5 mx-3 text-gray-700 hover:bg-gray-50 rounded-md cursor-pointer transition-colors"
+        {/* Logout at Bottom (Sticks to bottom) */}
+        <div className="flex-shrink-0 border-t border-gray-200 p-4">
+          <button
+            onClick={handleLogout}
+            className="flex items-center px-3 py-2.5 w-full text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl cursor-pointer transition-colors"
           >
-            <LogOut className="h-4 w-4 mr-3 text-gray-500" />
-            <span className="text-sm">Sign Out</span>
-          </div>
+            <LogOut className="h-4 w-4 mr-3 text-gray-500 hover:text-red-600 transition-colors" />
+            <span className="text-sm font-medium">Sign Out</span>
+          </button>
         </div>
 
       </aside>
