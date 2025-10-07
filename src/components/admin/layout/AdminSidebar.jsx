@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  LayoutDashboard,
+import { LayoutDashboard,
   Package,
   Ship,
   Warehouse,
@@ -31,6 +30,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion'; // Add this import
 
 // -------------------------------------------------------------------
 // 1. NAVIGATION DATA CONFIGURATION
@@ -146,10 +146,6 @@ const findActiveGroup = (path) => {
   return null;
 };
 
-
-// -------------------------------------------------------------------
-// 2. SIDEBAR COMPONENT LOGIC (Internal to App)
-// -------------------------------------------------------------------
 const AdminSidebar = ({ currentPath, setCurrentPath }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -170,7 +166,7 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
 
   const handleNavigation = (path) => {
     setCurrentPath(path);
-    setIsMobileMenuOpen(false); // Close mobile menu on navigation
+    setIsMobileMenuOpen(false);
   };
 
   // Custom handler for logout to avoid forbidden alert()
@@ -183,16 +179,14 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
 
   // Base link styling function
   const linkClass = (isActive) =>
-    `flex items-center text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors cursor-pointer w-full ${ // <-- Added w-full here
-    isActive
+    `flex items-center text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors cursor-pointer w-full ${isActive
       ? "bg-red-50 text-red-700 font-semibold border-r-4 border-red-600 shadow-sm"
       : "text-gray-700 hover:bg-gray-100/70"
     }`;
 
   // Submenu link styling function
   const subLinkClass = (isActive) =>
-    `flex items-center text-xs px-3 py-2 rounded-lg transition-colors cursor-pointer w-full ${ // <-- Added w-full here
-    isActive
+    `flex items-center text-xs px-3 py-2 rounded-lg transition-colors cursor-pointer w-full ${isActive
       ? "text-red-600 font-medium bg-red-50"
       : "text-gray-600 hover:text-red-700 hover:bg-red-100/50"
     }`;
@@ -215,7 +209,7 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
     const isGroup = item.children && item.children.length > 0;
 
     if (!isGroup) {
-      // Render simple link
+      // Render simple link (unchanged)
       const Icon = item.icon;
       return (
         <NavLink to={item.path}>
@@ -232,12 +226,42 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
     // Check if any child link is currently active
     const isParentActive = item.children.some(child => child.path === currentPath);
 
-    // Dynamic height calculation for smooth transition
-    const maxSubmenuHeight = item.children.length * 40 + 32;
+    // Define animation variants for the submenu
+    const submenuVariants = {
+      hidden: { 
+        height: 0, 
+        opacity: 0, 
+        paddingTop: 0, 
+        paddingBottom: 0 
+      },
+      visible: { 
+        height: "auto", 
+        opacity: 1, 
+        paddingTop: "0.5rem", 
+        paddingBottom: "0.5rem",
+        transition: { 
+          duration: 0.3, 
+          ease: "easeInOut",
+          height: { duration: 0.3 }, // Smooth height animation
+          opacity: { duration: 0.2, delay: 0.1 } // Slight delay for opacity
+        }
+      },
+      exit: { 
+        height: 0, 
+        opacity: 0, 
+        paddingTop: 0, 
+        paddingBottom: 0,
+        transition: { 
+          duration: 0.3, 
+          ease: "easeInOut",
+          height: { duration: 0.3 }, // Ensure height animates out
+          opacity: { duration: 0.2 } // Opacity fades out without delay for closing
+        }
+      }
+    };
 
     return (
       <div>
-        {/* The group button already uses w-full and mx-3, giving it a block appearance */}
         <button
           onClick={() => toggleGroup(item.group)}
           className={`flex items-center justify-between w-full text-sm px-3 py-2.5 mx-3 rounded-xl transition-colors ${isParentActive ? "bg-gray-100 text-gray-800" : "text-gray-700 hover:bg-gray-100/70"
@@ -250,35 +274,37 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
             {item.name}
           </div>
           <ChevronRight
-            className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}
+            className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
           />
         </button>
-        <div
-          id={`${item.group}-submenu`}
-          // Use explicit transition for a smoother, stylish animation
-          className={`overflow-hidden transition-[max-height,opacity,padding] duration-500 ease-out`}
-          style={{
-            maxHeight: isOpen ? `${maxSubmenuHeight}px` : '0px',
-            opacity: isOpen ? 1 : 0,
-            paddingTop: isOpen ? '0.5rem' : '0rem',
-            paddingBottom: isOpen ? '0.5rem' : '0rem',
-          }}
-        >
-          {/* Submenu container manages the left indentation */}
-          <div className="ml-5 space-y-1 border-l border-gray-200 pl-3">
-            {item.children.map((child, idx) => {
-              const ChildIcon = child.icon;
-              const isActive = currentPath === child.path;
-              return (
-                // NavLink uses subLinkClass, which now has w-full
-                <NavLink key={idx} to={child.path} className={subLinkClass(isActive)}>
-                  <ChildIcon className={`h-3 w-3 mr-2 ${isActive ? 'text-red-600' : 'text-gray-500'}`} />
-                  {child.name}
-                </NavLink>
-              );
-            })}
-          </div>
-        </div>
+
+        {/* Replace the old submenu div with AnimatePresence and motion.div */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              key={`${item.group}-submenu`} // Unique key for AnimatePresence
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={submenuVariants}
+              className="overflow-hidden" // Keep overflow-hidden to prevent layout shifts
+            >
+              {/* Submenu container (unchanged) */}
+              <div className="ml-5 space-y-1 border-l border-gray-200 pl-3">
+                {item.children.map((child, idx) => {
+                  const ChildIcon = child.icon;
+                  const isActive = currentPath === child.path;
+                  return (
+                    <NavLink key={idx} to={child.path} className={subLinkClass(isActive)}>
+                      <ChildIcon className={`h-3 w-3 mr-2 ${isActive ? 'text-red-600' : 'text-gray-500'}`} />
+                      {child.name}
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   };
@@ -347,10 +373,10 @@ const AdminSidebar = ({ currentPath, setCurrentPath }) => {
         </div>
 
         {/* Logout at Bottom (Sticks to bottom) */}
-        <div className="flex-shrink-0 border-t border-gray-200 p-4">
+        <div className="flex-shrink-0 border-t border-gray-200 p-2">
           <button
             onClick={handleLogout}
-            className="flex items-center px-3 py-2.5 w-full text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl cursor-pointer transition-colors"
+            className="flex items-center p-3 w-full text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl cursor-pointer transition-colors"
           >
             <LogOut className="h-4 w-4 mr-3 text-gray-500 hover:text-red-600 transition-colors" />
             <span className="text-sm font-medium">Sign Out</span>
