@@ -42,6 +42,17 @@ import WarehouseSupportPage from "../pages/warehouse/support/WarehouseSupportPag
 import WarehouseBulkUpdatePage from "../pages/warehouse/parcels/WarehouseBulkUpdatePage";
 import WarehouseSettingsPage from "../pages/warehouse/settings/WarehouseSettingsPage";
 
+
+// Admin Pages
+import AdminLayout from "../components/admin/layout/AdminLayout";
+import AdminLogin from "../pages/admin/auth/AdminLogin";
+import AdminForgotPassword from "../pages/admin/auth/AdminForgotPassword";
+import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
+import AdminAllParcels from "../pages/admin/parcels/AdminAllParcels";
+import CreateAdminParcelPage from "../pages/admin/parcels/CreateAdminParcelPage";
+import AdminParcelDetailPage from "../pages/admin/parcels/AdminParcelDetailPage";
+
+
 const AppRoutes = () => (
   <Routes>
     {/* Public Routes - wrapped in MainLayout */}
@@ -91,6 +102,22 @@ const AppRoutes = () => (
       <Route path="warehouse/bulk-updates"element={<WarehouseBulkUpdatePage />} />
       <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
+
+
+        {/* Admin Auth Routes */}
+        <Route path="admin/auth/login" element={<AdminLogin />} />
+        <Route path="admin/auth/forgot-password" element={<AdminForgotPassword />} />
+
+        {/* Admin Routes*/}
+        {/* <Route element={<AdminLayout />}> */}
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/parcels" element={<AdminAllParcels />} />
+          <Route path="admin/parcels/create" element={<CreateAdminParcelPage />} />
+          <Route path="admin/parcels/:id" element={<AdminParcelDetailPage />} />
+          {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
+          {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
+          {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
+        {/* </Route> */}
 
   </Routes>
 );
