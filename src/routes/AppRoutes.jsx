@@ -48,6 +48,9 @@ import AdminLayout from "../components/admin/layout/AdminLayout";
 import AdminLogin from "../pages/admin/auth/AdminLogin";
 import AdminForgotPassword from "../pages/admin/auth/AdminForgotPassword";
 import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
+import AdminAllParcels from "../pages/admin/parcels/AdminAllParcels";
+import CreateAdminParcelPage from "../pages/admin/parcels/CreateAdminParcelPage";
+import AdminParcelDetailPage from "../pages/admin/parcels/AdminParcelDetailPage";
 
 
 const AppRoutes = () => (
@@ -108,6 +111,9 @@ const AppRoutes = () => (
         {/* Admin Routes*/}
         {/* <Route element={<AdminLayout />}> */}
           <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/parcels" element={<AdminAllParcels />} />
+          <Route path="admin/parcels/create" element={<CreateAdminParcelPage />} />
+          <Route path="admin/parcels/:id" element={<AdminParcelDetailPage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
