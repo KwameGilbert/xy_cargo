@@ -51,6 +51,8 @@ import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
 import AdminAllParcels from "../pages/admin/parcels/AdminAllParcels";
 import CreateAdminParcelPage from "../pages/admin/parcels/CreateAdminParcelPage";
 import AdminParcelDetailPage from "../pages/admin/parcels/AdminParcelDetailPage";
+import EditAdminParcelPage from "../pages/admin/parcels/EditAdminParcelPage";
+import AdminAllShipments from "../pages/admin/shipments/AllShipments";
 
 
 const AppRoutes = () => (
@@ -114,6 +116,8 @@ const AppRoutes = () => (
           <Route path="admin/parcels" element={<AdminAllParcels />} />
           <Route path="admin/parcels/create" element={<CreateAdminParcelPage />} />
           <Route path="admin/parcels/:id" element={<AdminParcelDetailPage />} />
+          <Route path="admin/parcels/:id/edit" element={<EditAdminParcelPage />} />
+          <Route path="admin/shipments" element={<AdminAllShipments />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
@@ -123,3 +127,4 @@ const AppRoutes = () => (
 );
 
 export default AppRoutes;
+
