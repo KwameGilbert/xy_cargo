@@ -22,7 +22,8 @@ const AdminShipmentCard = ({
   onSelectionChange,
   onViewDetails,
   onEditShipment,
-  onDeleteShipment
+  onDeleteShipment,
+  onUpdateStatus
 }) => {
   const getStatusIcon = (status) => {
     switch (status) {

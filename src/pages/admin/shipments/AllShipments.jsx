@@ -6,6 +6,7 @@ import AdminShipmentTable from '../../../components/admin/shipments/AdminShipmen
 import AdminShipmentCard from '../../../components/admin/shipments/AdminShipmentCard';
 import AdminShipmentActions from '../../../components/admin/shipments/AdminShipmentActions';
 import AdminShipmentKPIs from '../../../components/admin/shipments/AdminShipmentKPIs';
+import StatusUpdateModal from '../../../components/admin/shipments/StatusUpdateModal';
 import mockShipmentsData from '../../../components/admin/shipments/mockData';
 import { useMediaQuery } from 'react-responsive';
 import { Plus, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
@@ -26,6 +27,7 @@ const AdminAllShipments = () => {
   const [selectedShipments, setSelectedShipments] = useState([]);
   const [viewMode, setViewMode] = useState('table'); // table, cards
   const [showBulkActions, setShowBulkActions] = useState(false);
+  const [statusUpdateModal, setStatusUpdateModal] = useState({ isOpen: false, shipment: null });
 
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
@@ -119,6 +121,48 @@ const AdminAllShipments = () => {
         : shipment
     ));
     setSelectedShipments([]);
+  };
+
+  const handleStatusUpdate = async (shipmentId, newStatus, notes = '') => {
+    // Update shipment status
+    setShipments(prev => prev.map(shipment => {
+      if (shipment.id === shipmentId) {
+        // Update all parcels within this shipment
+        const updatedParcels = shipment.parcels?.map(parcel => ({
+          ...parcel,
+          status: newStatus,
+          lastUpdated: new Date().toISOString(),
+          notes: notes ? `${parcel.notes || ''}\n[${new Date().toLocaleString()}] Status updated to ${newStatus}: ${notes}`.trim() : parcel.notes
+        })) || [];
+
+        return {
+          ...shipment,
+          status: newStatus,
+          lastUpdated: new Date().toISOString(),
+          parcels: updatedParcels,
+          // Update actual arrival date if delivered
+          actualArrival: newStatus === 'Delivered' ? new Date().toISOString() : shipment.actualArrival,
+          // Add status update notes
+          statusHistory: [
+            ...(shipment.statusHistory || []),
+            {
+              status: newStatus,
+              timestamp: new Date().toISOString(),
+              notes: notes,
+              updatedBy: 'Admin User' // In a real app, this would be the current user
+            }
+          ]
+        };
+      }
+      return shipment;
+    }));
+
+    // Close modal
+    setStatusUpdateModal({ isOpen: false, shipment: null });
+  };
+
+  const openStatusUpdateModal = (shipment) => {
+    setStatusUpdateModal({ isOpen: true, shipment });
   };
 
   // Calculate KPIs
@@ -236,7 +280,7 @@ const AdminAllShipments = () => {
               onEdit={handleEditShipment}
               onDelete={handleDeleteShipment}
               onPrintManifest={(id) => console.log("Print manifest:", id)}
-              onUpdateStatus={(id) => console.log("Update status:", id)}
+              onUpdateStatus={openStatusUpdateModal}
             />
           )}
         </div>
@@ -246,6 +290,14 @@ const AdminAllShipments = () => {
           Showing {filteredShipments.length} of {shipments.length} shipments
         </div>
       </div>
+
+      {/* Status Update Modal */}
+      <StatusUpdateModal
+        isOpen={statusUpdateModal.isOpen}
+        onClose={() => setStatusUpdateModal({ isOpen: false, shipment: null })}
+        shipment={statusUpdateModal.shipment}
+        onUpdateStatus={handleStatusUpdate}
+      />
     </AdminLayout>
   );
 };

@@ -13,7 +13,8 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  XCircle
+  XCircle,
+  RefreshCw
 } from 'lucide-react';
 
 const AdminShipmentTable = ({
@@ -30,7 +31,6 @@ const AdminShipmentTable = ({
   onDelete,
   sortConfig = { key: 'departureDate', direction: 'desc' },
   onSort,
-  onPrintManifest,
   onUpdateStatus
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -68,19 +68,21 @@ const AdminShipmentTable = ({
   const getStatusColor = (status) => {
     switch (status) {
       case 'Delivered':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 border border-green-200';
       case 'In Transit':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 border border-blue-200';
       case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
       case 'Processing':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100 text-purple-800 border border-purple-200';
       case 'Delayed':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 border border-red-200';
       case 'Cancelled':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 border border-gray-200';
+      case 'Created':
+        return 'bg-indigo-100 text-indigo-800 border border-indigo-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 border border-gray-200';
     }
   };
 
@@ -136,7 +138,7 @@ const AdminShipmentTable = ({
 
   const SortableHeader = ({ label, sortKey, className = '' }) => (
     <th
-      className={`px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50 ${className}`}
+      className={`px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50 ${className}`}
       onClick={() => handleSort(sortKey)}
     >
       <div className="flex items-center gap-1">
@@ -159,7 +161,7 @@ const AdminShipmentTable = ({
         year: 'numeric'
       });
     } catch (error) {
-      return 'Invalid Date';
+      return 'Invalid Date: ' + dateString + ' ' + error.message;
     }
   };
 
@@ -181,18 +183,18 @@ const AdminShipmentTable = ({
 
   // Fix: Handle action calls safely
   const handleView = (shipment) => {
-    if (onViewDetails) onViewDetails(shipment);
-    else if (onView) onView(shipment);
+    if (onViewDetails) onViewDetails(shipment.id);
+    else if (onView) onView(shipment.id);
   };
 
   const handleEdit = (shipment) => {
-    if (onEditShipment) onEditShipment(shipment);
-    else if (onEdit) onEdit(shipment);
+    if (onEditShipment) onEditShipment(shipment.id);
+    else if (onEdit) onEdit(shipment.id);
   };
 
   const handleDelete = (shipment) => {
-    if (onDeleteShipment) onDeleteShipment(shipment);
-    else if (onDelete) onDelete(shipment);
+    if (onDeleteShipment) onDeleteShipment(shipment.id);
+    else if (onDelete) onDelete(shipment.id);
   };
 
   return (
@@ -214,10 +216,10 @@ const AdminShipmentTable = ({
             <SortableHeader label="Shipment ID" sortKey="id" />
             <SortableHeader label="Status & Priority" sortKey="status" />
             <SortableHeader label="Route" sortKey="originCountry" />
-            <SortableHeader label="Departure" sortKey="departureDate" />
+            <SortableHeader label="Departure/Est. Arrival" sortKey="departureDate" />
             <SortableHeader label="Parcels" sortKey="totalParcels" />
             <SortableHeader label="Cost" sortKey="shippingCost" />
-            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
             </th>
           </tr>
@@ -246,12 +248,9 @@ const AdminShipmentTable = ({
               </td>
               <td className="px-4 py-4 whitespace-nowrap">
                 <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    {getStatusIcon(shipment.status)}
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(shipment.status)}`}>
-                      {shipment.status || 'Unknown'}
-                    </span>
-                  </div>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full w-fit ${getStatusColor(shipment.status)}`}>
+                    {shipment.status || 'Unknown'}
+                  </span>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full w-fit ${getPriorityColor(shipment.priority)}`}>
                     {shipment.priority || 'Normal'}
                   </span>
@@ -270,9 +269,15 @@ const AdminShipmentTable = ({
                 </div>
               </td>
               <td className="px-4 py-4 whitespace-nowrap">
-                <div className="flex items-center gap-1 text-sm text-gray-900">
-                  <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  {formatDate(shipment.departureDate)}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1 text-sm text-gray-900">
+                    <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <span className="font-medium">Dep:</span> {formatDate(shipment.departureDate)}
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-gray-900">
+                    <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <span className="font-medium">Arr:</span> {formatDate(shipment.estimatedArrival)}
+                  </div>
                 </div>
               </td>
               <td className="px-4 py-4 whitespace-nowrap">
@@ -286,17 +291,6 @@ const AdminShipmentTable = ({
               <td className="px-4 py-4 whitespace-nowrap">
                 <div className="text-sm font-medium text-gray-900">
                   {shipment.shippingCost || '$0.00'}
-                </div>
-                <div className="text-sm text-gray-500">
-                  Duty: {shipment.customsDuty || '$0.00'}
-                </div>
-              </td>
-              <td className="px-4 py-4">
-                <div className="text-sm text-gray-900">
-                  {shipment.assignedWarehouse || 'Unassigned'}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {shipment.assignedAgent || 'No agent'}
                 </div>
               </td>
               <td className="px-4 py-4 text-right whitespace-nowrap">
@@ -320,6 +314,16 @@ const AdminShipmentTable = ({
                         >
                           <Eye className="h-4 w-4" />
                           View Details
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (onUpdateStatus) onUpdateStatus(shipment);
+                            setDropdownOpen(null);
+                          }}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-blue-600 hover:bg-blue-50"
+                        >
+                          <RefreshCw className="h-4 w-4" />
+                          Update Status
                         </button>
                         <button
                           onClick={() => {
