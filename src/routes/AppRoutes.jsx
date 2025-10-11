@@ -64,6 +64,12 @@ import AdminWarehouseDetailPage from "../pages/admin/warehouse/AdminWarehouseDet
 import AdminCreateWarehousePage from "../pages/admin/warehouse/AdminCreateWarehousePage";
 import AdminEditWarehousePage from "../pages/admin/warehouse/AdminEditWarehousePage";
 
+// Staff Pages
+import AdminAllStaff from "../pages/admin/staff/AdminAllStaff";
+import AdminCreateStaff from "../pages/admin/staff/AdminCreateStaff";
+import AdminEditStaff from "../pages/admin/staff/AdminEditStaff";
+import AdminStaffDetailPage from "../pages/admin/staff/AdminStaffDetailPage";
+
 
 const AppRoutes = () => (
   <Routes>
@@ -136,6 +142,10 @@ const AppRoutes = () => (
           <Route path="admin/warehouses/create" element={<AdminCreateWarehousePage />} />
           <Route path="admin/warehouses/:id" element={<AdminWarehouseDetailPage />} />
           <Route path="admin/warehousses/:id/edit" element={<AdminEditWarehousePage />} />
+          <Route path="admin/staff" element={<AdminAllStaff />} />
+          <Route path="admin/staff/create" element={<AdminCreateStaff />} />
+          <Route path="admin/staff/:staffId" element={<AdminStaffDetailPage />} />
+          <Route path="admin/staff/:staffId/edit" element={<AdminEditStaff />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
