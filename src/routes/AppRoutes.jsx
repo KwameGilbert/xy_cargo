@@ -63,12 +63,18 @@ import AdminAllWarehouses from "../pages/admin/warehouse/AdminAllWarehouses";
 import AdminWarehouseDetailPage from "../pages/admin/warehouse/AdminWarehouseDetailPage";
 import AdminCreateWarehousePage from "../pages/admin/warehouse/AdminCreateWarehousePage";
 import AdminEditWarehousePage from "../pages/admin/warehouse/AdminEditWarehousePage";
+import AdminIntakeLogsPage from "../pages/admin/warehouse/AdminIntakeLogsPage";
 
 // Staff Pages
 import AdminAllStaff from "../pages/admin/staff/AdminAllStaff";
 import AdminCreateStaff from "../pages/admin/staff/AdminCreateStaff";
 import AdminEditStaff from "../pages/admin/staff/AdminEditStaff";
 import AdminStaffDetailPage from "../pages/admin/staff/AdminStaffDetailPage";
+
+// Customer Pages
+import AdminAllCustomers from "../pages/admin/customers/AdminAllCustomers";
+import AdminCustomerDetailPage from "../pages/admin/customers/AdminCustomerDetailPage";
+import AdminEditCustomerPage from "../pages/admin/customers/AdminEditCustomerPage";
 
 
 const AppRoutes = () => (
@@ -142,10 +148,14 @@ const AppRoutes = () => (
           <Route path="admin/warehouses/create" element={<AdminCreateWarehousePage />} />
           <Route path="admin/warehouses/:id" element={<AdminWarehouseDetailPage />} />
           <Route path="admin/warehousses/:id/edit" element={<AdminEditWarehousePage />} />
+          <Route path="admin/warehouses/logs" element={<AdminIntakeLogsPage />} />
           <Route path="admin/staff" element={<AdminAllStaff />} />
           <Route path="admin/staff/create" element={<AdminCreateStaff />} />
           <Route path="admin/staff/:staffId" element={<AdminStaffDetailPage />} />
           <Route path="admin/staff/:staffId/edit" element={<AdminEditStaff />} />
+          <Route path="admin/customers" element={<AdminAllCustomers />} />
+          <Route path="admin/customers/:id" element={<AdminCustomerDetailPage />} />
+          <Route path="admin/customers/:id/edit" element={<AdminEditCustomerPage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
