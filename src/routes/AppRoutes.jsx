@@ -76,6 +76,12 @@ import AdminAllCustomers from "../pages/admin/customers/AdminAllCustomers";
 import AdminCustomerDetailPage from "../pages/admin/customers/AdminCustomerDetailPage";
 import AdminEditCustomerPage from "../pages/admin/customers/AdminEditCustomerPage";
 
+// Agent Pages
+import AdminAllAgents from "../pages/admin/agents/AdminAllAgents";
+import AdminAgentDetailPage from "../pages/admin/agents/AdminAgentDetailPage";
+import AdminCreateAgentPage from "../pages/admin/agents/AdminCreateAgentPage";
+import AdminEditAgentPage from "../pages/admin/agents/AdminEditAgentPage";
+
 
 const AppRoutes = () => (
   <Routes>
@@ -156,6 +162,10 @@ const AppRoutes = () => (
           <Route path="admin/customers" element={<AdminAllCustomers />} />
           <Route path="admin/customers/:id" element={<AdminCustomerDetailPage />} />
           <Route path="admin/customers/:id/edit" element={<AdminEditCustomerPage />} />
+          <Route path="admin/agents" element={<AdminAllAgents />} />
+          <Route path="admin/agents/:id" element={<AdminAgentDetailPage />} />
+          <Route path="admin/agents/create" element={<AdminCreateAgentPage />} />
+          <Route path="admin/agents/:id/edit" element={<AdminEditAgentPage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
