@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Grid, List, Download, Package } from 'lucide-react';
+import { Plus, Download, Package } from 'lucide-react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import AdminWarehouseFilters from '../../../components/admin/warehouse/AdminWarehouseFilters';
-import AdminWarehouseTable from '../../../components/admin/warehouse/AdminWarehouseTable';
 import AdminWarehouseCard from '../../../components/admin/warehouse/AdminWarehouseCard';
 import AdminWarehouseKPIs from '../../../components/admin/warehouse/AdminWarehouseKPIs';
 import mockWarehousesData from '../../../components/admin/warehouse/mockData';
@@ -13,7 +12,6 @@ const AdminAllWarehouses = () => {
   const [warehouses, setWarehouses] = useState([]);
   const [selectedWarehouses, setSelectedWarehouses] = useState([]);
   const [filters, setFilters] = useState({});
-  const [viewMode, setViewMode] = useState('table'); // 'table' or 'card'
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,14 +61,6 @@ const AdminAllWarehouses = () => {
         ? prev.filter(id => id !== warehouseId)
         : [...prev, warehouseId]
     );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedWarehouses.length === filteredWarehouses.length) {
-      setSelectedWarehouses([]);
-    } else {
-      setSelectedWarehouses(filteredWarehouses.map(w => w.id));
-    }
   };
 
   const handleViewWarehouse = (warehouseId) => {
@@ -160,49 +150,20 @@ const AdminAllWarehouses = () => {
           totalWarehouses={warehouses.length}
         />
 
-        {/* View Toggle and Bulk Actions */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode('table')}
-                className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
-                  viewMode === 'table'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <List className="h-4 w-4 mr-2" />
-                Table
-              </button>
-              <button
-                onClick={() => setViewMode('card')}
-                className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium ${
-                  viewMode === 'card'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <Grid className="h-4 w-4 mr-2" />
-                Cards
-              </button>
-            </div>
-            {selectedWarehouses.length > 0 && (
-              <span className="text-sm text-gray-600">
-                {selectedWarehouses.length} selected
-              </span>
-            )}
-          </div>
-
-          {selectedWarehouses.length > 0 && (
+        {/* Bulk Actions */}
+        {selectedWarehouses.length > 0 && (
+          <div className="flex items-center justify-between mb-6">
+            <span className="text-sm text-gray-600">
+              {selectedWarehouses.length} selected
+            </span>
             <button
               onClick={handleBulkDelete}
               className="inline-flex items-center px-4 py-2 border border-red-500 rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600"
             >
               Delete Selected ({selectedWarehouses.length})
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Content */}
         {filteredWarehouses.length === 0 ? (
@@ -227,16 +188,6 @@ const AdminAllWarehouses = () => {
               </div>
             )}
           </div>
-        ) : viewMode === 'table' ? (
-          <AdminWarehouseTable
-            warehouses={filteredWarehouses}
-            selectedWarehouses={selectedWarehouses}
-            onSelectWarehouse={handleSelectWarehouse}
-            onSelectAll={handleSelectAll}
-            onViewWarehouse={handleViewWarehouse}
-            onEditWarehouse={handleEditWarehouse}
-            onDeleteWarehouse={handleDeleteWarehouse}
-          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredWarehouses.map(warehouse => (
