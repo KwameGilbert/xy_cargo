@@ -56,6 +56,13 @@ import AdminAllShipments from "../pages/admin/shipments/AllShipments";
 import AdminShipmentDetailPage from "../pages/admin/shipments/AdminShipmentDetailPage";
 import AdminShipmentEditPage from "../pages/admin/shipments/AdminShipmentEditPage";
 import AdminCreateShipmentPage from "../pages/admin/shipments/AdminCreateShipmentPage";
+import AdminShipmentManifestPage from "../pages/admin/shipments/AdminShipmentManifestPage";
+
+// Warehouse Pages
+import AdminAllWarehouses from "../pages/admin/warehouse/AdminAllWarehouses";
+import AdminWarehouseDetailPage from "../pages/admin/warehouse/AdminWarehouseDetailPage";
+import AdminCreateWarehousePage from "../pages/admin/warehouse/AdminCreateWarehousePage";
+import AdminEditWarehousePage from "../pages/admin/warehouse/AdminEditWarehousePage";
 
 
 const AppRoutes = () => (
@@ -123,7 +130,12 @@ const AppRoutes = () => (
           <Route path="admin/shipments" element={<AdminAllShipments />} />
           <Route path="admin/shipments/create" element={<AdminCreateShipmentPage />} />
           <Route path="admin/shipments/:shipmentId" element={<AdminShipmentDetailPage />} />
+          <Route path="admin/shipments/:shipmentId/manifest" element={<AdminShipmentManifestPage />} />
           <Route path="admin/shipments/:shipmentId/edit" element={<AdminShipmentEditPage />} />
+          <Route path="admin/warehouses" element={<AdminAllWarehouses />} />
+          <Route path="admin/warehouses/create" element={<AdminCreateWarehousePage />} />
+          <Route path="admin/warehouses/:id" element={<AdminWarehouseDetailPage />} />
+          <Route path="admin/warehouses/:id/edit" element={<AdminEditWarehousePage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
