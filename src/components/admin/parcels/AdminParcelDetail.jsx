@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
-import { Package, Truck, User, DollarSign, Clock, MapPin, CheckCircle, AlertTriangle, Edit, Split, UserCheck, Calculator, Printer, Send, X, Plus, Minus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Package, Truck, User, DollarSign, Clock, MapPin, CheckCircle, AlertTriangle, Edit, Split, UserCheck, Calculator, Printer, Send, X} from 'lucide-react';
 
 const AdminParcelDetail = ({ parcel }) => {
+  const navigate = useNavigate();
   const [showSplitModal, setShowSplitModal] = useState(false);
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [showCostModal, setShowCostModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showNotifyModal, setShowNotifyModal] = useState(false);
   const [selectedItemsForSplit, setSelectedItemsForSplit] = useState([]);
   const [newCustomerId, setNewCustomerId] = useState('');
   const [newCost, setNewCost] = useState(parcel.paymentAmount.replace('$', ''));
   const [notificationMessage, setNotificationMessage] = useState('');
-  const [editForm, setEditForm] = useState({
-    priority: parcel.priority,
-    warehouse: parcel.warehouse,
-    agent: parcel.agent,
-    specialInstructions: parcel.specialInstructions || '',
-    adminNotes: parcel.adminNotes || ''
-  });
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -60,13 +55,6 @@ const AdminParcelDetail = ({ parcel }) => {
     console.log('Updating cost to:', newCost);
     alert(`Cost updated to $${newCost}`);
     setShowCostModal(false);
-  };
-
-  const handleEditParcel = () => {
-    // Mock edit functionality
-    console.log('Updating parcel details:', editForm);
-    alert('Parcel details updated successfully!');
-    setShowEditModal(false);
   };
 
   const handleNotifyCustomer = () => {
@@ -248,7 +236,7 @@ const AdminParcelDetail = ({ parcel }) => {
             <Send className="h-4 w-4 mr-2" />
             Notify Customer
           </button>
-          <button onClick={() => setShowEditModal(true)} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+          <button onClick={() => navigate(`/admin/parcels/${parcel.id}/edit`)} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
             <Edit className="h-4 w-4 mr-2" />
             Edit Details
           </button>
@@ -373,7 +361,7 @@ const AdminParcelDetail = ({ parcel }) => {
 
       {/* Modals for Admin Actions */}
       {showSplitModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-xs bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">Split Parcel</h3>
@@ -427,7 +415,7 @@ const AdminParcelDetail = ({ parcel }) => {
       )}
 
       {showReassignModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-xs bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">Reassign Customer</h3>
@@ -475,7 +463,7 @@ const AdminParcelDetail = ({ parcel }) => {
       )}
 
       {showCostModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-xs bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">Update Cost</h3>
@@ -523,81 +511,8 @@ const AdminParcelDetail = ({ parcel }) => {
         </div>
       )}
 
-      {showEditModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold">Edit Parcel Details</h3>
-              <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600">
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                <select
-                  value={editForm.priority}
-                  onChange={(e) => setEditForm({...editForm, priority: e.target.value})}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                >
-                  <option value="low">Low</option>
-                  <option value="normal">Normal</option>
-                  <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Warehouse</label>
-                <select
-                  value={editForm.warehouse}
-                  onChange={(e) => setEditForm({...editForm, warehouse: e.target.value})}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                >
-                  <option value="Warehouse A">Warehouse A</option>
-                  <option value="Warehouse B">Warehouse B</option>
-                  <option value="Warehouse C">Warehouse C</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Agent</label>
-                <input
-                  type="text"
-                  value={editForm.agent}
-                  onChange={(e) => setEditForm({...editForm, agent: e.target.value})}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Special Instructions</label>
-                <textarea
-                  value={editForm.specialInstructions}
-                  onChange={(e) => setEditForm({...editForm, specialInstructions: e.target.value})}
-                  rows={3}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Admin Notes</label>
-                <textarea
-                  value={editForm.adminNotes}
-                  onChange={(e) => setEditForm({...editForm, adminNotes: e.target.value})}
-                  rows={2}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end space-x-2 mt-6">
-              <button onClick={() => setShowEditModal(false)} className="px-4 py-2 border rounded">Cancel</button>
-              <button onClick={handleEditParcel} className="px-4 py-2 bg-blue-600 text-white rounded">
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {showNotifyModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-xs bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">Notify Customer</h3>
