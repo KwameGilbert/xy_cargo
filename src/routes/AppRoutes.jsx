@@ -135,7 +135,7 @@ const AppRoutes = () => (
           <Route path="admin/warehouses" element={<AdminAllWarehouses />} />
           <Route path="admin/warehouses/create" element={<AdminCreateWarehousePage />} />
           <Route path="admin/warehouses/:id" element={<AdminWarehouseDetailPage />} />
-          <Route path="admin/warehouses/:id/edit" element={<AdminEditWarehousePage />} />
+          <Route path="admin/warehousses/:id/edit" element={<AdminEditWarehousePage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
