@@ -91,7 +91,7 @@ const NAV_ITEMS = [
     children: [
       { name: "All Payments", icon: CreditCard, path: "/admin/payments" },
       { name: "Pending Payments", icon: CreditCard, path: "/admin/payments/pending" },
-      { name: "Refunds & Adjustments", icon: RotateCcw, path: "/admin/refunds" },
+      // { name: "Refunds & Adjustments", icon: RotateCcw, path: "/admin/refunds" },
       { name: "Financial Reports", icon: TrendingUp, path: "/admin/reports/finance" },
     ],
   },
