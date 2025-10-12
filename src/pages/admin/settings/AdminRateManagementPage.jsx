@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AdminLayout from '../../../components/admin/layout/AdminLayout';
 import RateModal from '../../../components/admin/rates/RateModal';
 import DeleteRateModal from '../../../components/admin/rates/DeleteRateModal';
@@ -15,7 +15,11 @@ import {
   Plane,
   Ship,
   Truck,
-  Package
+  Package,
+  Eye,
+  Copy,
+  Download,
+  ChevronDown
 } from 'lucide-react';
 import ReportFilters from '../../../components/admin/reports/ReportFilters';
 import DataExport from '../../../components/admin/reports/DataExport';
@@ -23,9 +27,9 @@ import DataExport from '../../../components/admin/reports/DataExport';
 // Mock data for shipping rates
 const mockRates = {
   overview: {
-    totalRates: 45,
-    activeRates: 42,
-    pendingUpdates: 3,
+    totalRates: 12,
+    activeRates: 11,
+    pendingUpdates: 1,
     lastUpdated: '2025-10-12T10:30:00Z'
   },
   rates: [
@@ -34,11 +38,13 @@ const mockRates = {
       name: 'Air Freight - Economy',
       type: 'air',
       category: 'economy',
-      origin: 'Lusaka',
-      destination: 'Johannesburg',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'South Africa',
+      destinationCity: 'Johannesburg',
       ratePerKg: 15.50,
       minimumCharge: 150.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -56,11 +62,13 @@ const mockRates = {
       name: 'Air Freight - Express',
       type: 'air',
       category: 'express',
-      origin: 'Lusaka',
-      destination: 'Johannesburg',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'South Africa',
+      destinationCity: 'Johannesburg',
       ratePerKg: 25.00,
       minimumCharge: 250.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -78,11 +86,13 @@ const mockRates = {
       name: 'Sea Freight - LCL',
       type: 'sea',
       category: 'lcl',
-      origin: 'Lusaka',
-      destination: 'Durban',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'South Africa',
+      destinationCity: 'Durban',
       ratePerCbm: 850.00,
       minimumCharge: 1200.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -100,10 +110,12 @@ const mockRates = {
       name: 'Sea Freight - FCL 20ft',
       type: 'sea',
       category: 'fcl_20ft',
-      origin: 'Lusaka',
-      destination: 'Durban',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'South Africa',
+      destinationCity: 'Durban',
       flatRate: 4500.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -120,11 +132,13 @@ const mockRates = {
       name: 'Road Freight - Local',
       type: 'road',
       category: 'local',
-      origin: 'Lusaka',
-      destination: 'Kitwe',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'Zambia',
+      destinationCity: 'Kitwe',
       ratePerKg: 8.50,
       minimumCharge: 75.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -142,11 +156,13 @@ const mockRates = {
       name: 'Air Freight - Heavy Cargo',
       type: 'air',
       category: 'heavy_cargo',
-      origin: 'Lusaka',
-      destination: 'Johannesburg',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'South Africa',
+      destinationCity: 'Johannesburg',
       ratePerKg: 12.00,
       minimumCharge: 500.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -164,11 +180,13 @@ const mockRates = {
       name: 'Sea Freight - LCL Express',
       type: 'sea',
       category: 'lcl_express',
-      origin: 'Lusaka',
-      destination: 'Durban',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'South Africa',
+      destinationCity: 'Durban',
       ratePerCbm: 1200.00,
       minimumCharge: 1800.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'active',
@@ -186,11 +204,13 @@ const mockRates = {
       name: 'Road Freight - Express',
       type: 'road',
       category: 'express',
-      origin: 'Lusaka',
-      destination: 'Livingstone',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'Zambia',
+      destinationCity: 'Livingstone',
       ratePerKg: 12.00,
       minimumCharge: 120.00,
-      currency: 'ZMW',
+      currency: 'USD',
       effectiveFrom: '2025-10-01',
       effectiveTo: null,
       status: 'pending',
@@ -202,16 +222,112 @@ const mockRates = {
       createdAt: '2025-10-10T15:30:00Z',
       updatedAt: '2025-10-10T15:30:00Z',
       createdBy: 'Road Transport Team'
+    },
+    {
+      id: 'RATE-009',
+      name: 'Air Freight - Kenya Route',
+      type: 'air',
+      category: 'express',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'Kenya',
+      destinationCity: 'Nairobi',
+      ratePerKg: 22.00,
+      minimumCharge: 200.00,
+      currency: 'USD',
+      effectiveFrom: '2025-10-01',
+      effectiveTo: null,
+      status: 'active',
+      priority: 1,
+      conditions: {
+        minWeight: 0.5,
+        maxWeight: 30
+      },
+      createdAt: '2025-10-05T08:00:00Z',
+      updatedAt: '2025-10-05T08:00:00Z',
+      createdBy: 'East Africa Ops'
+    },
+    {
+      id: 'RATE-010',
+      name: 'Sea Freight - Tanzania',
+      type: 'sea',
+      category: 'lcl',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'Tanzania',
+      destinationCity: 'Dar es Salaam',
+      ratePerCbm: 950.00,
+      minimumCharge: 1400.00,
+      currency: 'USD',
+      effectiveFrom: '2025-10-01',
+      effectiveTo: null,
+      status: 'active',
+      priority: 1,
+      conditions: {
+        minVolume: 1,
+        maxVolume: 12
+      },
+      createdAt: '2025-10-08T11:45:00Z',
+      updatedAt: '2025-10-08T11:45:00Z',
+      createdBy: 'Tanzania Logistics'
+    },
+    {
+      id: 'RATE-011',
+      name: 'Air Freight - Botswana',
+      type: 'air',
+      category: 'economy',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'Botswana',
+      destinationCity: 'Gaborone',
+      ratePerKg: 18.50,
+      minimumCharge: 180.00,
+      currency: 'USD',
+      effectiveFrom: '2025-10-01',
+      effectiveTo: null,
+      status: 'active',
+      priority: 1,
+      conditions: {
+        minWeight: 0.5,
+        maxWeight: 25
+      },
+      createdAt: '2025-10-06T14:20:00Z',
+      updatedAt: '2025-10-06T14:20:00Z',
+      createdBy: 'Southern Africa Team'
+    },
+    {
+      id: 'RATE-012',
+      name: 'Road Freight - Zimbabwe',
+      type: 'road',
+      category: 'local',
+      originCountry: 'Zambia',
+      originCity: 'Lusaka',
+      destinationCountry: 'Zimbabwe',
+      destinationCity: 'Harare',
+      ratePerKg: 10.00,
+      minimumCharge: 100.00,
+      currency: 'USD',
+      effectiveFrom: '2025-10-01',
+      effectiveTo: null,
+      status: 'active',
+      priority: 1,
+      conditions: {
+        minWeight: 1,
+        maxWeight: 500
+      },
+      createdAt: '2025-10-09T09:30:00Z',
+      updatedAt: '2025-10-09T09:30:00Z',
+      createdBy: 'Zimbabwe Operations'
     }
   ],
   categories: {
-    air: { count: 12, percentage: 27 },
-    sea: { count: 15, percentage: 33 },
-    road: { count: 18, percentage: 40 }
+    air: { count: 5, percentage: 42 },
+    sea: { count: 4, percentage: 33 },
+    road: { count: 3, percentage: 25 }
   },
   status: {
-    active: { count: 42, percentage: 93 },
-    pending: { count: 3, percentage: 7 }
+    active: { count: 11, percentage: 92 },
+    pending: { count: 1, percentage: 8 }
   }
 };
 
@@ -225,14 +341,29 @@ const AdminRateManagementPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingRate, setEditingRate] = useState(null);
   const [deletingRate, setDeletingRate] = useState(null);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.dropdown-container')) {
+        setOpenDropdownId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Filter rates based on search and filters
   const filteredRates = useMemo(() => {
     return rates.filter(rate => {
       const matchesSearch = searchTerm === '' ||
         rate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rate.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rate.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        rate.originCountry.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        rate.originCity.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        rate.destinationCountry.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        rate.destinationCity.toLowerCase().includes(searchTerm.toLowerCase()) ||
         rate.id.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesType = typeFilter === 'all' || rate.type === typeFilter;
@@ -273,9 +404,40 @@ const AdminRateManagementPage = () => {
     setRates(prev => prev.filter(rate => rate.id !== rateId));
   };
 
+  // Handle additional actions
+  const handleViewDetails = (rate) => {
+    console.log('View details for rate:', rate);
+    // TODO: Implement view details modal
+    setOpenDropdownId(null);
+  };
+
+  const handleDuplicateRate = (rate) => {
+    const duplicatedRate = {
+      ...rate,
+      id: `RATE-${String(rates.length + 1).padStart(3, '0')}`,
+      name: `${rate.name} (Copy)`,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'Current Admin'
+    };
+    setRates(prev => [...prev, duplicatedRate]);
+    setOpenDropdownId(null);
+  };
+
+  const handleExportRate = (rate) => {
+    console.log('Export rate:', rate);
+    // TODO: Implement export functionality
+    setOpenDropdownId(null);
+  };
+
+  const toggleDropdown = (rateId) => {
+    setOpenDropdownId(openDropdownId === rateId ? null : rateId);
+  };
+
   // Format currency
-  const formatCurrency = (amount, currency = 'ZMW') => {
-    return new Intl.NumberFormat('en-ZM', {
+  const formatCurrency = (amount, currency = 'USD') => {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency
     }).format(amount);
@@ -321,7 +483,7 @@ const AdminRateManagementPage = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
+      <div className="">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
@@ -480,10 +642,9 @@ const AdminRateManagementPage = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {rate.origin} → {rate.destination}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          Priority: {rate.priority}
+                          <div className="font-medium">{rate.originCity}, {rate.originCountry}</div>
+                          <div className="text-gray-500">↓</div>
+                          <div className="font-medium">{rate.destinationCity}, {rate.destinationCountry}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -523,9 +684,42 @@ const AdminRateManagementPage = () => {
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
-                          <button className="text-gray-600 hover:text-gray-900" title="More Options">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </button>
+                          <div className="relative dropdown-container">
+                            <button
+                              onClick={() => toggleDropdown(rate.id)}
+                              className="text-gray-600 hover:text-gray-900"
+                              title="More Options"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </button>
+                            {openDropdownId === rate.id && (
+                              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                <div className="py-1">
+                                  <button
+                                    onClick={() => handleViewDetails(rate)}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  >
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    View Details
+                                  </button>
+                                  <button
+                                    onClick={() => handleDuplicateRate(rate)}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  >
+                                    <Copy className="h-4 w-4 mr-2" />
+                                    Duplicate Rate
+                                  </button>
+                                  <button
+                                    onClick={() => handleExportRate(rate)}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  >
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Export Rate
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </td>
                     </tr>

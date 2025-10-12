@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
 import { XCircle } from 'lucide-react';
 
+// Dummy data for countries and cities
+const COUNTRIES_CITIES = {
+  'Zambia': ['Lusaka', 'Kitwe', 'Ndola', 'Kabwe', 'Chingola', 'Mufulira', 'Livingstone'],
+  'South Africa': ['Johannesburg', 'Cape Town', 'Durban', 'Pretoria', 'Port Elizabeth', 'Bloemfontein', 'East London'],
+  'Botswana': ['Gaborone', 'Francistown', 'Molepolole', 'Maun', 'Serowe'],
+  'Zimbabwe': ['Harare', 'Bulawayo', 'Chitungwiza', 'Mutare', 'Gweru', 'Kwekwe'],
+  'Namibia': ['Windhoek', 'Walvis Bay', 'Swakopmund', 'Rundu', 'Oshakati'],
+  'Mozambique': ['Maputo', 'Beira', 'Nampula', 'Tete', 'Quelimane', 'Pemba'],
+  'Tanzania': ['Dar es Salaam', 'Dodoma', 'Mwanza', 'Arusha', 'Mbeya', 'Morogoro'],
+  'Kenya': ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika'],
+  'Uganda': ['Kampala', 'Entebbe', 'Jinja', 'Mbarara', 'Mbale', 'Masaka'],
+  'Malawi': ['Lilongwe', 'Blantyre', 'Mzuzu', 'Zomba', 'Karonga']
+};
+
 const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
   const [formData, setFormData] = useState(rate || {
     name: '',
     type: 'air',
     category: 'economy',
-    origin: '',
-    destination: '',
+    originCountry: '',
+    originCity: '',
+    destinationCountry: '',
+    destinationCity: '',
     ratePerKg: 0,
     ratePerCbm: 0,
     flatRate: 0,
     minimumCharge: 0,
-    currency: 'ZMW',
+    currency: 'USD',
     effectiveFrom: '',
     effectiveTo: '',
     status: 'active',
@@ -56,6 +72,21 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
         ...prev.conditions,
         [field]: value
       }
+    }));
+  };
+
+  // Get available cities for a selected country
+  const getCitiesForCountry = (country) => {
+    return country && COUNTRIES_CITIES[country] ? COUNTRIES_CITIES[country] : [];
+  };
+
+  // Handle country change - reset city when country changes
+  const handleCountryChange = (field, value) => {
+    const cityField = field === 'originCountry' ? 'originCity' : 'destinationCity';
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+      [cityField]: '' // Reset city when country changes
     }));
   };
 
@@ -142,27 +173,69 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
               </select>
             </div>
 
-            {/* Origin and Destination */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Origin */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Origin</label>
-                <input
-                  type="text"
-                  value={formData.origin}
-                  onChange={(e) => handleChange('origin', e.target.value)}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Origin Country</label>
+                <select
+                  value={formData.originCountry}
+                  onChange={(e) => handleCountryChange('originCountry', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="e.g., Lusaka"
-                />
+                  required
+                >
+                  <option value="">Select Country</option>
+                  {Object.keys(COUNTRIES_CITIES).map(country => (
+                    <option key={country} value={country}>{country}</option>
+                  ))}
+                </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Destination</label>
-                <input
-                  type="text"
-                  value={formData.destination}
-                  onChange={(e) => handleChange('destination', e.target.value)}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Origin City</label>
+                <select
+                  value={formData.originCity}
+                  onChange={(e) => handleChange('originCity', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="e.g., Johannesburg"
-                />
+                  disabled={!formData.originCountry}
+                  required
+                >
+                  <option value="">Select City</option>
+                  {getCitiesForCountry(formData.originCountry).map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Destination */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Destination Country</label>
+                <select
+                  value={formData.destinationCountry}
+                  onChange={(e) => handleCountryChange('destinationCountry', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  required
+                >
+                  <option value="">Select Country</option>
+                  {Object.keys(COUNTRIES_CITIES).map(country => (
+                    <option key={country} value={country}>{country}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Destination City</label>
+                <select
+                  value={formData.destinationCity}
+                  onChange={(e) => handleChange('destinationCity', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  disabled={!formData.destinationCountry}
+                  required
+                >
+                  <option value="">Select City</option>
+                  {getCitiesForCountry(formData.destinationCountry).map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -173,7 +246,7 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
                 {formData.type === 'air' || formData.type === 'road' ? (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Rate per kg (ZMW)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Rate per kg (USD)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -183,7 +256,7 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Charge (ZMW)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Charge (USD)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -196,7 +269,7 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
                 ) : formData.type === 'sea' ? (
                   formData.category.startsWith('fcl') ? (
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Flat Rate (ZMW)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Flat Rate (USD)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -208,7 +281,7 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
                   ) : (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Rate per CBM (ZMW)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Rate per CBM (USD)</label>
                         <input
                           type="number"
                           step="0.01"
@@ -218,7 +291,7 @@ const RateModal = ({ isOpen, onClose, rate, onSave, mode }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Charge (ZMW)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Charge (USD)</label>
                         <input
                           type="number"
                           step="0.01"
