@@ -70,7 +70,7 @@ const NAV_ITEMS = [
     group: "warehouses",
     children: [
       { name: "All Warehouses", icon: Warehouse, path: "/admin/warehouses" },
-      { name: "Warehouse Staff", icon: User, path: "/admin/warehouses/staff" },
+      { name: "Warehouse Staff", icon: User, path: "/admin/staff" },
       { name: "Intake Logs", icon: Activity, path: "/admin/warehouses/logs" },
     ],
   },
