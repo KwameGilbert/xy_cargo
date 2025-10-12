@@ -90,6 +90,15 @@ import AdminEditPaymentPage from "../pages/admin/finance/AdminEditPaymentPage";
 
 // Reports Pages
 import AdminFinancialReportsPage from "../pages/admin/reports/AdminFinancialReportsPage";
+import AdminCustomerAnalyticsPage from "../pages/admin/reports/AdminCustomerAnalyticsPage";
+import AdminAgentPerformancePage from "../pages/admin/reports/AdminAgentPerformancePage";
+import AdminSystemActivityLogsPage from "../pages/admin/reports/AdminSystemActivityLogsPage";
+
+// Support Pages
+import AdminSupportTicketsPage from "../pages/admin/support/AdminSupportTicketsPage";
+
+// Settings Pages
+import AdminRateManagementPage from "../pages/admin/settings/AdminRateManagementPage";
 
 
 const AppRoutes = () => (
@@ -188,6 +197,13 @@ const AppRoutes = () => (
           <Route path="admin/payments/:id/edit" element={<AdminEditPaymentPage />} />
 
           <Route path="admin/reports/finance" element={<AdminFinancialReportsPage />} />
+          <Route path="admin/reports/customers" element={<AdminCustomerAnalyticsPage />} />
+          <Route path="admin/reports/agents" element={<AdminAgentPerformancePage />} />
+          <Route path="admin/reports/logs" element={<AdminSystemActivityLogsPage />} />
+
+          <Route path="admin/support/tickets" element={<AdminSupportTicketsPage />} />
+
+          <Route path="admin/settings/rates" element={<AdminRateManagementPage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
