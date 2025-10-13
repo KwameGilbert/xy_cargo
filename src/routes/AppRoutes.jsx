@@ -82,6 +82,30 @@ import AdminAgentDetailPage from "../pages/admin/agents/AdminAgentDetailPage";
 import AdminCreateAgentPage from "../pages/admin/agents/AdminCreateAgentPage";
 import AdminEditAgentPage from "../pages/admin/agents/AdminEditAgentPage";
 
+// Payment Pages
+import AdminAllPayments from "../pages/admin/finance/AdminAllPayments";
+import AdminPendingPayments from "../pages/admin/finance/AdminPendingPayments";
+import AdminPaymentDetailPage from "../pages/admin/finance/AdminPaymentDetailPage";
+import AdminEditPaymentPage from "../pages/admin/finance/AdminEditPaymentPage";
+
+// Reports Pages
+import AdminFinancialReportsPage from "../pages/admin/reports/AdminFinancialReportsPage";
+import AdminCustomerAnalyticsPage from "../pages/admin/reports/AdminCustomerAnalyticsPage";
+import AdminAgentPerformancePage from "../pages/admin/reports/AdminAgentPerformancePage";
+import AdminSystemActivityLogsPage from "../pages/admin/reports/AdminSystemActivityLogsPage";
+
+// Support Pages
+import AdminSupportTicketsPage from "../pages/admin/support/AdminSupportTicketsPage";
+
+// Settings Pages
+import AdminRateManagementPage from "../pages/admin/settings/AdminRateManagementPage";
+import AdminNotificationsSettingsPage from "../pages/admin/settings/AdminNotificationsSettingsPage";
+
+// Security Pages
+import AdminAccessLogsPage from "../pages/admin/security/AdminAccessLogsPage";
+import AdminAuditLogsPage from "../pages/admin/security/AdminAuditLogsPage";
+import AdminTwoFactorAuthPage from "../pages/admin/security/AdminTwoFactorAuthPage";
+
 
 const AppRoutes = () => (
   <Routes>
@@ -127,9 +151,9 @@ const AppRoutes = () => (
       <Route path="warehouse/payments" element={<WarehousePaymentsPage />} />
       <Route path="warehouse/shipments" element={<WarehouseShipmentsPage />} />
       <Route path="warehouse/shipments/:shipmentId" element={<WarehouseShipmentDetailPage />} />
-      <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />
-      <Route path="warehouse/support" element={<WarehouseSupportPage />} />
-      <Route path="warehouse/bulk-updates"element={<WarehouseBulkUpdatePage />} />
+      <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />      
+      <Route path="warehouse/support" element={<WarehouseSupportPage />} />      
+      <Route path="warehouse/bulk-updates" element={<WarehouseBulkUpdatePage />} />
       <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
@@ -141,31 +165,56 @@ const AppRoutes = () => (
         {/* Admin Routes*/}
         {/* <Route element={<AdminLayout />}> */}
           <Route path="admin/dashboard" element={<AdminDashboard />} />
+          
           <Route path="admin/parcels" element={<AdminAllParcels />} />
           <Route path="admin/parcels/create" element={<CreateAdminParcelPage />} />
           <Route path="admin/parcels/:id" element={<AdminParcelDetailPage />} />
           <Route path="admin/parcels/:id/edit" element={<EditAdminParcelPage />} />
+          
           <Route path="admin/shipments" element={<AdminAllShipments />} />
           <Route path="admin/shipments/create" element={<AdminCreateShipmentPage />} />
           <Route path="admin/shipments/:shipmentId" element={<AdminShipmentDetailPage />} />
           <Route path="admin/shipments/:shipmentId/manifest" element={<AdminShipmentManifestPage />} />
           <Route path="admin/shipments/:shipmentId/edit" element={<AdminShipmentEditPage />} />
+          
           <Route path="admin/warehouses" element={<AdminAllWarehouses />} />
           <Route path="admin/warehouses/create" element={<AdminCreateWarehousePage />} />
           <Route path="admin/warehouses/:id" element={<AdminWarehouseDetailPage />} />
-          <Route path="admin/warehousses/:id/edit" element={<AdminEditWarehousePage />} />
+          <Route path="admin/warehouses/:id/edit" element={<AdminEditWarehousePage />} />
           <Route path="admin/warehouses/logs" element={<AdminIntakeLogsPage />} />
+          
           <Route path="admin/staff" element={<AdminAllStaff />} />
           <Route path="admin/staff/create" element={<AdminCreateStaff />} />
           <Route path="admin/staff/:staffId" element={<AdminStaffDetailPage />} />
           <Route path="admin/staff/:staffId/edit" element={<AdminEditStaff />} />
+          
           <Route path="admin/customers" element={<AdminAllCustomers />} />
           <Route path="admin/customers/:id" element={<AdminCustomerDetailPage />} />
           <Route path="admin/customers/:id/edit" element={<AdminEditCustomerPage />} />
+          
           <Route path="admin/agents" element={<AdminAllAgents />} />
           <Route path="admin/agents/:id" element={<AdminAgentDetailPage />} />
           <Route path="admin/agents/create" element={<AdminCreateAgentPage />} />
           <Route path="admin/agents/:id/edit" element={<AdminEditAgentPage />} />
+
+          <Route path="admin/payments" element={<AdminAllPayments />} />
+          <Route path="admin/payments/pending" element={<AdminPendingPayments />} />
+          <Route path="admin/payments/:id" element={<AdminPaymentDetailPage />} />
+          <Route path="admin/payments/:id/edit" element={<AdminEditPaymentPage />} />
+
+          <Route path="admin/reports/finance" element={<AdminFinancialReportsPage />} />
+          <Route path="admin/reports/customers" element={<AdminCustomerAnalyticsPage />} />
+          <Route path="admin/reports/agents" element={<AdminAgentPerformancePage />} />
+          <Route path="admin/reports/logs" element={<AdminSystemActivityLogsPage />} />
+
+          <Route path="admin/support/tickets" element={<AdminSupportTicketsPage />} />
+
+          <Route path="admin/settings/rates" element={<AdminRateManagementPage />} />
+          <Route path="admin/settings/notifications" element={<AdminNotificationsSettingsPage />} />
+
+          <Route path="admin/security/access-logs" element={<AdminAccessLogsPage />} />
+          <Route path="admin/security/audit" element={<AdminAuditLogsPage />} />
+          <Route path="admin/security/2fa" element={<AdminTwoFactorAuthPage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}

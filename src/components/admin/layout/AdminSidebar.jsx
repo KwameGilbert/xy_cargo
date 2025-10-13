@@ -91,7 +91,7 @@ const NAV_ITEMS = [
     children: [
       { name: "All Payments", icon: CreditCard, path: "/admin/payments" },
       { name: "Pending Payments", icon: CreditCard, path: "/admin/payments/pending" },
-      { name: "Refunds & Adjustments", icon: RotateCcw, path: "/admin/refunds" },
+      // { name: "Refunds & Adjustments", icon: RotateCcw, path: "/admin/refunds" },
       { name: "Financial Reports", icon: TrendingUp, path: "/admin/reports/finance" },
     ],
   },
@@ -100,7 +100,7 @@ const NAV_ITEMS = [
     icon: BarChart3,
     group: "reports",
     children: [
-      { name: "Operational Reports", icon: BarChart3, path: "/admin/reports/operations" },
+      // { name: "Operational Reports", icon: BarChart3, path: "/admin/reports/operations" },
       { name: "Customer Analytics", icon: PieChart, path: "/admin/reports/customers" },
       { name: "Agent Performance", icon: UserCheck, path: "/admin/reports/agents" },
       { name: "System Activity Logs", icon: Activity, path: "/admin/reports/logs" },
@@ -112,7 +112,7 @@ const NAV_ITEMS = [
     group: "support",
     children: [
       { name: "Support Tickets", icon: MessageSquare, path: "/admin/support/tickets" },
-      { name: "Claims", icon: AlertTriangle, path: "/admin/support/claims" },
+      // { name: "Claims", icon: AlertTriangle, path: "/admin/support/claims" },
     ],
   },
   {
@@ -120,7 +120,7 @@ const NAV_ITEMS = [
     icon: Settings,
     group: "settings",
     children: [
-      { name: "Roles & Permissions", icon: Shield, path: "/admin/settings/roles" },
+      // { name: "Roles & Permissions", icon: Shield, path: "/admin/settings/roles" },
       { name: "Rate Management", icon: DollarSign, path: "/admin/settings/rates" },
       { name: "Notification Settings", icon: Bell, path: "/admin/settings/notifications" },
       { name: "System Preferences", icon: Settings, path: "/admin/settings/system" },
