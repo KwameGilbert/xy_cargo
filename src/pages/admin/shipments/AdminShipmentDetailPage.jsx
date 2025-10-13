@@ -103,7 +103,7 @@ const AdminShipmentDetailPage = () => {
   };
 
   const handlePrintManifest = () => {
-    window.print();
+    navigate(`/admin/shipments/${shipmentId}/manifest`);
   };
 
   const handleExportData = () => {
@@ -238,6 +238,13 @@ const AdminShipmentDetailPage = () => {
                 >
                   <Clock className="h-4 w-4 mr-2" />
                   Update Status
+                </button>
+                <button
+                  onClick={() => navigate(`/admin/shipments/${shipmentId}/manifest`)}
+                  className="inline-flex items-center px-3 py-2 border border-blue-500 rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  View Manifest
                 </button>
                 <button
                   onClick={handlePrintManifest}
