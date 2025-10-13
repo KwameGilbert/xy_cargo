@@ -99,6 +99,12 @@ import AdminSupportTicketsPage from "../pages/admin/support/AdminSupportTicketsP
 
 // Settings Pages
 import AdminRateManagementPage from "../pages/admin/settings/AdminRateManagementPage";
+import AdminNotificationsSettingsPage from "../pages/admin/settings/AdminNotificationsSettingsPage";
+
+// Security Pages
+import AdminAccessLogsPage from "../pages/admin/security/AdminAccessLogsPage";
+import AdminAuditLogsPage from "../pages/admin/security/AdminAuditLogsPage";
+import AdminTwoFactorAuthPage from "../pages/admin/security/AdminTwoFactorAuthPage";
 
 
 const AppRoutes = () => (
@@ -145,9 +151,9 @@ const AppRoutes = () => (
       <Route path="warehouse/payments" element={<WarehousePaymentsPage />} />
       <Route path="warehouse/shipments" element={<WarehouseShipmentsPage />} />
       <Route path="warehouse/shipments/:shipmentId" element={<WarehouseShipmentDetailPage />} />
-      <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />
-      <Route path="warehouse/support" element={<WarehouseSupportPage />} />
-      <Route path="warehouse/bulk-updates"element={<WarehouseBulkUpdatePage />} />
+      <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />      
+      <Route path="warehouse/support" element={<WarehouseSupportPage />} />      
+      <Route path="warehouse/bulk-updates" element={<WarehouseBulkUpdatePage />} />
       <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
@@ -204,6 +210,11 @@ const AppRoutes = () => (
           <Route path="admin/support/tickets" element={<AdminSupportTicketsPage />} />
 
           <Route path="admin/settings/rates" element={<AdminRateManagementPage />} />
+          <Route path="admin/settings/notifications" element={<AdminNotificationsSettingsPage />} />
+
+          <Route path="admin/security/access-logs" element={<AdminAccessLogsPage />} />
+          <Route path="admin/security/audit" element={<AdminAuditLogsPage />} />
+          <Route path="admin/security/2fa" element={<AdminTwoFactorAuthPage />} />
           {/* <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="admin/settings" element={<AdminSettingsPage />} /> */}
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
