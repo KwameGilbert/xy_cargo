@@ -1,6 +1,6 @@
 import http from 'http';
 import app from './app.js';
-import config from './config/index.js';
+import config from './config/config.js';
 import logger from './utils/logger.js';
 
 const PORT = config.port || 5000;
@@ -17,6 +17,7 @@ process.on('uncaughtException', (error) => {
 // Start server
 server.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections

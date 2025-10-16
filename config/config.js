@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ "path": `.env.${process.env.NODE_ENV || 'development'}.local` });
 
 const config = {
   env: process.env.NODE_ENV || 'development',

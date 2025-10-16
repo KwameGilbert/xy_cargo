@@ -5,7 +5,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 import 'express-async-errors';
 
-import config from './config/env.js';
+import config from './config/config.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
