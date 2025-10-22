@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { login as loginService } from "../services/client/authService";
+import { login as loginService, getToken, getUser, saveToken, saveUser, removeToken, removeUser } from "../services/client/authService";
 
 // Create auth context
 const AuthContext = createContext();
@@ -12,15 +12,18 @@ export const useAuth = () => {
 // AuthProvider component
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Check if user is already logged in (from localStorage)
   useEffect(() => {
     const checkAuthStatus = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setCurrentUser(JSON.parse(storedUser));
+      const storedToken = getToken();
+      const storedUser = getUser();
+      if (storedToken && storedUser) {
+        setToken(storedToken);
+        setCurrentUser(storedUser);
         setIsAuthenticated(true);
       }
       setLoading(false);
@@ -35,10 +38,11 @@ export const AuthProvider = ({ children }) => {
       const response = await loginService(email, password);
       if (response.success) {
         setCurrentUser(response.user);
+        setToken(response.token);
         setIsAuthenticated(true);
-        // Save to localStorage
-        localStorage.setItem("user", JSON.stringify(response.user));
         return { success: true };
+      } else {
+        return { success: false, message: response.message };
       }
     } catch (error) {
       return { success: false, message: error.message || "Login failed" };
@@ -48,13 +52,16 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = () => {
     setCurrentUser(null);
+    setToken(null);
     setIsAuthenticated(false);
-    localStorage.removeItem("user");
+    removeToken();
+    removeUser();
   };
 
   // Context value
   const value = {
     currentUser,
+    token,
     isAuthenticated,
     loading,
     login,
