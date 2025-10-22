@@ -4,29 +4,34 @@ import NavBar from "../../../components/public_pages/layout/NavBar";
 import Footer from "../../../components/public_pages/layout/Footer";
 import { motion } from "framer-motion";
 import { Mail, Lock } from "lucide-react";
+import { useAuth } from "../../../contexts/AuthContext";
 
-// Login page with UI preserved; submit simply routes to dashboard (no auth yet)
+// Login page with API integration
 const ClientLogin = () => {
 	const navigate = useNavigate();
+	const { login } = useAuth();
 	const [form, setForm] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(""); // kept for future integration
-	const [success, setSuccess] = useState(false);
+	const [error, setError] = useState("");
 
 	const handleChange = (e) => {
 		setForm({ ...form, [e.target.name]: e.target.value });
 		setError("");
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		setSuccess(false);
-		// Direct navigation (placeholder for future API call)
-		setTimeout(() => {
-			setSuccess(true);
+		setError("");
+
+		const result = await login(form.email, form.password);
+		setLoading(false);
+
+		if (result.success) {
 			navigate("/client/dashboard");
-		}, 500);
+		} else {
+			setError(result.message);
+		}
 	};
 
     return (
@@ -77,7 +82,6 @@ const ClientLogin = () => {
                             </div>
                         </div>
                         {error && <div className="text-red-500 text-sm">{error}</div>}
-                        {success && <div className="text-green-600 text-sm">Redirecting to dashboard...</div>}
                         <motion.button
                             type="submit"
                             disabled={loading}
@@ -86,7 +90,7 @@ const ClientLogin = () => {
                             whileTap={{ scale: 0.98 }}
                         >
                             <Lock className="w-5 h-5" />
-                            {loading ? "Processing..." : "Login"}
+                            {loading ? "Logging in..." : "Login"}
                         </motion.button>
                     </form>
                     <div className="mt-6 text-center text-sm text-gray-600">

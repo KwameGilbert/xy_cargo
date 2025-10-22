@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../../../components/public_pages/layout/NavBar";
 import Footer from "../../../components/public_pages/layout/Footer";
 import { motion } from "framer-motion";
-import { User, Mail, Lock, Upload, Camera, ArrowLeft, ArrowRight, Phone } from "lucide-react";
+import { User, Mail, Lock, ArrowLeft, ArrowRight, Phone, Building } from "lucide-react";
+import { signup } from "../../../services/client/authService";
 
 const steps = [
   { id: "personal", title: "Personal Information" },
-  { id: "id", title: "ID Verification" },
-  { id: "selfie", title: "Selfie Verification" },
   { id: "security", title: "Security Setup" }
 ];
 
@@ -16,17 +15,12 @@ const Signup = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [form, setForm] = useState({
-    // Personal Info
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
-    // ID Verification
-    idType: "national_id",
-    idNumber: "",
-    idImage: null,
-    // Selfie
-    selfieImage: null,
-    // Security
+    address: "",
+    company: "",
     password: "",
     confirmPassword: ""
   });
@@ -52,24 +46,17 @@ const Signup = () => {
 
     // Validation based on current step
     if (currentStep === 0) {
-      if (!form.name || !form.email || !form.phone) {
+      if (!form.firstName || !form.lastName || !form.email || !form.phone || !form.address || !form.company) {
         setError("Please fill in all personal information");
         setLoading(false);
         return;
       }
     } else if (currentStep === 1) {
-      if (!form.idNumber || !form.idImage) {
-        setError("Please provide ID information and upload ID image");
+      if (!form.password || !form.confirmPassword) {
+        setError("Please fill in password fields");
         setLoading(false);
         return;
       }
-    } else if (currentStep === 2) {
-      if (!form.selfieImage) {
-        setError("Please take or upload a selfie");
-        setLoading(false);
-        return;
-      }
-    } else if (currentStep === 3) {
       if (form.password !== form.confirmPassword) {
         setError("Passwords do not match");
         setLoading(false);
@@ -80,12 +67,23 @@ const Signup = () => {
         setLoading(false);
         return;
       }
-      // Final submission
-      setTimeout(() => {
-        setLoading(false);
-        alert("Registration successful! Please login.");
+      // Call signup API
+      const signupData = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+        address: form.address,
+        company: form.company
+      };
+      const result = await signup(signupData);
+      setLoading(false);
+      if (result.success) {
         navigate("/client/auth/login");
-      }, 1000);
+      } else {
+        setError(result.message);
+      }
       return;
     }
 
@@ -98,19 +96,36 @@ const Signup = () => {
       case 0:
         return (
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-              <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
-                <User className="w-5 h-5 text-gray-400 mr-3" />
-                <input
-                  type="text"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full bg-transparent outline-none"
-                  placeholder="Enter your full name"
-                />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
+                  <User className="w-5 h-5 text-gray-400 mr-3" />
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-transparent outline-none"
+                    placeholder="First name"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
+                  <User className="w-5 h-5 text-gray-400 mr-3" />
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-transparent outline-none"
+                    placeholder="Last name"
+                  />
+                </div>
               </div>
             </div>
             <div>
@@ -143,86 +158,36 @@ const Signup = () => {
                 />
               </div>
             </div>
-          </div>
-        );
-      case 1:
-        return (
-          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">ID Type</label>
-              <select
-                name="idType"
-                value={form.idType}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              >
-                <option value="national_id">National ID</option>
-                <option value="passport">Passport</option>
-                <option value="drivers_license">Driver's License</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">ID Number</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
               <input
                 type="text"
-                name="idNumber"
-                value={form.idNumber}
+                name="address"
+                value={form.address}
                 onChange={handleChange}
+                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="Enter your ID number"
+                placeholder="Enter your address"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Upload ID Image</label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-                <div className="space-y-1 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="flex text-sm text-gray-600">
-                    <label className="relative cursor-pointer rounded-md font-medium text-red-600 hover:text-red-500">
-                      <span>Upload a file</span>
-                      <input
-                        type="file"
-                        name="idImage"
-                        className="sr-only"
-                        accept="image/*"
-                        onChange={handleChange}
-                      />
-                    </label>
-                  </div>
-                  <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
-                </div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
+              <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
+                <Building className="w-5 h-5 text-gray-400 mr-3" />
+                <input
+                  type="text"
+                  name="company"
+                  value={form.company}
+                  onChange={handleChange}
+                  required
+                  className="w-full bg-transparent outline-none"
+                  placeholder="Enter your company name"
+                />
               </div>
             </div>
           </div>
         );
-      case 2:
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Take a Selfie</label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-                <div className="space-y-1 text-center">
-                  <Camera className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="flex text-sm text-gray-600">
-                    <label className="relative cursor-pointer rounded-md font-medium text-red-600 hover:text-red-500">
-                      <span>Take a photo or upload</span>
-                      <input
-                        type="file"
-                        name="selfieImage"
-                        className="sr-only"
-                        accept="image/*"
-                        capture="user"
-                        onChange={handleChange}
-                      />
-                    </label>
-                  </div>
-                  <p className="text-xs text-gray-500">Look straight at the camera</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 3:
+      case 1:
         return (
           <div className="space-y-4">
             <div>
