@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Package } from 'lucide-react';
 import axios from 'axios';
 import ParcelSummary from '../../../components/client/parcels/ParcelSummary';
 import ItemsList from '../../../components/client/parcels/ItemsList';
@@ -164,16 +164,24 @@ const ParcelDetailsPage = () => {
             />
 
             {/* Items List */}
-            {parcel.items && parcel.items.length > 0 && (
+            {parcel.items && parcel.items.length > 0 ? (
               <ItemsList
                 items={parcel.items}
                 onRequestSpecialPackaging={handleRequestSpecialPackaging}
                 onViewSeparateParcel={handleViewSeparateParcel}
               />
+            ) : (
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Items in This Parcel</h3>
+                <div className="text-center py-8">
+                  <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">No items have been added to this parcel yet.</p>
+                </div>
+              </div>
             )}
 
             {/* Tracking Timeline */}
-            <TrackingTimeline trackingHistory={parcel.trackingHistory} />
+            <TrackingTimeline trackingHistory={parcel.trackingHistory || []} />
           </div>
 
           {/* Right Column - Actions */}
