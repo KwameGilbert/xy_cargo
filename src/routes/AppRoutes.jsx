@@ -1,5 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { ClientAuthProvider } from "../contexts/ClientAuthContext";
+import { ToastProvider } from "../contexts/ToastContext";
+import ToastContainer from "../components/ToastContainer";
 
 // Public pages
 import HomePage from "../pages/public_pages/home/HomePage";
@@ -23,6 +26,7 @@ import ClientPayments from "../pages/client/payments/Payments";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
+import ClientProtectedRoute from "../components/client/auth/ProtectedRoute";
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
 
@@ -108,7 +112,9 @@ import AdminTwoFactorAuthPage from "../pages/admin/security/AdminTwoFactorAuthPa
 
 
 const AppRoutes = () => (
-  <Routes>
+  <ToastProvider>
+    <ClientAuthProvider>
+      <Routes>
     {/* Public Routes - wrapped in MainLayout */}
     <Route element={<MainLayout />}>
       <Route index element={<HomePage />} />
@@ -127,15 +133,14 @@ const AppRoutes = () => (
     <Route path="client/auth/login" element={<ClientLogin />} />
     <Route path="client/auth/signup" element={<ClientSignup />} />
 
-    {/* Client Routes - wrapped in ClientLayout */}
-   
-      <Route path="client/dashboard" element={<Dashboard />} />
-      <Route path="client/parcels" element={<ParcelsPage />} />
-      <Route path="client/parcels/:id" element={<ParcelDetailsPage />} />
-      <Route path="client/payments" element={<ClientPayments />} />
-      <Route path="client/notifications" element={<Notifications />} />
-      <Route path="client/addresses" element={<ClientAddresses />} />
-      <Route path="client/support" element={<ClientSupport />} />
+    {/* Protected Client Routes */}
+    <Route path="client/dashboard" element={<ClientProtectedRoute><Dashboard /></ClientProtectedRoute>} />
+    <Route path="client/parcels" element={<ClientProtectedRoute><ParcelsPage /></ClientProtectedRoute>} />
+    <Route path="client/parcels/:id" element={<ClientProtectedRoute><ParcelDetailsPage /></ClientProtectedRoute>} />
+    <Route path="client/payments" element={<ClientProtectedRoute><ClientPayments /></ClientProtectedRoute>} />
+    <Route path="client/notifications" element={<ClientProtectedRoute><Notifications /></ClientProtectedRoute>} />
+    <Route path="client/addresses" element={<ClientProtectedRoute><ClientAddresses /></ClientProtectedRoute>} />
+    <Route path="client/support" element={<ClientProtectedRoute><ClientSupport /></ClientProtectedRoute>} />
 
 
     {/* Warehouse Auth Routes */}
@@ -221,6 +226,9 @@ const AppRoutes = () => (
         {/* </Route> */}
 
   </Routes>
+    </ClientAuthProvider>
+    <ToastContainer />
+  </ToastProvider>
 );
 
 export default AppRoutes;

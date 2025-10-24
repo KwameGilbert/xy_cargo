@@ -5,6 +5,7 @@ import Footer from "../../../components/public_pages/layout/Footer";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, ArrowLeft, ArrowRight, Phone, Building } from "lucide-react";
 import { signup } from "../../../services/client/authService";
+import { useToast } from "../../../contexts/ToastContext";
 
 const steps = [
   { id: "personal", title: "Personal Information" },
@@ -13,6 +14,7 @@ const steps = [
 
 const Signup = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [form, setForm] = useState({
     firstName: "",
@@ -25,7 +27,6 @@ const Signup = () => {
     confirmPassword: ""
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -33,7 +34,6 @@ const Signup = () => {
       ...prev,
       [name]: type === 'file' ? files[0] : value
     }));
-    setError("");
   };
 
   const handleNext = () => setCurrentStep(c => Math.min(c + 1, steps.length - 1));
@@ -42,28 +42,27 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     // Validation based on current step
     if (currentStep === 0) {
       if (!form.firstName || !form.lastName || !form.email || !form.phone || !form.address || !form.company) {
-        setError("Please fill in all personal information");
+        toast.error("Please fill in all personal information");
         setLoading(false);
         return;
       }
     } else if (currentStep === 1) {
       if (!form.password || !form.confirmPassword) {
-        setError("Please fill in password fields");
+        toast.error("Please fill in password fields");
         setLoading(false);
         return;
       }
       if (form.password !== form.confirmPassword) {
-        setError("Passwords do not match");
+        toast.error("Passwords do not match");
         setLoading(false);
         return;
       }
       if (form.password.length < 6) {
-        setError("Password must be at least 6 characters");
+        toast.error("Password must be at least 6 characters");
         setLoading(false);
         return;
       }
@@ -80,9 +79,10 @@ const Signup = () => {
       const result = await signup(signupData);
       setLoading(false);
       if (result.success) {
+        toast.success("Account created successfully! Please login.");
         navigate("/client/auth/login");
       } else {
-        setError(result.message);
+        toast.error(result.message);
       }
       return;
     }
@@ -271,10 +271,6 @@ const Signup = () => {
           <form onSubmit={handleSubmit}>
             {renderStep()}
             
-            {error && (
-              <div className="mt-4 text-sm text-red-500 text-center">{error}</div>
-            )}
-
             <div className="mt-6 flex justify-between">
               {currentStep > 0 && (
                 <button

@@ -1,12 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import axios from 'axios';
 import ParcelSummary from '../../../components/client/parcels/ParcelSummary';
 import ItemsList from '../../../components/client/parcels/ItemsList';
 import TrackingTimeline from '../../../components/client/parcels/TrackingTimeline';
 import ParcelActions from '../../../components/client/parcels/ParcelActions';
 import PaymentModal from '../../../components/client/parcels/PaymentModal';
 import ClientLayout from '../../../components/client/layout/ClientLayout';
+import { getAuthHeader, getApiBaseUrl } from '../../../services/client/authService';
 
 const ParcelDetailsPage = () => {
   const { id } = useParams();
@@ -22,28 +24,20 @@ const ParcelDetailsPage = () => {
       try {
         setError(null);
         setLoading(true);
-        // Try to fetch from detailed data first
-        try {
-          const res = await fetch('/data/parcel-details.json');
-          if (res.ok) {
-            const data = await res.json();
-            const found = data[id];
-            if (found) {
-              setParcel(found);
-              return;
-            }
-          }
-        } catch (e) {
-          console.log('Detailed data not available, falling back to basic data');
+
+        // Call the real API endpoint
+        const response = await axios.get(`${getApiBaseUrl()}/clients/parcels/${id}`, {
+          headers: getAuthHeader()
+        });
+
+        console.log('Fetched parcel details:', response.data);
+        if (response.data.status === 'success') {
+          setParcel(response.data.parcel);
+        } else {
+          setError(response.data.message || 'Failed to load parcel details');
         }
-        
-        // Fallback to basic parcels data
-        const res = await fetch('/data/parcels.json');
-        if (!res.ok) throw new Error('Failed to fetch parcel');
-        const data = await res.json();
-        const found = data.find(p => p.id === id);
-        setParcel(found);
       } catch (err) {
+        console.error('Error fetching parcel details:', err);
         setError('Could not load parcel details.');
       } finally {
         setLoading(false);

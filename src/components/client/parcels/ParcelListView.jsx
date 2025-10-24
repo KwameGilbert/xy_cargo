@@ -70,7 +70,7 @@ const ParcelListView = ({
             <div className="grid grid-cols-2 gap-3 text-sm mb-3">
               <div>
                 <span className="text-gray-500 font-medium">Recipient:</span>
-                <div className="font-semibold text-gray-900 text-sm">{parcel.recipient?.name || 'N/A'}</div>
+                <div className="font-semibold text-gray-900 text-sm">N/A</div>
               </div>
               <div>
                 <span className="text-gray-500 font-medium">Weight:</span>
@@ -166,8 +166,8 @@ const ParcelListView = ({
                   {getStatusBadge(parcel.status)}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{parcel.recipient?.name || 'N/A'}</div>
-                  <div className="text-xs text-gray-500">{parcel.recipient?.phone || ''}</div>
+                  <div className="text-sm font-medium text-gray-900">N/A</div>
+                  <div className="text-xs text-gray-500"></div>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{parcel.weight} kg</div>

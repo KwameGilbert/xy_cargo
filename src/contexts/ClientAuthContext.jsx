@@ -1,16 +1,16 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { login as loginService, getToken, getUser, saveToken, saveUser, removeToken, removeUser } from "../services/client/authService";
 
-// Create auth context
-const AuthContext = createContext();
+// Create client auth context
+const ClientAuthContext = createContext();
 
-// Custom hook for using auth context
-export const useAuth = () => {
-  return useContext(AuthContext);
+// Custom hook for using client auth context
+export const useClientAuth = () => {
+  return useContext(ClientAuthContext);
 };
 
-// AuthProvider component
-export const AuthProvider = ({ children }) => {
+// ClientAuthProvider component
+export const ClientAuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -69,8 +69,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <ClientAuthContext.Provider value={value}>
       {children}
-    </AuthContext.Provider>
+    </ClientAuthContext.Provider>
   );
 };

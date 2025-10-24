@@ -8,6 +8,7 @@ import ParcelListView from '../../../components/client/parcels/ParcelListView';
 import ParcelLoadingState from '../../../components/client/parcels/ParcelLoadingState';
 import ParcelEmptyState from '../../../components/client/parcels/ParcelEmptyState';
 import PaymentModal from '../../../components/client/parcels/PaymentModal';
+import { getAuthHeader, getApiBaseUrl } from '../../../services/client/authService';
 
 const ParcelsPage = () => {
   const navigate = useNavigate();
@@ -28,11 +29,20 @@ const ParcelsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const parcelsRes = await axios.get('/data/parcels.json');
-        const parcels = Array.isArray(parcelsRes.data) ? parcelsRes.data : [];
-        setParcels(parcels);
+        // Call the real API endpoint
+        const response = await axios.get(`${getApiBaseUrl()}/clients/parcels/data`, {
+          headers: getAuthHeader()
+        });
+
+        console.log('Fetched parcels data:', response.data);
+        if (response.data.status === 'success') {
+          setParcels(response.data.parcels);
+        } else {
+          console.error('Failed to fetch parcels:', response.data.message);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching parcels:', error);
+        // TODO: Handle authentication errors (redirect to login)
       } finally {
         setLoading(false);
       }
