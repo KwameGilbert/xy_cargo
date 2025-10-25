@@ -1,5 +1,5 @@
 // src/services/client/authService.js
-const APP_ENV = "production"
+const APP_ENV = "development"
 const PROD_API_BASE_URL = "https://api.xycargozm.com/v1"
 const DEV_API_BASE_URL = "http://app.xycargo.com/v1"
 

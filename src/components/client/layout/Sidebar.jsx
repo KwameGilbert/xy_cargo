@@ -99,7 +99,7 @@ const Sidebar = () => {
                   {currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Loading..."}
                 </h3>
                 <p className="text-xs text-gray-500">
-                  ID: {currentUser?.id ? `XY-CU-${currentUser.id}` : "Loading..."}
+                  ID: {currentUser?.client_id ? currentUser.client_id : "Loading..."}
                 </p>
               </div>
             </div>
