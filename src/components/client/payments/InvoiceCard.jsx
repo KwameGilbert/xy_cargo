@@ -1,5 +1,6 @@
 import React from 'react';
-import { Download, CreditCard, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Download, CreditCard, Clock, Eye } from 'lucide-react';
 
 const statusClass = (status) => {
   switch (status) {
@@ -15,12 +16,13 @@ const statusClass = (status) => {
 };
 
 const InvoiceCard = ({ invoice }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-6 mb-4">
+    <div className="bg-white rounded-lg border border-gray-100 p-6 mb-4 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start">
-        <div>
+        <div className="flex-1">
           <div className="flex items-center gap-3">
-            <input type="checkbox" className="mr-2" />
             <div>
               <h3 className="text-base font-semibold">{invoice.invoiceId}</h3>
               <p className="text-sm text-gray-500">Shipment: {invoice.shipmentRef}</p>
@@ -31,36 +33,47 @@ const InvoiceCard = ({ invoice }) => {
               <p className="text-xs text-gray-400">Issue Date</p>
               <div className="font-medium">{invoice.issueDate}</div>
             </div>
-            <div>
-              <p className="text-xs text-gray-400">Due Date</p>
-              <div className="font-medium">{invoice.dueDate}</div>
-            </div>
+            {invoice.dueDate && (
+              <div>
+                <p className="text-xs text-gray-400">Due Date</p>
+                <div className="font-medium">{invoice.dueDate}</div>
+              </div>
+            )}
             <div>
               <p className="text-xs text-gray-400">Services</p>
-              <div className="font-medium">{invoice.serviceCount} items</div>
+              <div className="font-medium">{invoice.serviceCount} item{invoice.serviceCount !== 1 ? 's' : ''}</div>
             </div>
           </div>
           <p className="text-sm text-gray-600 mt-3">{invoice.description}</p>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {invoice.tags && invoice.tags.map((t, i) => (
-              <span key={i} className="text-xs bg-gray-100 border border-gray-200 px-2 py-1 rounded-full">{t}</span>
-            ))}
-          </div>
+          {invoice.tags && invoice.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {invoice.tags.map((t, i) => (
+                <span key={i} className="text-xs bg-gray-100 border border-gray-200 px-2 py-1 rounded-full">{t}</span>
+              ))}
+            </div>
+          )}
 
           <div className="flex gap-3 mt-4">
-            <button className="inline-flex items-center gap-2 border border-red-200 text-red-600 px-3 py-2 rounded-md">
+            <button
+              onClick={() => navigate(`/client/invoices/${invoice.id}`)}
+              className="inline-flex items-center gap-2 border border-gray-300 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-50"
+            >
+              <Eye className="w-4 h-4" />
+              View Details
+            </button>
+            <button className="inline-flex items-center gap-2 border border-red-200 text-red-600 px-3 py-2 rounded-md hover:bg-red-50">
               <Download className="w-4 h-4" />
               Download PDF
             </button>
-            {invoice.status === 'PENDING' && (
-              <button className="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-md">
+            {invoice.status !== 'PAID' && (
+              <button className="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700">
                 <CreditCard className="w-4 h-4" /> Pay Now
               </button>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end ml-4">
           <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusClass(invoice.status)}`}>{invoice.status}</span>
           <div className="text-xl font-semibold mt-4">${invoice.amount.toFixed(2)}</div>
         </div>

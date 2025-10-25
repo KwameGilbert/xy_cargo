@@ -23,6 +23,7 @@ import Dashboard from "../pages/client/dashboard/Dashboard";
 import ParcelsPage from "../pages/client/parcels/ParcelsPage";
 import ParcelDetailsPage from "../pages/client/parcels/ParcelDetailsPage";
 import ClientPayments from "../pages/client/payments/Payments";
+import InvoiceDetailsPage from "../pages/client/payments/InvoiceDetailsPage";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
@@ -138,6 +139,7 @@ const AppRoutes = () => (
     <Route path="client/parcels" element={<ClientProtectedRoute><ParcelsPage /></ClientProtectedRoute>} />
     <Route path="client/parcels/:id" element={<ClientProtectedRoute><ParcelDetailsPage /></ClientProtectedRoute>} />
     <Route path="client/payments" element={<ClientProtectedRoute><ClientPayments /></ClientProtectedRoute>} />
+    <Route path="client/invoices/:id" element={<ClientProtectedRoute><InvoiceDetailsPage /></ClientProtectedRoute>} />
     <Route path="client/notifications" element={<ClientProtectedRoute><Notifications /></ClientProtectedRoute>} />
     <Route path="client/addresses" element={<ClientProtectedRoute><ClientAddresses /></ClientProtectedRoute>} />
     <Route path="client/support" element={<ClientProtectedRoute><ClientSupport /></ClientProtectedRoute>} />
