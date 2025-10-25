@@ -1,17 +1,17 @@
 // src/services/client/authService.js
 
 // API base URL - matches backend deployment
-const API_BASE_URL = 'http://app.xycargo.com';
+const API_BASE_URL = 'http://app.xycargo.com/v1';
 
 // Centralized endpoints
 const ENDPOINTS = {
-  login: `${API_BASE_URL}/v1/auth/client/login`,
-  signup: `${API_BASE_URL}/v1/auth/client/signup`,
+  login: `${API_BASE_URL}/auth/client/login`,
+  signup: `${API_BASE_URL}/auth/client/signup`,
 };
 
 // Token storage keys
-const TOKEN_KEY = 'xy_cargo_token';
-const USER_KEY = 'xy_cargo_user';
+const TOKEN_KEY = 'xy_cargo_client_token';
+const USER_KEY = 'xy_cargo_client_user';
 
 // Core login function
 export async function login(email, password) {

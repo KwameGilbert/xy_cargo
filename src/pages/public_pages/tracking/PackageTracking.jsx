@@ -12,49 +12,67 @@ const PackageTracking = () => {
     if (!trackingNumber.trim()) return;
     
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    setTrackingData(null);
+    
+    try {
+      const response = await fetch(`/v1/parcels/track/${trackingNumber.trim()}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch tracking data');
+      }
+      
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        // Transform API data to match component expectations
+        const transformedData = {
+          trackingNumber: data.trackingNumber,
+          status: data.currentStatus,
+          currentLocation: data.trackingHistory.length > 0 ? data.trackingHistory[data.trackingHistory.length - 1].location : 'Unknown',
+          progress: calculateProgress(data.currentStatus),
+          timeline: data.trackingHistory.map(update => ({
+            status: update.status,
+            location: update.location,
+            date: formatDate(update.date),
+            completed: true // All historical updates are completed
+          }))
+        };
+        
+        setTrackingData(transformedData);
+      } else {
+        setTrackingData({
+          error: data.message || 'Tracking information not found'
+        });
+      }
+    } catch (error) {
       setTrackingData({
-        trackingNumber: trackingNumber,
-        status: "In Transit",
-        estimatedDelivery: "Dec 8, 2025",
-        currentLocation: "Distribution Center - Los Angeles, CA",
-        progress: 75,
-        timeline: [
-          {
-            status: "Package Received",
-            location: "FY Cargo Facility - New York, NY",
-            date: "Dec 4, 2025 - 2:30 PM",
-            completed: true
-          },
-          {
-            status: "Departed Origin Facility",
-            location: "New York, NY",
-            date: "Dec 5, 2025 - 6:45 AM",
-            completed: true
-          },
-          {
-            status: "In Transit",
-            location: "Distribution Center - Los Angeles, CA",
-            date: "Dec 6, 2025 - 11:20 AM",
-            completed: true
-          },
-          {
-            status: "Out for Delivery",
-            location: "Local Delivery Facility",
-            date: "Expected Dec 8, 2025",
-            completed: false
-          },
-          {
-            status: "Delivered",
-            location: "Final Destination",
-            date: "Expected Dec 8, 2025",
-            completed: false
-          }
-        ]
+        error: 'Unable to track package. Please try again later.'
       });
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
+  };
+
+  const calculateProgress = (status) => {
+    const statusProgress = {
+      'RECEIVED': 20,
+      'PROCESSING': 40,
+      'IN_TRANSIT': 60,
+      'OUT_FOR_DELIVERY': 80,
+      'DELIVERED': 100
+    };
+    return statusProgress[status] || 0;
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   const containerVariants = {
@@ -142,90 +160,99 @@ const PackageTracking = () => {
             variants={sectionVariants}
             className="bg-white rounded-lg shadow-md overflow-hidden"
           >
-            {/* Status Header */}
-            <div className="bg-red-500 text-white p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-semibold">Tracking: {trackingData.trackingNumber}</h2>
-                  <p className="text-red-100">Status: {trackingData.status}</p>
-                </div>
-                <Package size={48} />
-              </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="p-6 border-b">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-600">Delivery Progress</span>
-                <span className="text-sm font-medium text-gray-600">{trackingData.progress}%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <motion.div
-                  className="bg-red-500 h-2 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${trackingData.progress}%` }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                />
-              </div>
-              <div className="flex justify-between mt-2">
-                <span className="text-sm text-gray-500">Shipped</span>
-                <span className="text-sm text-gray-500">Estimated Delivery: {trackingData.estimatedDelivery}</span>
-              </div>
-            </div>
-
-            {/* Current Status */}
-            <div className="p-6 border-b">
-              <div className="flex items-center">
-                <div className="bg-red-100 p-3 rounded-full mr-4">
-                  <Truck className="text-red-500" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Current Status: {trackingData.status}</h3>
-                  <p className="text-gray-600 flex items-center">
-                    <MapPin size={16} className="mr-1" />
-                    {trackingData.currentLocation}
-                  </p>
+            {trackingData.error ? (
+              <div className="p-6 text-center">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">Tracking Error</h3>
+                  <p className="text-red-600">{trackingData.error}</p>
                 </div>
               </div>
-            </div>
-
-            {/* Timeline */}
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-6">Shipment Timeline</h3>
-              <div className="space-y-4">
-                {trackingData.timeline.map((event, index) => (
-                  <motion.div
-                    key={index}
-                    variants={timelineVariants}
-                    initial="hidden"
-                    animate="visible"
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-start"
-                  >
-                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mr-4 ${
-                      event.completed ? 'bg-green-500' : 'bg-gray-300'
-                    }`}>
-                      {event.completed ? (
-                        <CheckCircle className="text-white" size={16} />
-                      ) : (
-                        <Clock className="text-gray-600" size={16} />
-                      )}
+            ) : (
+              <>
+                {/* Status Header */}
+                <div className="bg-red-500 text-white p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-2xl font-semibold">Tracking: {trackingData.trackingNumber}</h2>
+                      <p className="text-red-100">Status: {trackingData.status}</p>
                     </div>
-                    <div className="flex-1">
-                      <h4 className={`font-medium ${event.completed ? 'text-gray-800' : 'text-gray-500'}`}>
-                        {event.status}
-                      </h4>
-                      <p className="text-sm text-gray-600">{event.location}</p>
-                      <p className="text-sm text-gray-500">{event.date}</p>
+                    <Package size={48} />
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="p-6 border-b">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-gray-600">Delivery Progress</span>
+                    <span className="text-sm font-medium text-gray-600">{trackingData.progress}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <motion.div
+                      className="bg-red-500 h-2 rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${trackingData.progress}%` }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                    />
+                  </div>
+                  <div className="flex justify-between mt-2">
+                    <span className="text-sm text-gray-500">Shipped</span>
+                    <span className="text-sm text-gray-500">In Transit</span>
+                  </div>
+                </div>
+
+                {/* Current Status */}
+                <div className="p-6 border-b">
+                  <div className="flex items-center">
+                    <div className="bg-red-100 p-3 rounded-full mr-4">
+                      <Truck className="text-red-500" size={24} />
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">Current Status: {trackingData.status}</h3>
+                      <p className="text-gray-600 flex items-center">
+                        <MapPin size={16} className="mr-1" />
+                        {trackingData.currentLocation}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Timeline */}
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-6">Shipment Timeline</h3>
+                  <div className="space-y-4">
+                    {trackingData.timeline.map((event, index) => (
+                      <motion.div
+                        key={index}
+                        variants={timelineVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start"
+                      >
+                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mr-4 ${
+                          event.completed ? 'bg-green-500' : 'bg-gray-300'
+                        }`}>
+                          {event.completed ? (
+                            <CheckCircle className="text-white" size={16} />
+                          ) : (
+                            <Clock className="text-gray-600" size={16} />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className={`font-medium ${event.completed ? 'text-gray-800' : 'text-gray-500'}`}>
+                            {event.status}
+                          </h4>
+                          <p className="text-sm text-gray-600">{event.location}</p>
+                          <p className="text-sm text-gray-500">{event.date}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </motion.div>
-        )}
-
-        {/* Help Section */}
+        )}        {/* Help Section */}
         <motion.div variants={sectionVariants} className="mt-12 text-center">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Need Help?</h3>
           <p className="text-gray-600 mb-6">
