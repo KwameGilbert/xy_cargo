@@ -66,9 +66,8 @@ const ParcelsPage = () => {
   const normalizedSearchQuery = searchQuery.toLowerCase();
   const filteredParcels = parcels.filter(parcel => {
     const matchesSearch = !searchQuery || 
-      parcel.waybillNumber.toLowerCase().includes(normalizedSearchQuery) ||
-      parcel.description.toLowerCase().includes(normalizedSearchQuery) ||
       parcel.trackingNumber.toLowerCase().includes(normalizedSearchQuery) ||
+      parcel.description.toLowerCase().includes(normalizedSearchQuery) ||
       (parcel.recipient?.name && parcel.recipient.name.toLowerCase().includes(normalizedSearchQuery));
 
     const matchesStatus = filters.status === 'all' || 
@@ -175,7 +174,7 @@ const ParcelsPage = () => {
             showFilters={showFilters}
             onToggleFilters={handleToggleFilters}
             onClearFilters={handleClearFilters}
-            placeholder="Search by waybill, recipient, or status..."
+            placeholder="Search by tracking ID, description, or recipient..."
           />
 
           {/* Parcels List */}

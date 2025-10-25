@@ -10,14 +10,14 @@ const ParcelCardList = ({ parcels, bulkSelected, handleBulkSelect, navigateToDet
             <div className="flex items-center">
               <input type="checkbox" checked={bulkSelected.includes(parcel.id)} onChange={e => {e.stopPropagation(); handleBulkSelect(parcel.id);}} className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mr-3" />
               <div>
-                <div className="text-sm font-medium text-gray-900">{parcel.waybillNumber}</div>
+                <div className="text-sm font-medium text-gray-900">{parcel.trackingNumber}</div>
                 <div className="text-xs text-gray-500">{parcel.description}</div>
               </div>
             </div>
             {/* Status badge can be added here if needed */}
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div><span className="text-gray-500">Recipient:</span> <span className="font-medium">John Smith</span></div>
+            <div><span className="text-gray-500">Items:</span> <span className="font-medium">{parcel.items ? parcel.items.length : 0} item{parcel.items && parcel.items.length !== 1 ? 's' : ''}</span></div>
             <div><span className="text-gray-500">Weight:</span> <span className="font-medium">{parcel.weight} kg</span></div>
             <div><span className="text-gray-500">Cost:</span> <span className="font-medium">${parcel.shippingCost.toFixed(2)}</span></div>
             <div><span className="text-gray-500">Last Update:</span> <span className="font-medium text-xs">{parcel.lastUpdate}</span></div>

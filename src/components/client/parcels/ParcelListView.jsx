@@ -59,7 +59,7 @@ const ParcelListView = ({
               <div className="flex items-center">
                 <Package className="h-6 w-6 text-gray-400 mr-2.5" />
                 <div>
-                  <div className="text-base font-semibold text-gray-900">{parcel.waybillNumber}</div>
+                  <div className="text-base font-semibold text-gray-900">{parcel.trackingNumber}</div>
                   <div className="text-xs text-gray-500">{parcel.description}</div>
                 </div>
               </div>
@@ -69,8 +69,10 @@ const ParcelListView = ({
             {/* Card Body */}
             <div className="grid grid-cols-2 gap-3 text-sm mb-3">
               <div>
-                <span className="text-gray-500 font-medium">Recipient:</span>
-                <div className="font-semibold text-gray-900 text-sm">N/A</div>
+                <span className="text-gray-500 font-medium">Items:</span>
+                <div className="font-semibold text-gray-900 text-sm">
+                  {parcel.items ? parcel.items.length : 0} item{parcel.items && parcel.items.length !== 1 ? 's' : ''}
+                </div>
               </div>
               <div>
                 <span className="text-gray-500 font-medium">Weight:</span>
@@ -126,13 +128,13 @@ const ParcelListView = ({
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Waybill & Description
+                Tracking ID & Description
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Recipient
+                Items
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Weight & Cost
@@ -157,7 +159,7 @@ const ParcelListView = ({
                       <Package className="h-6 w-6 text-gray-400" />
                     </div>
                     <div className="ml-2">
-                      <div className="text-base font-semibold text-gray-900">{parcel.waybillNumber}</div>
+                      <div className="text-base font-semibold text-gray-900">{parcel.trackingNumber}</div>
                       <div className="text-xs text-gray-500 whitespace-pre-wrap">{parcel.description}</div>
                     </div>
                   </div>
@@ -166,8 +168,9 @@ const ParcelListView = ({
                   {getStatusBadge(parcel.status)}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">N/A</div>
-                  <div className="text-xs text-gray-500"></div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {parcel.items ? parcel.items.length : 0} item{parcel.items && parcel.items.length !== 1 ? 's' : ''}
+                  </div>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{parcel.weight} kg</div>
