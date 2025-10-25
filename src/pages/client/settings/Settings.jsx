@@ -37,7 +37,7 @@ const ClientSettings = () => {
 
       // Fetch user profile data
       const profileResponse = await axios.get(`${baseUrl}/clients/profile/data`, { headers });
-      const profileData = profileResponse.data?.data;
+      const profileData = profileResponse.data?.client;
 
       setUserData({
         firstName: profileData?.firstName || "",

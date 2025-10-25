@@ -68,7 +68,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
-            <ShipmentTable shipments={dashboardData.recentShipments} />
+            <ShipmentTable shipments={dashboardData.recentParcels} />
           </div>
           <div>
             <QuickActions />
