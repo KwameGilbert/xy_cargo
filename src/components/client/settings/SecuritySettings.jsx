@@ -1,51 +1,89 @@
 import { useState } from "react";
+import axios from "axios";
+import { getAuthHeader, getApiBaseUrl } from "../../../services/client/authService";
+import { useToast } from "../../../contexts/ToastContext";
 
-const SecuritySettings = ({ securitySettings }) => {
+const SecuritySettings = ({ securitySettings, onUpdateSuccess }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(securitySettings.twoFactorAuthentication || false);
   const [passwordError, setPasswordError] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isToggling2FA, setIsToggling2FA] = useState(false);
+  const { success, error: showError } = useToast();
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setPasswordError("");
-    
+
     if (newPassword !== confirmPassword) {
       setPasswordError("New passwords don't match");
       return;
     }
 
-    setIsSaving(true);
-    
+    if (newPassword.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      return;
+    }
+
+    setIsSavingPassword(true);
+
     try {
-      // Simulate API call to update password
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setSaveSuccess(true);
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setSaveSuccess(false);
-      }, 3000);
-    } catch (error) {
-      console.error("Error updating password:", error);
+      const baseUrl = getApiBaseUrl();
+      const response = await axios.patch(`${baseUrl}/clients/security/password`, {
+        currentPassword,
+        newPassword
+      }, {
+        headers: getAuthHeader()
+      });
+
+      if (response.data?.status === 'success') {
+        success("Password updated successfully");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        if (onUpdateSuccess) {
+          onUpdateSuccess();
+        }
+      } else {
+        throw new Error(response.data?.message || 'Failed to update password');
+      }
+    } catch (err) {
+      console.error("Error updating password:", err);
+      const errorMessage = err.response?.data?.message || "Failed to update password";
+      setPasswordError(errorMessage);
+      showError(errorMessage);
     } finally {
-      setIsSaving(false);
+      setIsSavingPassword(false);
     }
   };
 
   const handleToggleTwoFactor = async () => {
+    setIsToggling2FA(true);
+
     try {
-      // Simulate API call to toggle 2FA
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setTwoFactorEnabled(!twoFactorEnabled);
-    } catch (error) {
-      console.error("Error toggling 2FA:", error);
+      const baseUrl = getApiBaseUrl();
+      const response = await axios.patch(`${baseUrl}/clients/security/2fa`, {
+        enabled: !twoFactorEnabled
+      }, {
+        headers: getAuthHeader()
+      });
+
+      if (response.data?.status === 'success') {
+        setTwoFactorEnabled(!twoFactorEnabled);
+        success(response.data.message || `Two-factor authentication ${!twoFactorEnabled ? 'enabled' : 'disabled'}`);
+        if (onUpdateSuccess) {
+          onUpdateSuccess();
+        }
+      } else {
+        throw new Error(response.data?.message || 'Failed to update 2FA settings');
+      }
+    } catch (err) {
+      console.error("Error toggling 2FA:", err);
+      showError(err.response?.data?.message || "Failed to update 2FA settings");
+    } finally {
+      setIsToggling2FA(false);
     }
   };
 
@@ -101,20 +139,12 @@ const SecuritySettings = ({ securitySettings }) => {
           </div>
           
           <div className="flex justify-end">
-            {saveSuccess && (
-              <div className="mr-4 text-green-600 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                Password updated successfully
-              </div>
-            )}
             <button
               type="submit"
               className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-              disabled={isSaving}
+              disabled={isSavingPassword}
             >
-              {isSaving ? (
+              {isSavingPassword ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -159,8 +189,9 @@ const SecuritySettings = ({ securitySettings }) => {
                   ? "bg-gray-200 text-gray-800 hover:bg-gray-300" 
                   : "bg-green-600 text-white hover:bg-green-700"
               }`}
+              disabled={isToggling2FA}
             >
-              {twoFactorEnabled ? "Disable" : "Enable"}
+              {isToggling2FA ? "Updating..." : (twoFactorEnabled ? "Disable" : "Enable")}
             </button>
           </div>
         </div>

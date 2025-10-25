@@ -1,16 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
+import { getAuthHeader, getApiBaseUrl } from "../../../services/client/authService";
+import { useToast } from "../../../contexts/ToastContext";
 
-const AccountSettings = ({ userData }) => {
+const AccountSettings = ({ userData, onUpdateSuccess }) => {
   const [formData, setFormData] = useState({
     firstName: userData.firstName || "",
     lastName: userData.lastName || "",
     email: userData.email || "",
     phoneNumber: userData.phoneNumber || "",
-    company: userData.company || ""
+    company: userData.company || "",
+    address: userData.address || ""
   });
   const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  const { success, error: showError } = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,20 +26,24 @@ const AccountSettings = ({ userData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-    setSaveSuccess(false);
 
     try {
-      // In a real app, this would be an API call to update the user's account information
-      // Simulating API delay
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setSaveSuccess(true);
-      
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setSaveSuccess(false);
-      }, 3000);
-    } catch (error) {
-      console.error("Error saving account settings:", error);
+      const baseUrl = getApiBaseUrl();
+      const response = await axios.patch(`${baseUrl}/clients/profile/data`, formData, {
+        headers: getAuthHeader()
+      });
+
+      if (response.data?.status === 'success') {
+        success("Account information updated successfully");
+        if (onUpdateSuccess) {
+          onUpdateSuccess();
+        }
+      } else {
+        throw new Error(response.data?.message || 'Failed to update account information');
+      }
+    } catch (err) {
+      console.error("Error saving account settings:", err);
+      showError(err.response?.data?.message || "Failed to update account information");
     } finally {
       setIsSaving(false);
     }
@@ -89,9 +96,8 @@ const AccountSettings = ({ userData }) => {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-              required
+              className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+              readOnly
             />
           </div>
           
@@ -110,29 +116,51 @@ const AccountSettings = ({ userData }) => {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+              Company
+            </label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="customerId" className="block text-sm font-medium text-gray-700 mb-2">
+              Customer ID
+            </label>
+            <input
+              type="text"
+              id="customerId"
+              name="customerId"
+              value={userData.customerId || ""}
+              className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+              readOnly
+            />
+          </div>
+        </div>
+
         <div className="mb-6">
-          <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-            Company
+          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+            Address
           </label>
-          <input
-            type="text"
-            id="company"
-            name="company"
-            value={formData.company}
+          <textarea
+            id="address"
+            name="address"
+            value={formData.address}
             onChange={handleChange}
+            rows={3}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
 
         <div className="flex justify-end">
-          {saveSuccess && (
-            <div className="mr-4 text-green-600 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Changes saved successfully
-            </div>
-          )}
           <button
             type="submit"
             className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"

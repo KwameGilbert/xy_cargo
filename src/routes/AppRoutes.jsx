@@ -27,6 +27,7 @@ import InvoiceDetailsPage from "../pages/client/payments/InvoiceDetailsPage";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
+import ClientSettings from "../pages/client/settings/Settings";
 import ClientProtectedRoute from "../components/client/auth/ProtectedRoute";
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
@@ -143,6 +144,7 @@ const AppRoutes = () => (
     <Route path="client/notifications" element={<ClientProtectedRoute><Notifications /></ClientProtectedRoute>} />
     <Route path="client/addresses" element={<ClientProtectedRoute><ClientAddresses /></ClientProtectedRoute>} />
     <Route path="client/support" element={<ClientProtectedRoute><ClientSupport /></ClientProtectedRoute>} />
+    <Route path="client/settings" element={<ClientProtectedRoute><ClientSettings/></ClientProtectedRoute>} />
 
 
     {/* Warehouse Auth Routes */}
