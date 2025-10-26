@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import KPICards from '../../../components/warehouse/dashboard/KPICards';
 import ChartsSection from '../../../components/warehouse/dashboard/ChartsSection';
 import RecentActivityFeed from '../../../components/warehouse/dashboard/RecentActivityFeed';
@@ -6,6 +6,8 @@ import QuickLinks from '../../../components/warehouse/dashboard/QuickLinks';
 import NotificationsPanel from '../../../components/warehouse/dashboard/NotificationsPanel';
 import SearchFilters from '../../../components/warehouse/dashboard/SearchFilters';
 import WarehouseLayout from '../../../components/warehouse/layout/WarehouseLayout';
+import { useWarehouseAuth } from '../../../contexts/WarehouseAuthContext';
+import { getDashboardData } from '../../../services/warehouse/dashboardService';
 
 // Mock data
 const mockData = {
@@ -96,6 +98,44 @@ const mockData = {
 const WarehouseDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({});
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { currentUser } = useWarehouseAuth();
+
+  // Fetch dashboard data on component mount
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!currentUser?.warehouseId) {
+        setError('Warehouse ID not found. Please log in again.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await getDashboardData(currentUser.warehouseId);
+
+        if (response.success) {
+          setDashboardData(response.data);
+        } else {
+          setError(response.message || 'Failed to load dashboard data');
+          // Fallback to mock data if API fails
+          setDashboardData(mockData);
+        }
+      } catch (err) {
+        setError('Network error occurred while loading dashboard data');
+        // Fallback to mock data if API fails
+        setDashboardData(mockData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [currentUser]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -109,26 +149,73 @@ const WarehouseDashboard = () => {
     console.log('Filters applied:', filterData);
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <WarehouseLayout>
+        <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard data...</p>
+          </div>
+        </div>
+      </WarehouseLayout>
+    );
+  }
+
+  // Show error state
+  if (error && !dashboardData) {
+    return (
+      <WarehouseLayout>
+        <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-md">
+            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Dashboard</h2>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </WarehouseLayout>
+    );
+  }
+
+  // Use dashboard data or fallback to mock data
+  const data = dashboardData || mockData;
+
   return (
     <WarehouseLayout>
       <div className="p-6 bg-gray-50 min-h-screen">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Warehouse Dashboard</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Warehouse Dashboard</h1>
+          {error && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+              <p className="text-sm text-yellow-800">
+                Using offline data. {error}
+              </p>
+            </div>
+          )}
+        </div>
 
         <SearchFilters onSearch={handleSearch} onFilter={handleFilter} />
 
-        <KPICards kpiData={mockData.kpiData} />
+        <KPICards kpiData={data.kpiData} />
 
         <QuickLinks />
 
         <ChartsSection
-          parcelIntakeTrend={mockData.parcelIntakeTrend}
-          shipmentStatusDistribution={mockData.shipmentStatusDistribution}
-          paymentsSummary={mockData.paymentsSummary}
+          parcelIntakeTrend={data.parcelIntakeTrend}
+          shipmentStatusDistribution={data.shipmentStatusDistribution}
+          paymentsSummary={data.paymentsSummary}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <RecentActivityFeed activities={mockData.recentActivities} />
-          <NotificationsPanel notifications={mockData.notifications} />
+          <RecentActivityFeed activities={data.recentActivities} />
+          <NotificationsPanel notifications={data.notifications} />
         </div>
       </div>
     </WarehouseLayout>
