@@ -19,6 +19,7 @@ import {
   Ship
 } from "lucide-react";
 import { useState } from "react";
+import { useWarehouseAuth } from "../../../contexts/WarehouseAuthContext";
 
 const menuItems = [
   { path: "/warehouse/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -34,6 +35,7 @@ const menuItems = [
 const Sidebar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { currentUser, logout } = useWarehouseAuth();
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -96,8 +98,12 @@ const Sidebar = () => {
                 />
               </div>
               <div className="ml-3">
-                <h3 className="font-medium text-gray-900 text-sm">John Smith</h3>
-                <p className="text-xs text-gray-500">ID: XY-CU-2833</p>
+                <h3 className="font-medium text-gray-900 text-sm">
+                  {currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Loading..."}
+                </h3>
+                <p className="text-xs text-gray-500">
+                  {currentUser?.role || "Staff"} - {currentUser?.warehouseName || "Warehouse"}
+                </p>
               </div>
             </div>
           </div>
@@ -134,17 +140,16 @@ const Sidebar = () => {
           
           {/* Logout Link - Fixed at bottom */}
           <div className="flex-shrink-0 border-t border-gray-100">
-            <Link 
-              to="/warehouse/auth/login"
-              className="flex items-center px-3 py-2.5 mx-3 text-gray-700 hover:bg-gray-50 rounded-md"
+            <button
               onClick={() => {
-                localStorage.removeItem("user");
-                localStorage.removeItem("token");
+                logout();
+                setIsMobileMenuOpen(false);
               }}
+              className="w-full flex items-center px-3 py-2.5 mx-3 text-gray-700 hover:bg-gray-50 rounded-md text-left"
             >
               <LogOut className="h-4 w-4 mr-3 text-gray-500" />
               <span className="text-sm">Sign Out</span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

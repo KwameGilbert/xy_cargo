@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ClientAuthProvider } from "../contexts/ClientAuthContext";
+import { WarehouseAuthProvider } from "../contexts/WarehouseAuthContext";
 import { ToastProvider } from "../contexts/ToastContext";
 import ToastContainer from "../components/ToastContainer";
 
@@ -33,6 +34,7 @@ import MainLayout from "../components/public_pages/layout/MainLayout";
 
 
 //Warehouse Pages
+import WarehouseProtectedRoute from "../components/warehouse/auth/WarehouseProtectedRoute";
 import WarehouseLogin from "../pages/warehouse/auth/WarehouseLogin";
 import WarehouseForgotPassword from "../pages/warehouse/auth/WarehouseForgotPassword";
 import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard";
@@ -116,7 +118,8 @@ import AdminTwoFactorAuthPage from "../pages/admin/security/AdminTwoFactorAuthPa
 const AppRoutes = () => (
   <ToastProvider>
     <ClientAuthProvider>
-      <Routes>
+      <WarehouseAuthProvider>
+        <Routes>
     {/* Public Routes - wrapped in MainLayout */}
     <Route element={<MainLayout />}>
       <Route index element={<HomePage />} />
@@ -151,19 +154,19 @@ const AppRoutes = () => (
     <Route path="warehouse/auth/login" element={<WarehouseLogin />} />
     <Route path="warehouse/auth/forgot-password" element={<WarehouseForgotPassword />} />
 
-    {/* Warehouse Routes - wrapped in WarehouseLayout */}
-      <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />
-      <Route path="warehouse/parcels" element={<WarehouseParcelsPage />} />
-      <Route path="warehouse/parcels/create" element={<CreateWarehouseParcelPage />} />
-      <Route path="warehouse/parcels/bulk-update" element={<BulkUpdatePage />} />
-      <Route path="warehouse/parcels/:id" element={<WarehouseParcelDetailPage />} />
-      <Route path="warehouse/payments" element={<WarehousePaymentsPage />} />
-      <Route path="warehouse/shipments" element={<WarehouseShipmentsPage />} />
-      <Route path="warehouse/shipments/:shipmentId" element={<WarehouseShipmentDetailPage />} />
-      <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />      
-      <Route path="warehouse/support" element={<WarehouseSupportPage />} />      
-      <Route path="warehouse/bulk-updates" element={<WarehouseBulkUpdatePage />} />
-      <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
+    {/* Protected Warehouse Routes */}
+    <Route path="warehouse/dashboard" element={<WarehouseProtectedRoute><WarehouseDashboard /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/parcels" element={<WarehouseProtectedRoute><WarehouseParcelsPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/parcels/create" element={<WarehouseProtectedRoute><CreateWarehouseParcelPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/parcels/bulk-update" element={<WarehouseProtectedRoute><BulkUpdatePage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/parcels/:id" element={<WarehouseProtectedRoute><WarehouseParcelDetailPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/payments" element={<WarehouseProtectedRoute><WarehousePaymentsPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/shipments" element={<WarehouseProtectedRoute><WarehouseShipmentsPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/shipments/:shipmentId" element={<WarehouseProtectedRoute><WarehouseShipmentDetailPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/notifications" element={<WarehouseProtectedRoute><WarehouseNotificationPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/support" element={<WarehouseProtectedRoute><WarehouseSupportPage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/bulk-updates" element={<WarehouseProtectedRoute><WarehouseBulkUpdatePage /></WarehouseProtectedRoute>} />
+    <Route path="warehouse/settings" element={<WarehouseProtectedRoute><WarehouseSettingsPage /></WarehouseProtectedRoute>} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
 
@@ -230,6 +233,7 @@ const AppRoutes = () => (
         {/* </Route> */}
 
   </Routes>
+      </WarehouseAuthProvider>
     </ClientAuthProvider>
     <ToastContainer />
   </ToastProvider>

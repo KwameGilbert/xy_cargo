@@ -1,16 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useWarehouseAuth } from "../../../contexts/WarehouseAuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
 
-  // Fallback to localStorage since AuthProvider may not be present
-  const stored = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-  const currentUser = stored ? JSON.parse(stored) : { name: "Warehouse Manager" };
+  // Use warehouse auth context when available
+  const { currentUser, logout } = useWarehouseAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    // Use centralized logout to clear storage and auth state
+    logout && logout();
     navigate("/warehouse/auth/login");
   };
 
@@ -27,7 +27,7 @@ const Header = () => {
         </Link>
 
         <div className="flex items-center">
-          <span className="mr-4 text-sm text-gray-600">Welcome, {currentUser?.name}</span>
+          <span className="mr-4 text-sm text-gray-600">Welcome, {currentUser ? `${currentUser.firstName || currentUser.name || ''} ${currentUser.lastName || ''}`.trim() : 'Warehouse'}</span>
           <button
             onClick={handleLogout}
             className="px-4 py-2 text-sm font-medium text-red-500 hover:text-red-700"

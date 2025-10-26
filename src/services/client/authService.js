@@ -1,7 +1,7 @@
 // src/services/client/authService.js
-const APP_ENV = "development"
-const PROD_API_BASE_URL = "https://api.xycargozm.com/v1"
-const DEV_API_BASE_URL = "http://app.xycargo.com/v1"
+const APP_ENV = import.meta.env.VITE_APP_ENV || "development"
+const PROD_API_BASE_URL = import.meta.env.VITE_PROD_API_BASE_URL
+const DEV_API_BASE_URL = import.meta.env.VITE_DEV_API_BASE_URL
 
 // Determine the active environment and select the appropriate base URL
 const isDevelopment = APP_ENV === 'development';
