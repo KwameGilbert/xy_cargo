@@ -8,8 +8,6 @@ const ShippingCalculator = ({ SEO }) => {
   const [formData, setFormData] = useState({
     fromCountry: '',
     toCountry: '',
-    fromCity: '',
-    toCity: '',
     serviceType: '',
     category: '',
     weight: '',
@@ -19,7 +17,6 @@ const ShippingCalculator = ({ SEO }) => {
   });
 
   const [countries, setCountries] = useState([]);
-  const [cities, setCities] = useState([]);
   const [shipmentTypes, setShipmentTypes] = useState([]);
   const [cargoCategories, setCargoCategories] = useState([]);
   const [quote, setQuote] = useState(null);
@@ -51,9 +48,7 @@ const ShippingCalculator = ({ SEO }) => {
             fromCountry: china.country_id?.toString(),
             toCountry: zambia.country_id?.toString()
           }));
-          // Fetch cities for default countries
-          fetchCities(china.country_id, 'origin');
-          fetchCities(zambia.country_id, 'destination');
+          // No need to fetch cities since we're not using them
         }
       } catch (err) {
         console.error('Failed to load initial data:', err);
@@ -64,40 +59,6 @@ const ShippingCalculator = ({ SEO }) => {
     fetchInitialData();
   }, []);
 
-  // Fetch cities when country changes
-  const fetchCities = async (countryId, type) => {
-    if (!countryId) return;
-
-    try {
-      const response = await axios.get(`${getApiBaseUrl()}/rates/countries/${countryId}/cities`);
-      const newCities = response.data.data || [];
-      
-      setCities(prev => {
-        // Remove existing cities for this country and add new ones
-        const filtered = prev.filter(city => city.country_id !== parseInt(countryId));
-        return [...filtered, ...newCities];
-      });
-    } catch (err) {
-      console.error('Failed to load cities:', err);
-    }
-  };
-
-  const handleCountryChange = (e, type) => {
-    const countryId = e.target.value;
-    const field = type === 'origin' ? 'fromCountry' : 'toCountry';
-    const cityField = type === 'origin' ? 'fromCity' : 'toCity';
-    
-    setFormData(prev => ({
-      ...prev,
-      [field]: countryId,
-      [cityField]: '' // Reset city when country changes
-    }));
-
-    if (countryId) {
-      fetchCities(countryId, type);
-    }
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -107,16 +68,16 @@ const ShippingCalculator = ({ SEO }) => {
   };
 
   const isFormValid = () => {
-    const requiredFields = ['fromCountry', 'toCountry', 'fromCity', 'toCity', 'serviceType', 'category'];
+    const requiredFields = ['fromCountry', 'toCountry', 'serviceType', 'category'];
     
     for (const field of requiredFields) {
       if (!formData[field]) return false;
     }
 
     // Check package details based on service type
-    const selectedCategory = cargoCategories.find(cat => cat.id === parseInt(formData.category));
+    const selectedCategory = cargoCategories.find(cat => cat.category_id === parseInt(formData.category));
     if (selectedCategory) {
-      const isSeaFreight = shipmentTypes.find(type => type.id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
+      const isSeaFreight = shipmentTypes.find(type => type.type_id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
       
       if (isSeaFreight) {
         // For sea freight, check dimensions
@@ -149,15 +110,15 @@ const ShippingCalculator = ({ SEO }) => {
 
     try {
       const requestData = {
-        origin_city_id: parseInt(formData.fromCity),
-        destination_city_id: parseInt(formData.toCity),
-        shipment_type_id: parseInt(formData.serviceType),
-        cargo_category_id: parseInt(formData.category)
+        originCountryId: parseInt(formData.fromCountry),
+        destinationCountryId: parseInt(formData.toCountry),
+        shipmentTypeId: parseInt(formData.serviceType),
+        cargoCategoryId: parseInt(formData.category)
       };
 
       // Add package details based on service type
-      const selectedCategory = cargoCategories.find(cat => cat.id === parseInt(formData.category));
-      const isSeaFreight = shipmentTypes.find(type => type.id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
+      const selectedCategory = cargoCategories.find(cat => cat.category_id === parseInt(formData.category));
+      const isSeaFreight = shipmentTypes.find(type => type.type_id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
 
       if (isSeaFreight) {
         // Calculate volume for sea freight
@@ -251,46 +212,6 @@ const ShippingCalculator = ({ SEO }) => {
                   </select>
                 </div>
               </div>
-              {formData.fromCountry && formData.toCountry && (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">From City</label>
-                      <select
-                        name="fromCity"
-                        value={formData.fromCity}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        disabled={loading}
-                      >
-                        <option value="">Select Origin City</option>
-                        {cities.filter(city => city.country_id === parseInt(formData.fromCountry)).map(city => (
-                          <option key={city.city_id} value={city.city_id}>
-                            {city.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">To City</label>
-                      <select
-                        name="toCity"
-                        value={formData.toCity}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        disabled={loading}
-                      >
-                        <option value="">Select Destination City</option>
-                        {cities.filter(city => city.country_id === parseInt(formData.toCountry)).map(city => (
-                          <option key={city.city_id} value={city.city_id}>
-                            {city.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </>
-              )}
               <div className="mb-6">
                 <h3 className="text-lg font-medium text-gray-800 mb-4">Service Type</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -315,7 +236,8 @@ const ShippingCalculator = ({ SEO }) => {
                           <IconComponent className="text-red-500 mr-2" size={20} />
                           <span className="font-medium text-gray-800">{service.name}</span>
                         </div>
-                        <p className="text-sm text-gray-600">{service.description}</p>
+                        {/* <p className="text-sm text-gray-600">{service.description}</p> */}
+                        <p className="text-xs text-gray-500 mt-1">Estimated delivery: {service.estimated_days} days</p>
                       </motion.div>
                     );
                   })}
@@ -347,7 +269,7 @@ const ShippingCalculator = ({ SEO }) => {
                   </div>
                   {formData.category && (
                     <p className="mt-2 text-sm text-gray-500">
-                      {cargoCategories.find(cat => cat.id === parseInt(formData.category))?.description || 'Please enter package details below.'}
+                      {cargoCategories.find(cat => cat.category_id === parseInt(formData.category))?.description || 'Please enter package details below.'}
                     </p>
                   )}
                 </div>
@@ -356,8 +278,8 @@ const ShippingCalculator = ({ SEO }) => {
                 <div className="mb-6">
                   <h3 className="text-lg font-medium text-gray-800 mb-4">Package Details</h3>
                   {(() => {
-                    const selectedCategory = cargoCategories.find(cat => cat.id === parseInt(formData.category));
-                    const isSeaFreight = shipmentTypes.find(type => type.id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
+                    const selectedCategory = cargoCategories.find(cat => cat.category_id === parseInt(formData.category));
+                    const isSeaFreight = shipmentTypes.find(type => type.type_id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
                     
                     if (isSeaFreight) {
                       return (
@@ -485,7 +407,7 @@ const ShippingCalculator = ({ SEO }) => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Route:</span>
-                    <span className="font-medium">{quote.origin_city} → {quote.destination_city}</span>
+                    <span className="font-medium">{quote.origin_country} → {quote.destination_country}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Service:</span>

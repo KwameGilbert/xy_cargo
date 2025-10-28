@@ -1,37 +1,40 @@
 import React from 'react';
-import { Plus, Truck, Eye, CreditCard, Upload } from 'lucide-react';
+import { Plus, Truck, Eye, CreditCard, Bell } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const QuickLinks = () => {
+  const navigate = useNavigate();
+
   const links = [
     {
       title: 'Add New Parcel',
       icon: Plus,
       color: 'bg-blue-500 hover:bg-blue-600',
-      action: () => console.log('Add New Parcel'),
-    },
-    {
-      title: 'Create Shipment',
-      icon: Truck,
-      color: 'bg-green-500 hover:bg-green-600',
-      action: () => console.log('Create Shipment'),
+      action: () => navigate("/warehouse/parcels/create"),
     },
     {
       title: 'View All Parcels',
       icon: Eye,
       color: 'bg-purple-500 hover:bg-purple-600',
-      action: () => console.log('View All Parcels'),
+      action: () => navigate("/warehouse/parcels"),
     },
     {
-      title: 'Record Payment',
+      title: 'View All Shipments',
+      icon: Truck,
+      color: 'bg-green-500 hover:bg-green-600',
+      action: () => navigate("/warehouse/shipments"),
+    },
+    {
+      title: 'View Payments & Invoices',
       icon: CreditCard,
       color: 'bg-yellow-500 hover:bg-yellow-600',
-      action: () => console.log('Record Payment'),
+      action: () => navigate("/warehouse/payments"),
     },
     {
-      title: 'Bulk Update',
-      icon: Upload,
+      title: 'Notifications',
+      icon: Bell,
       color: 'bg-red-500 hover:bg-red-600',
-      action: () => console.log('Bulk Update'),
+      action: () => navigate("/warehouse/notifications"),
     },
   ];
 

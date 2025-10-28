@@ -4,17 +4,16 @@ import { getAuthHeader, getApiBaseUrl } from './authService';
 
 // Centralized endpoints
 const ENDPOINTS = {
-  dashboardData: (warehouseId) => `${getApiBaseUrl()}/warehouse-staff/dashboard/data/${warehouseId}`,
+  dashboardData: `${getApiBaseUrl()}/warehouse-staff/dashboard/data`,
 };
 
 /**
  * Fetch dashboard data for a specific warehouse
- * @param {number} warehouseId - The warehouse ID
  * @returns {Promise<Object>} Dashboard data or error
  */
-export async function getDashboardData(warehouseId) {
+export async function getDashboardData() {
   try {
-    const res = await fetch(ENDPOINTS.dashboardData(warehouseId), {
+    const res = await fetch(ENDPOINTS.dashboardData, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
