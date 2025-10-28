@@ -4,6 +4,7 @@ import AboutMission from "../../../components/public_pages/about/AboutMission";
 import AboutValues from "../../../components/public_pages/about/AboutValues";
 import AboutTeam from "../../../components/public_pages/about/AboutTeam";
 import AboutContact from "../../../components/public_pages/about/AboutContact";
+import Partners from "../../../components/public_pages/about/Partners";
 // import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const About = () => (
@@ -17,6 +18,7 @@ const About = () => (
     <AboutHero />
     <AboutMission />
     <AboutValues />
+    <Partners />
     <AboutTeam />
     <AboutContact />
   </div>

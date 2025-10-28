@@ -6,6 +6,7 @@ import ShippingCalculator from "../../../components/public_pages/calc/ShippingCa
 import Pricing from "../../../components/public_pages/pricing/Pricing";
 import Tracking from "../../../components/public_pages/home/Tracking";
 import SupportCenter from "../../../components/public_pages/home/SupportCenter";
+import Partners from "../../../components/public_pages/about/Partners";
 // import SEO from "../../../components/public_pages/common/SEO/SEO";
 
 const HomePage = () => {
@@ -65,6 +66,10 @@ const HomePage = () => {
       
       <motion.div variants={sectionVariants}>
         <SupportCenter />
+      </motion.div>
+      
+      <motion.div variants={sectionVariants}>
+        <Partners />
       </motion.div>
     </motion.div>
   );

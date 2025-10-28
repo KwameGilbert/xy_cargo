@@ -1,145 +1,189 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Calculator, Package, Plane, Ship } from "lucide-react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { Calculator, Package, Plane, Ship, MapPin, Truck, DollarSign } from "lucide-react";
+import { getApiBaseUrl } from '../../../services/client/authService';
 
 const ShippingCalculator = ({ SEO }) => {
   const [formData, setFormData] = useState({
-    fromCountry: "China",
-    toCountry: "Zambia",
-    weight: "",
-    length: "",
-    width: "",
-    height: "",
-    packageType: "standard",
-    serviceType: "standard",
-    category: "normal"
+    fromCountry: '',
+    toCountry: '',
+    fromCity: '',
+    toCity: '',
+    serviceType: '',
+    category: '',
+    weight: '',
+    length: '',
+    width: '',
+    height: ''
   });
-  const [weightWarning, setWeightWarning] = useState("");
+
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [shipmentTypes, setShipmentTypes] = useState([]);
+  const [cargoCategories, setCargoCategories] = useState([]);
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [weightWarning, setWeightWarning] = useState('');
 
-  const serviceTypes = [
-    { id: "standard", name: "Standard Air Freight", icon: Plane, description: "10-17 business days", multiplier: 1.0 },
-    { id: "express", name: "Express Air Freight", icon: Plane, description: "3-5 business days", multiplier: 1.5 },
-    { id: "sea", name: "Sea Freight", icon: Ship, description: "40-60 business days", multiplier: 1.0 }
-  ];
+  // Fetch initial data
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const [countriesRes, shipmentTypesRes, cargoCategoriesRes] = await Promise.all([
+          axios.get(`${getApiBaseUrl()}/rates/countries`),
+          axios.get(`${getApiBaseUrl()}/rates/shipment-types`),
+          axios.get(`${getApiBaseUrl()}/rates/cargo-categories`)
+        ]);
 
-  const categoryTypes = [
-    { id: "normal", name: "Normal Goods", rate: 12, service: "air" },
-    { id: "wigs", name: "Wigs", rate: 14, service: "air" },
-    { id: "phones", name: "Phones", rate: 11, unit: "per piece", service: "air" },
-    { id: "battery", name: "Battery Goods/Cosmetics/Toner Cartridges/Medicine", rate: 14, service: "air" },
-    { id: "laptop", name: "Laptops and iPads", rate: 16, service: "air" },
-    { id: "sea_general", name: "General Goods (Sea)", rate: 300, unit: "CBM", service: "sea" },
-    { id: "sea_special", name: "Special Goods (Sea)", rate: 330, unit: "CBM", service: "sea" }
-  ];
+        setCountries(countriesRes.data.data || []);
+        setShipmentTypes(shipmentTypesRes.data.data || []);
+        setCargoCategories(cargoCategoriesRes.data.data || []);
+
+        // Set default values (China to Zambia if available)
+        const china = countriesRes.data.data?.find(c => c.name === 'China');
+        const zambia = countriesRes.data.data?.find(c => c.name === 'Zambia');
+
+        if (china && zambia) {
+          setFormData(prev => ({
+            ...prev,
+            fromCountry: china.country_id?.toString(),
+            toCountry: zambia.country_id?.toString()
+          }));
+          // Fetch cities for default countries
+          fetchCities(china.country_id, 'origin');
+          fetchCities(zambia.country_id, 'destination');
+        }
+      } catch (err) {
+        console.error('Failed to load initial data:', err);
+        setError('Failed to load shipping data. Please refresh the page.');
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  // Fetch cities when country changes
+  const fetchCities = async (countryId, type) => {
+    if (!countryId) return;
+
+    try {
+      const response = await axios.get(`${getApiBaseUrl()}/rates/countries/${countryId}/cities`);
+      const newCities = response.data.data || [];
+      
+      setCities(prev => {
+        // Remove existing cities for this country and add new ones
+        const filtered = prev.filter(city => city.country_id !== parseInt(countryId));
+        return [...filtered, ...newCities];
+      });
+    } catch (err) {
+      console.error('Failed to load cities:', err);
+    }
+  };
+
+  const handleCountryChange = (e, type) => {
+    const countryId = e.target.value;
+    const field = type === 'origin' ? 'fromCountry' : 'toCountry';
+    const cityField = type === 'origin' ? 'fromCity' : 'toCity';
+    
+    setFormData(prev => ({
+      ...prev,
+      [field]: countryId,
+      [cityField]: '' // Reset city when country changes
+    }));
+
+    if (countryId) {
+      fetchCities(countryId, type);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "weight") {
-      // Only show warning for express
-      if (formData.serviceType === "express" && value !== "" && parseFloat(value) < 5) {
-        setWeightWarning("Minimum allowed weight for Express is 5kg.");
-      } else {
-        setWeightWarning("");
-      }
-    }
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const calculateShipping = () => {
-    if (formData.serviceType !== 'sea') {
-      if (!formData.weight) {
-        alert("Please enter weight for air freight");
-        return;
-      }
-      // Only enforce minimum for express
-      if (formData.serviceType === 'express' && parseFloat(formData.weight) < 5) {
-        setWeightWarning("Minimum allowed weight for Express is 5kg.");
-        return;
+  const isFormValid = () => {
+    const requiredFields = ['fromCountry', 'toCountry', 'fromCity', 'toCity', 'serviceType', 'category'];
+    
+    for (const field of requiredFields) {
+      if (!formData[field]) return false;
+    }
+
+    // Check package details based on service type
+    const selectedCategory = cargoCategories.find(cat => cat.id === parseInt(formData.category));
+    if (selectedCategory) {
+      const isSeaFreight = shipmentTypes.find(type => type.id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
+      
+      if (isSeaFreight) {
+        // For sea freight, check dimensions
+        if (!formData.length || !formData.width || !formData.height) return false;
+        const dimensions = [formData.length, formData.width, formData.height].map(d => parseFloat(d));
+        if (dimensions.some(d => isNaN(d) || d <= 0)) return false;
+      } else {
+        // For air freight, check weight/pieces
+        if (selectedCategory.unit === 'pieces') {
+          if (!formData.weight || parseInt(formData.weight) < 1) return false;
+        } else {
+          const minWeight = selectedCategory.min_quantity || 0.1;
+          if (!formData.weight || parseFloat(formData.weight) < minWeight) return false;
+        }
       }
     }
-    if (formData.serviceType === 'sea' && (!formData.length || !formData.width || !formData.height)) {
-      alert("Please enter dimensions for sea freight");
+
+    return true;
+  };
+
+  const calculateShipping = async () => {
+    if (!isFormValid()) {
+      setError('Please fill in all required fields');
       return;
     }
+
     setLoading(true);
-    setTimeout(() => {
-      let cost = 0;
-      let description = '';
-      const selectedCategory = categoryTypes.find(cat => cat.id === formData.category);
-      if (formData.serviceType !== 'sea') {
-        // Only apply minimum for express
-        const weight = formData.serviceType === 'express'
-          ? Math.max(parseFloat(formData.weight) || 0, 5)
-          : parseFloat(formData.weight) || 0;
-        cost = weight * selectedCategory.rate;
-        if (formData.serviceType === 'express') {
-          cost *= 1.5;
-        }
-        description = formData.serviceType === 'standard' ? '10-17 business days' : '7-9 business days';
-      } else {
-        const lengthM = parseFloat(formData.length) / 100;
-        const widthM = parseFloat(formData.width) / 100;
-        const heightM = parseFloat(formData.height) / 100;
-        const volumeCBM = lengthM * widthM * heightM;
-        if (volumeCBM < 0.1) {
-          cost = 50;
-        } else {
-          cost = volumeCBM * (formData.category === 'sea_special' ? 330 : 300);
-        }
-        description = '30-45 business days';
-      }
-      const serviceType = serviceTypes.find(s => s.id === formData.serviceType);
-      const mockApiResponse = {
-        quote: {
-          basePrice: cost.toFixed(2),
-          total: cost.toFixed(2),
-          currency: "USD",
-          service: {
-            id: serviceType.id,
-            name: serviceType.name,
-            description: serviceType.description
-          },
-          category: selectedCategory.name,
-          estimatedDays: description,
-          route: {
-            origin: "Foshan, China",
-            destination: "Lusaka, Zambia"
-          },
-          measurements: formData.serviceType === 'sea' 
-            ? {
-                volume: ((parseFloat(formData.length) * parseFloat(formData.width) * parseFloat(formData.height)) / 1000000).toFixed(2),
-                unit: "CBM",
-                dimensions: {
-                  length: parseFloat(formData.length),
-                  width: parseFloat(formData.width),
-                  height: parseFloat(formData.height),
-                  unit: "cm"
-                }
-              }
-            : {
-                weight: formData.serviceType === 'express'
-                  ? Math.max(parseFloat(formData.weight) || 0, 5)
-                  : parseFloat(formData.weight) || 0,
-                unit: selectedCategory.id === "phones" ? "pieces" : "kg"
-              },
-          priceBreakdown: {
-            baseCost: cost.toFixed(2),
-            fees: "0.00",
-            taxes: "0.00",
-            discounts: "0.00",
-            total: cost.toFixed(2)
-          },
-          additionalInfo: {
-            minCharge: formData.serviceType === 'sea' ? "0.1 CBM ($50)" : "1 kg",
-            storagePolicy: "Packages left unclaimed for more than 3 days will be charged $2 per day."
-          }
-        }
+    setError('');
+    setQuote(null);
+
+    try {
+      const requestData = {
+        origin_city_id: parseInt(formData.fromCity),
+        destination_city_id: parseInt(formData.toCity),
+        shipment_type_id: parseInt(formData.serviceType),
+        cargo_category_id: parseInt(formData.category)
       };
-      setQuote(mockApiResponse.quote);
+
+      // Add package details based on service type
+      const selectedCategory = cargoCategories.find(cat => cat.id === parseInt(formData.category));
+      const isSeaFreight = shipmentTypes.find(type => type.id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
+
+      if (isSeaFreight) {
+        // Calculate volume for sea freight
+        const length = parseFloat(formData.length);
+        const width = parseFloat(formData.width);
+        const height = parseFloat(formData.height);
+        const volume = (length * width * height) / 1000000; // Convert to CBM
+        requestData.volume = volume;
+      } else {
+        // Add weight/pieces for air freight
+        requestData.weight = selectedCategory.unit === 'pieces' ? parseInt(formData.weight) : parseFloat(formData.weight);
+      }
+
+      const response = await axios.post(`${getApiBaseUrl()}/rates/calculate`, requestData);
+
+      if (response.data.status === 'success') {
+        setQuote(response.data.data);
+      } else {
+        setError(response.data.message || 'Failed to calculate rate');
+      }
+    } catch (err) {
+      console.error('Calculation error:', err);
+      setError(err.response?.data?.message || 'Failed to calculate shipping rate. Please try again.');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const containerVariants = {
@@ -171,8 +215,6 @@ const ShippingCalculator = ({ SEO }) => {
           <motion.div variants={sectionVariants} className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md p-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6">Calculate Your Shipping Cost</h2>
-              {/* Origin & Destination, Service Type, Category Type, Package Details, Calculate Button */}
-              {/* ...existing code... */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
@@ -180,10 +222,15 @@ const ShippingCalculator = ({ SEO }) => {
                     name="fromCountry"
                     value={formData.fromCountry}
                     onChange={handleInputChange}
-                    disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    disabled={loading}
                   >
-                    <option value="China">China (Foshan)</option>
+                    <option value="">Select Origin Country</option>
+                    {countries.map(country => (
+                      <option key={country.country_id} value={country.country_id}>
+                        {country.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -192,31 +239,76 @@ const ShippingCalculator = ({ SEO }) => {
                     name="toCountry"
                     value={formData.toCountry}
                     onChange={handleInputChange}
-                    disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    disabled={loading}
                   >
-                    <option value="Zambia">Zambia (Lusaka)</option>
+                    <option value="">Select Destination Country</option>
+                    {countries.map(country => (
+                      <option key={country.country_id} value={country.country_id}>
+                        {country.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
+              {formData.fromCountry && formData.toCountry && (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">From City</label>
+                      <select
+                        name="fromCity"
+                        value={formData.fromCity}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        disabled={loading}
+                      >
+                        <option value="">Select Origin City</option>
+                        {cities.filter(city => city.country_id === parseInt(formData.fromCountry)).map(city => (
+                          <option key={city.city_id} value={city.city_id}>
+                            {city.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">To City</label>
+                      <select
+                        name="toCity"
+                        value={formData.toCity}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        disabled={loading}
+                      >
+                        <option value="">Select Destination City</option>
+                        {cities.filter(city => city.country_id === parseInt(formData.toCountry)).map(city => (
+                          <option key={city.city_id} value={city.city_id}>
+                            {city.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
               <div className="mb-6">
                 <h3 className="text-lg font-medium text-gray-800 mb-4">Service Type</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {serviceTypes.map(service => {
-                    const IconComponent = service.icon;
+                  {shipmentTypes.map(service => {
+                    const IconComponent = service.icon || Package;
                     return (
                       <motion.div
-                        key={service.id}
+                        key={service.type_id}
                         whileHover={{ scale: 1.02 }}
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                          formData.serviceType === service.id 
+                          formData.serviceType === service.type_id.toString() 
                             ? 'border-red-500 bg-red-50' 
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                         onClick={() => setFormData(prev => ({ 
                           ...prev, 
-                          serviceType: service.id,
-                          category: service.id === 'sea' ? 'sea_general' : 'normal'
+                          serviceType: service.type_id.toString(),
+                          category: '' // Reset category when service changes
                         }))}
                       >
                         <div className="flex items-center mb-2">
@@ -229,149 +321,161 @@ const ShippingCalculator = ({ SEO }) => {
                   })}
                 </div>
               </div>
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-800 mb-4">Cargo Category</h3>
-                <div className="relative">
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  >
-                    {formData.serviceType !== 'sea' ? (
-                      categoryTypes.filter(cat => cat.service === "air").map(category => (
-                        <option key={category.id} value={category.id}>
-                          {category.name} - ${category.rate}/{category.unit || "kg"}
-                        </option>
-                      ))
-                    ) : (
-                      categoryTypes.filter(cat => cat.service === "sea").map(category => (
-                        <option key={category.id} value={category.id}>
-                          {category.name} - ${category.rate}/{category.unit}
-                        </option>
-                      ))
-                    )}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  {formData.serviceType !== 'sea' 
-                    ? formData.category === 'phones'
-                      ? 'For phones, enter the number of pieces.'
-                      : formData.serviceType === 'express'
-                        ? 'For express air freight, minimum weight is 5kg.'
-                        : 'For standard air freight, no minimum weight.'
-                    : 'For sea freight, minimum charge is $50 (0.1 CBM).'}
-                </p>
-              </div>
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-800 mb-4">Package Details</h3>
-                {formData.serviceType !== 'sea' ? (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {formData.category === 'phones' ? 'Number of Pieces *' : 'Weight (kg) *'}
-                    </label>
-                    <input
-                      type="number"
-                      name="weight"
-                      value={formData.weight}
+              {formData.serviceType && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-800 mb-4">Cargo Category</h3>
+                  <div className="relative">
+                    <select
+                      name="category"
+                      value={formData.category}
                       onChange={handleInputChange}
-                        placeholder={
-                          formData.category === 'phones'
-                            ? "1"
-                            : formData.serviceType === 'express'
-                              ? "5.0"
-                              : "1.0"
-                        }
-                      min="5"
-                      step={formData.category === 'phones' ? "1" : "0.1"}
-                      className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${weightWarning ? 'border-red-500' : ''}`}
-                      required
-                    />
-                    {weightWarning && (
-                      <div className="text-red-500 text-sm mt-2">{weightWarning}</div>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <p className="mb-4 text-sm text-gray-600">Enter package dimensions to calculate volume in cubic meters (CBM)</p>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Length (cm) *</label>
-                        <input
-                          type="number"
-                          name="length"
-                          value={formData.length}
-                          onChange={handleInputChange}
-                          placeholder="0"
-                          min="1"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Width (cm) *</label>
-                        <input
-                          type="number"
-                          name="width"
-                          value={formData.width}
-                          onChange={handleInputChange}
-                          placeholder="0"
-                          min="1"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Height (cm) *</label>
-                        <input
-                          type="number"
-                          name="height"
-                          value={formData.height}
-                          onChange={handleInputChange}
-                          placeholder="0"
-                          min="1"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                          required
-                        />
-                      </div>
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      disabled={loading}
+                    >
+                      <option value="">Select Category</option>
+                      {cargoCategories.filter(cat => cat.shipment_type_id === parseInt(formData.serviceType)).map(category => (
+                        <option key={category.category_id} value={category.category_id}>
+                          {category.name} - ${category.base_rate}/{category.unit}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
                     </div>
-                    {formData.length && formData.width && formData.height && (
-                      <div className="mt-3 p-2 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-700">
-                          Estimated volume: 
-                          <span className="font-medium ml-1">
-                            {((parseFloat(formData.length) * parseFloat(formData.width) * parseFloat(formData.height)) / 1000000).toFixed(2)} CBM
-                          </span>
-                        </p>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={calculateShipping}
-                disabled={loading}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium disabled:opacity-50 flex items-center justify-center"
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Calculating...
-                  </>
-                ) : (
-                  <>
-                    <Calculator className="mr-2" size={18} />
-                    Calculate Shipping Cost
-                  </>
-                )}
-              </motion.button>
+                  </div>
+                  {formData.category && (
+                    <p className="mt-2 text-sm text-gray-500">
+                      {cargoCategories.find(cat => cat.id === parseInt(formData.category))?.description || 'Please enter package details below.'}
+                    </p>
+                  )}
+                </div>
+              )}
+              {formData.category && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-800 mb-4">Package Details</h3>
+                  {(() => {
+                    const selectedCategory = cargoCategories.find(cat => cat.id === parseInt(formData.category));
+                    const isSeaFreight = shipmentTypes.find(type => type.id === parseInt(formData.serviceType))?.name?.toLowerCase().includes('sea');
+                    
+                    if (isSeaFreight) {
+                      return (
+                        <>
+                          <p className="mb-4 text-sm text-gray-600">Enter package dimensions to calculate volume in cubic meters (CBM)</p>
+                          <div className="grid grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">Length (cm) *</label>
+                              <input
+                                type="number"
+                                name="length"
+                                value={formData.length}
+                                onChange={handleInputChange}
+                                placeholder="0"
+                                min="1"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">Width (cm) *</label>
+                              <input
+                                type="number"
+                                name="width"
+                                value={formData.width}
+                                onChange={handleInputChange}
+                                placeholder="0"
+                                min="1"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">Height (cm) *</label>
+                              <input
+                                type="number"
+                                name="height"
+                                value={formData.height}
+                                onChange={handleInputChange}
+                                placeholder="0"
+                                min="1"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                required
+                              />
+                            </div>
+                          </div>
+                          {formData.length && formData.width && formData.height && (
+                            <div className="mt-3 p-2 bg-gray-50 rounded-lg">
+                              <p className="text-sm text-gray-700">
+                                Estimated volume: 
+                                <span className="font-medium ml-1">
+                                  {((parseFloat(formData.length) * parseFloat(formData.width) * parseFloat(formData.height)) / 1000000).toFixed(2)} CBM
+                                </span>
+                              </p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    } else {
+                      const isPieces = selectedCategory?.unit === 'pieces';
+                      const minValue = selectedCategory?.min_quantity || (isPieces ? 1 : 0.1);
+                      
+                      return (
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            {isPieces ? 'Number of Pieces *' : 'Weight (kg) *'}
+                          </label>
+                          <input
+                            type="number"
+                            name="weight"
+                            value={formData.weight}
+                            onChange={handleInputChange}
+                            placeholder={minValue.toString()}
+                            min={minValue}
+                            step={isPieces ? "1" : "0.1"}
+                            className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${weightWarning ? 'border-red-500' : ''}`}
+                            required
+                          />
+                          {weightWarning && (
+                            <div className="text-red-500 text-sm mt-2">{weightWarning}</div>
+                          )}
+                          {selectedCategory && (
+                            <p className="mt-2 text-sm text-gray-500">
+                              Minimum {isPieces ? 'pieces' : 'weight'}: {minValue} {selectedCategory.unit}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    }
+                  })()}
+                </div>
+              )}
+              {formData.category && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={calculateShipping}
+                  disabled={loading || !isFormValid()}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium disabled:opacity-50 flex items-center justify-center"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Calculating...
+                    </>
+                  ) : (
+                    <>
+                      <Calculator className="mr-2" size={18} />
+                      Calculate Shipping Cost
+                    </>
+                  )}
+                </motion.button>
+              )}
+              {error && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
             </div>
           </motion.div>
           <motion.div variants={sectionVariants} className="lg:col-span-1">
@@ -381,36 +485,36 @@ const ShippingCalculator = ({ SEO }) => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Route:</span>
-                    <span className="font-medium">{quote.route.origin} → {quote.route.destination}</span>
+                    <span className="font-medium">{quote.origin_city} → {quote.destination_city}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Service:</span>
-                    <span className="font-medium">{quote.service.name}</span>
+                    <span className="font-medium">{quote.shipment_type}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Category:</span>
-                    <span className="font-medium">{quote.category}</span>
+                    <span className="font-medium">{quote.cargo_category}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Delivery Time:</span>
-                    <span className="font-medium">{quote.estimatedDays}</span>
+                    <span className="font-medium">{quote.estimated_days} days</span>
                   </div>
-                  {quote.measurements.weight !== undefined && (
+                  {quote.weight !== undefined && quote.weight !== null && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600">{quote.measurements.unit === "pieces" ? "Pieces:" : "Weight:"}</span>
-                      <span className="font-medium">{quote.measurements.weight} {quote.measurements.unit}</span>
+                      <span className="text-gray-600">{quote.unit === "pieces" ? "Pieces:" : "Weight:"}</span>
+                      <span className="font-medium">{quote.weight} {quote.unit}</span>
                     </div>
                   )}
-                  {quote.measurements.volume !== undefined && (
+                  {quote.volume !== undefined && quote.volume !== null && (
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Volume:</span>
-                      <span className="font-medium">{quote.measurements.volume} {quote.measurements.unit}</span>
+                      <span className="font-medium">{quote.volume} CBM</span>
                     </div>
                   )}
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-between text-lg font-semibold text-red-500 pt-2">
                       <span>Total Cost:</span>
-                      <span>${quote.total} {quote.currency}</span>
+                      <span>${quote.total_cost} USD</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
@@ -438,7 +542,7 @@ const ShippingCalculator = ({ SEO }) => {
                   </div>
                   <div className="text-xs text-gray-500 mt-4">
                     <p>* This is an estimate. Final cost may vary based on actual weight, dimensions, and additional services.</p>
-                    <p>* {quote.additionalInfo.storagePolicy}</p>
+                    <p>* Rates are subject to change without notice.</p>
                   </div>
                 </div>
               </motion.div>
@@ -450,24 +554,26 @@ const ShippingCalculator = ({ SEO }) => {
                   <p className="text-gray-500">Fill in the details and click calculate to see your shipping quote</p>
                 </div>
                 <div className="mt-8 space-y-4">
-                  <div className="border border-gray-200 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-700 mb-2">Air Services Pricing:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• Normal goods: $12/kg</li>
-                      <li>• Wigs: $14/kg</li>
-                      <li>• Phones: $11/piece</li>
-                      <li>• Battery/Cosmetics/Toner/Medicine: $14/kg</li>
-                      <li>• Laptops & iPads: $16/kg</li>
-                    </ul>
-                  </div>
-                  <div className="border border-gray-200 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-700 mb-2">Sea Services Pricing:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• General Goods: $300/CBM</li>
-                      <li>• Special Goods: $330/CBM</li>
-                      <li>• Minimum charge: $50 (0.1 CBM)</li>
-                    </ul>
-                  </div>
+                  {shipmentTypes.length > 0 && (
+                    <>
+                      <div className="border border-gray-200 rounded-lg p-3">
+                        <h4 className="font-medium text-gray-700 mb-2">Available Services:</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          {shipmentTypes.map(type => (
+                            <li key={type.type_id}>• {type.name}: {type.description}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="border border-gray-200 rounded-lg p-3">
+                        <h4 className="font-medium text-gray-700 mb-2">Cargo Categories:</h4>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          {cargoCategories.slice(0, 6).map(category => (
+                            <li key={category.category_id}>• {category.name}: ${category.base_rate}/{category.unit}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  )}
                   <div className="border border-gray-200 rounded-lg p-3">
                     <h4 className="font-medium text-gray-700 mb-2">Delivery Times:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">

@@ -101,7 +101,7 @@ const HeroSection = () => {
 
   return (
     <div className="relative w-full h-[700px] bg-cover bg-center overflow-hidden" style={{ 
-      backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/hero-logistics.jpg')" 
+      backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/hero-logistics-1.png')" 
     }}>
       {/* Animated Background Elements */}
       <motion.div

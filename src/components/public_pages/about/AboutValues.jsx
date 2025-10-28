@@ -1,10 +1,26 @@
 import React from "react";
 
 const values = [
-  { title: "Reliability", desc: "We deliver on our promises and ensure your cargo arrives safely and on time." },
-  { title: "Transparency", desc: "Clear pricing and honest communication at every step." },
-  { title: "Customer Focus", desc: "Your satisfaction is our top priority." },
-  { title: "Innovation", desc: "We use technology to make shipping easier and more efficient." },
+  { 
+    title: "Reliability", 
+    desc: "We keep our promises by ensuring every shipment is handled with care, accuracy, and timeliness." 
+  },
+  { 
+    title: "Integrity", 
+    desc: "We conduct our business with honesty, transparency, and accountability in every transaction and partnership." 
+  },
+  { 
+    title: "Customer Commitment", 
+    desc: "Our customers are at the heart of what we do; we go the extra mile to provide exceptional service and lasting satisfaction." 
+  },
+  { 
+    title: "Innovation", 
+    desc: "We embrace creativity and technology to improve our logistics processes and deliver smarter, faster solutions." 
+  },
+  { 
+    title: "Teamwork", 
+    desc: "We believe in the power of collaboration — working together with our clients, partners, and staff to achieve shared success." 
+  },
 ];
 
 const AboutValues = () => (

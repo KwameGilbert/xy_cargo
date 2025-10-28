@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { UserPlus, Package, Truck, CheckCircle, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HowWeWork = () => {
   const steps = [
@@ -273,6 +274,7 @@ const HowWeWork = () => {
         transition={{ duration: 0.8, delay: 1 }}
         className="text-center mt-16"
       >
+        <Link to="/client/auth/login">
         <motion.button
           whileHover={{ 
             scale: 1.05,
@@ -283,6 +285,7 @@ const HowWeWork = () => {
         >
           Start Shipping Now
         </motion.button>
+        </Link>
       </motion.div>
     </section>
   );

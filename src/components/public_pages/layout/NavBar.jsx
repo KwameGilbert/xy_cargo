@@ -11,15 +11,17 @@ const NavBar = () => {
   const menuItems = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
-    { name: "How We Work", path: "/howwework" },
-    { name: "Pricing", path: "/pricing" },
-    { name: "Locations", path: "/locations" },
+    { name: "How We Work", path: "/how-we-work" },
+    { name: "Gallery", path: "/gallery" },
+    { name: "Blog", path: "/blog" },
+    { name: "FAQ", path: "/faq" },
     { name: "Support", path: "/support" },
     { name: "About", path: "/about" },
   ];
 
   const languages = [
     { code: "en", label: "EN" },
+    { code: "ch", label: "CH" },
     { code: "fr", label: "FR" },
     { code: "es", label: "ES" },
   ];

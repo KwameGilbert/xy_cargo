@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Send } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -61,12 +61,12 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact & Support</h3>
             <ul className="space-y-2">
-              <li><Link to="/about" className="text-gray-400 hover:text-red-500">About XY Cargo Zambia</Link></li>
-              <li><Link to="/locations" className="text-gray-400 hover:text-red-500">China Warehouse</Link></li>
+              <li><Link to={"/about"} className="text-gray-400 hover:text-red-500">About XY Cargo Zambia</Link></li>
+              <li><Link to={"/locations"} className="text-gray-400 hover:text-red-500">China Warehouse</Link></li>
               <li><a href="https://wa.me/260967379139" className="text-gray-400 hover:text-red-500">WhatsApp Support</a></li>
-              <li><Link to="/contact" className="text-gray-400 hover:text-red-500">Contact Us</Link></li>
+              <li><Link to={"/contact"} className="text-gray-400 hover:text-red-500">Contact Us</Link></li>
               <li><a href="tel:+260967379139" className="text-gray-400 hover:text-red-500">Call Zambia Office</a></li>
-              <li><Link to="/shipping-guide" className="text-gray-400 hover:text-red-500">Shipping Guide</Link></li>
+              <li><Link to={"/faq"} className="text-gray-400 hover:text-red-500">FAQ</Link></li>
             </ul>
             <div className="mt-4">
               <p className="text-gray-400 text-sm font-semibold mb-2">WhatsApp Contacts:</p>
@@ -107,13 +107,10 @@ const Footer = () => {
                 <Facebook size={20} />
               </a>
               <a href="#" className="text-gray-400 hover:text-red-500">
-                <Twitter size={20} />
+                {/* <Tiktok size={20} /> */}
               </a>
               <a href="#" className="text-gray-400 hover:text-red-500">
                 <Instagram size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-red-500">
-                <Linkedin size={20} />
               </a>
             </div>
           </div>

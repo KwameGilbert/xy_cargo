@@ -13,6 +13,9 @@ import Locations from "../pages/public_pages/location/Locations";
 import ShippingCalculator from "../pages/public_pages/ShippingCalc/ShippingCalculator";
 import Contact from "../pages/public_pages/contact/Contact";
 import SupportPage from "../pages/public_pages/support/Support";
+import FAQPage from "../pages/public_pages/faq/FAQPage";
+import GalleryPage from "../pages/public_pages/gallery/GalleryPage";
+import BlogPage from "../pages/public_pages/blog/BlogPage";
 import ServicesPage from "../pages/public_pages/services/Services";
 import HowWeWorkPage from "../pages/public_pages/howwework/HowWeWork";
 import AboutPage from "../pages/public_pages/about/About";
@@ -129,6 +132,9 @@ const AppRoutes = () => (
       <Route path="calculator" element={<ShippingCalculator />} />
       <Route path="contact" element={<Contact />} />
       <Route path="support" element={<SupportPage />} />
+      <Route path="faq" element={<FAQPage />} />
+      <Route path="gallery" element={<GalleryPage />} />
+      <Route path="blog" element={<BlogPage />} />
       <Route path="services" element={<ServicesPage />} />
       <Route path="how-we-work" element={<HowWeWorkPage />} />
       <Route path="about" element={<AboutPage />} />

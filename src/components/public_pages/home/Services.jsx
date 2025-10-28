@@ -6,6 +6,7 @@ import {
   ShieldCheck, Battery, Smartphone, 
   Clock, DollarSign, MessageCircle 
 } from "lucide-react";
+import Partners from "../about/Partners";
 
 const Services = () => {
   const containerVariants = {
@@ -57,40 +58,40 @@ const Services = () => {
       buttonLink: "/shipping-calculator"
     },
     {
-      icon: Battery,
-      title: "Electronics & Battery Shipping",
-      description: "Specialized handling for sensitive electronics, batteries, and regulated goods with all necessary safety compliance.",
-      features: ["Special packaging", "Safety documentation", "Customs compliance"],
+      icon: Package,
+      title: "Product Sourcing",
+      description: "We help you find and source the best products from reliable Chinese suppliers. Quality assurance and supplier verification included.",
+      features: ["Supplier verification", "Quality inspection", "Price negotiation", "Bulk order handling"],
       color: "bg-orange-50 text-orange-600 border-orange-200",
-      buttonText: "Ship Electronics Safely",
+      buttonText: "Start Sourcing",
+      buttonLink: "/contact"
+    },
+    {
+      icon: DollarSign,
+      title: "Supplier Payment Facilitation",
+      description: "Secure and convenient payment solutions for Chinese suppliers. Multiple payment methods and currency exchange services.",
+      features: ["Secure payment processing", "Currency exchange", "Payment tracking", "Supplier verification"],
+      color: "bg-purple-50 text-purple-600 border-purple-200",
+      buttonText: "Payment Services",
       buttonLink: "/contact"
     },
     {
       icon: ShieldCheck,
-      title: "Customs Clearance",
+      title: "Custom Clearance",
       description: "Hassle-free import processing with our experienced team handling all documentation and regulatory requirements.",
       features: ["Documentation assistance", "Duty & tax calculation", "Compliance management"],
-      color: "bg-purple-50 text-purple-600 border-purple-200",
+      color: "bg-indigo-50 text-indigo-600 border-indigo-200",
       buttonText: "Learn About Customs",
       buttonLink: "/contact"
     },
     {
       icon: Truck,
-      title: "Final Mile Delivery",
-      description: "Direct delivery to your doorstep in Zambia. We ensure your packages arrive safely at their final destination.",
-      features: ["Nationwide coverage", "SMS notifications", "Proof of delivery"],
+      title: "Door to Door Delivery",
+      description: "Complete logistics solution from supplier warehouse to your doorstep in Zambia. End-to-end shipping management.",
+      features: ["Full supply chain coverage", "Real-time tracking", "Insurance options", "Final delivery confirmation"],
       color: "bg-red-50 text-red-600 border-red-200",
       buttonText: "Track Your Delivery",
       buttonLink: "/tracking"
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile & Tech Products",
-      description: "Specialized service for smartphones, tablets, laptops and accessories with secure handling and fast delivery.",
-      features: ["Anti-theft packaging", "Insurance options", "Express delivery available"],
-      color: "bg-indigo-50 text-indigo-600 border-indigo-200",
-      buttonText: "Ship Tech Products",
-      buttonLink: "/contact"
     }
   ];
 
@@ -209,6 +210,9 @@ const Services = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* Partners Section */}
+        <Partners />
       </motion.div>
     </section>
   );
