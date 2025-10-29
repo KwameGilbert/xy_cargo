@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Minus, ArrowLeft, ArrowRight } from 'lucide-react';
+import { getApiBaseUrl } from '../../../services/warehouse/authService';
 
 const CreateParcel = ({ onSubmit, onCancel }) => {
   const [currentStep, setCurrentStep] = useState('form'); // 'form' or 'summary'
@@ -34,6 +35,10 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
     ]
   });
 
+  const [clientInfo, setClientInfo] = useState(null);
+  const [clientLoading, setClientLoading] = useState(false);
+  const [clientError, setClientError] = useState(null);
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -45,6 +50,40 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
         ...prev,
         [field]: null
       }));
+    }
+  };
+
+  const fetchClientById = async (id) => {
+    setClientInfo(null);
+    setClientError(null);
+
+    const parsed = parseInt(id, 10);
+    if (Number.isNaN(parsed) || parsed <= 0) {
+      setClientError('Please enter a valid client ID');
+      return;
+    }
+
+    setClientLoading(true);
+    try {
+      // Adjust the base path if your API is proxied under /api or similar
+      const res = await fetch(`${getApiBaseUrl()}/clients/${parsed}`, {
+        headers: { 'Accept': 'application/json' }
+      });
+      const data = await res.json();
+      if (!res.ok || data.status === 'error') {
+        const msg = data.message || 'Client not found';
+        setClientError(msg);
+        setClientInfo(null);
+      } else {
+        setClientInfo(data.client || null);
+        setClientError(null);
+      }
+    } catch (err) {
+      console.error('Failed to fetch client:', err);
+      setClientError('Failed to fetch client.');
+      setClientInfo(null);
+    } finally {
+      setClientLoading(false);
     }
   };
 
@@ -198,19 +237,40 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="client_id" className="block text-sm font-medium text-gray-700">
-                  Client ID *
-                </label>
-                <input
-                  type="number"
-                  id="client_id"
-                  value={formData.client_id}
-                  onChange={(e) => handleInputChange('client_id', e.target.value)}
-                  className={`mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm ${
-                    errors.client_id ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  required
-                />
-                {errors.client_id && <p className="mt-1 text-sm text-red-600">{errors.client_id}</p>}
+                    Client ID *
+                  </label>
+                  <div className="flex">
+                    <input
+                      type="number"
+                      id="client_id"
+                      value={formData.client_id}
+                      onChange={(e) => {
+                        handleInputChange('client_id', e.target.value);
+                        // clear client info when id changes
+                        if (clientInfo) setClientInfo(null);
+                        if (clientError) setClientError(null);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          fetchClientById(e.target.value);
+                        }
+                      }}
+                      className={`mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm ${
+                        errors.client_id ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fetchClientById(formData.client_id)}
+                      className="ml-2 mt-1 inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm bg-white hover:bg-gray-50"
+                    >
+                      {clientLoading ? '...' : 'Find'}
+                    </button>
+                  </div>
+                  {errors.client_id && <p className="mt-1 text-sm text-red-600">{errors.client_id}</p>}
+                  {clientError && <p className="mt-1 text-sm text-red-600">{clientError}</p>}
               </div>
 
               <div>
@@ -228,6 +288,31 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                 />
                 {errors.shipment_id && <p className="mt-1 text-sm text-red-600">{errors.shipment_id}</p>}
               </div>
+
+              {/* Non-editable client info display */}
+              {clientInfo && (
+                <div className="sm:col-span-2 bg-gray-50 p-3 rounded-md">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Client</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <p className="text-xs text-gray-500">Name</p>
+                      <p className="text-sm text-gray-900">{(clientInfo.firstName || '') + ' ' + (clientInfo.lastName || '')}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Phone</p>
+                      <p className="text-sm text-gray-900">{clientInfo.phone || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Email</p>
+                      <p className="text-sm text-gray-900">{clientInfo.email || 'N/A'}</p>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <p className="text-xs text-gray-500">Address</p>
+                      <p className="text-sm text-gray-900">{clientInfo.address || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="sm:col-span-2">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">
