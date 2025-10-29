@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateParcel from '../../../components/warehouse/parcels/CreateParcel';
+import { createParcel } from '../../../services/warehouse/parcelService';
 import WarehouseLayout from '../../../components/warehouse/layout/WarehouseLayout';
 
 
@@ -10,29 +11,26 @@ const CreateWarehouseParcelPage = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = (formData) => {
+  const handleSubmit = async (formData) => {
     setIsSubmitting(true);
     setError(null);
-    
-    // In a real app, this would be an API call to create the parcel
-    // For demo purposes, we'll simulate a successful API call
-    setTimeout(() => {
-      try {
-        console.log('Creating parcel with data:', formData);
-        
-        // Simulate successful creation
+
+    try {
+      const result = await createParcel(formData);
+
+      if (result.success) {
         setSubmitSuccess(true);
-        setIsSubmitting(false);
-        
-        // After a brief delay, navigate to the parcels list
         setTimeout(() => {
           navigate('/warehouse/parcels');
         }, 1500);
-      } catch (err) {
-        setError('Failed to create parcel. Please try again.');
-        setIsSubmitting(false);
+      } else {
+        setError(result.message || 'Failed to create parcel. Please try again.');
       }
-    }, 1000);
+    } catch (err) {
+      setError('Failed to create parcel. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
