@@ -1,79 +1,43 @@
+// ParcelDetail.jsx
+
 import React from 'react';
 import { 
-  Printer, 
-  Send, 
-  Edit, 
-  Truck, 
-  Clock, 
-  CheckCircle, 
-  AlertTriangle,
-  Package
+    Printer, 
+    Send, 
+    Edit, 
+    Truck, 
+    Clock, 
+    CheckCircle, 
+    AlertTriangle,
+    Package
 } from 'lucide-react';
 
-// --- Data Mapping Function (from Step 1) ---
-const mapParcelData = (rawParcel) => {
-    const formatDimensions = (dims) => {
-        if (!dims) return 'N/A';
-        if (typeof dims === 'string') return dims;
-        return `${dims.length}x${dims.width}x${dims.height}cm`; // Added 'cm' for clarity
-    };
+// FIX: Removed mapParcelData function entirely
 
-    return {
-        id: rawParcel.parcel_id,
-        trackingNumber: rawParcel.tracking_number,
-        status: rawParcel.status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-
-        customer: {
-            name: rawParcel.client.fullName,
-            phone: rawParcel.client.phone,
-            email: rawParcel.client.email,
-            address: rawParcel.client.address
-        },
-
-        metrics: {
-            totalWeight: parseFloat(rawParcel.weight).toFixed(2),
-            volume: rawParcel.dimensions,
-            declaredValue: `$${parseFloat(rawParcel.declared_value).toFixed(2)}`,
-            shippingCost: `$${parseFloat(rawParcel.shipping_cost).toFixed(2)}`,
-            paymentStatus: rawParcel.payment_status.charAt(0).toUpperCase() + rawParcel.payment_status.slice(1)
-        },
-
-        itemsList: rawParcel.items.map(item => ({
-            name: item.name,
-            quantity: item.quantity,
-            weight: parseFloat(item.weight).toFixed(2),
-            dimensions: formatDimensions(item.dimensions),
-            specialPackaging: item.special_packaging
-        })),
-
-        shipment: {
-            tracking_updates: rawParcel.shipment.tracking_updates.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-                .map(update => ({
-                    ...update,
-                    status: update.status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-                }))
-        }
-    };
-};
-// ------------------------------------------
-
-// The component now expects the raw data and maps it internally
+// The component now expects the transformed data from parcelService and uses it directly
 const ParcelDetail = ({ parcelData }) => {
     if (!parcelData) {
         return <div className="p-6 text-center text-red-500">Error: Parcel data is not available.</div>;
     }
 
-    // Map the raw JSON object to the component's expected structure
-    const parcel = mapParcelData(parcelData);
+    // Use the transformed data directly
+    const parcel = parcelData;
+
+    // FIX: Added safer object access and defaults to prevent runtime errors
+    const trackingUpdates = parcel.shipment?.tracking_updates || [];
+    const itemsList = parcel.itemsList || [];
+    const customer = parcel.customer || {};
+    const metrics = parcel.metrics || {};
+
 
     const getStatusColor = (status) => {
       switch (status) {
+        case 'Pending':
         case 'Created':
-        case 'In Warehouse': // Added based on tracking updates
+        case 'In Warehouse':
           return 'bg-gray-100 text-gray-800';
         case 'Processing':
-        case 'Departed': // Added based on tracking updates
-          return 'bg-yellow-100 text-yellow-800';
+        case 'Departed':
         case 'In Transit':
           return 'bg-blue-100 text-blue-800';
         case 'Delivered':
@@ -85,6 +49,7 @@ const ParcelDetail = ({ parcelData }) => {
 
     const getStatusIcon = (status) => {
       switch (status) {
+        case 'Pending':
         case 'Created':
         case 'In Warehouse':
           return Package;
@@ -143,10 +108,10 @@ const ParcelDetail = ({ parcelData }) => {
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-2">Customer Information</h4>
               <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm font-medium text-gray-900">{parcel.customer.name}</p>
-                <p className="text-sm text-gray-500">{parcel.customer.phone}</p>
-                <p className="text-sm text-gray-500">{parcel.customer.email}</p>
-                <p className="text-sm text-gray-500 mt-2">{parcel.customer.address}</p>
+                <p className="text-sm font-medium text-gray-900">{customer.name}</p>
+                <p className="text-sm text-gray-500">{customer.phone}</p>
+                <p className="text-sm text-gray-500">{customer.email}</p>
+                <p className="text-sm text-gray-500 mt-2">{customer.address}</p>
               </div>
             </div>
             
@@ -156,20 +121,20 @@ const ParcelDetail = ({ parcelData }) => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-gray-500">Total Weight</p>
-                    <p className="text-sm font-medium text-gray-900">{parcel.metrics.totalWeight} kg</p>
+                    <p className="text-sm font-medium text-gray-900">{metrics.totalWeight} kg</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Dimensions (L×W×H)</p>
-                    <p className="text-sm font-medium text-gray-900">{parcel.metrics.volume}</p>
+                    <p className="text-sm font-medium text-gray-900">{metrics.volume}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Declared Value</p>
-                    <p className="text-sm font-medium text-gray-900">{parcel.metrics.declaredValue}</p>
+                    <p className="text-sm font-medium text-gray-900">{metrics.declaredValue}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Payment Status</p>
-                    <p className={`text-sm font-medium ${parcel.metrics.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-600'}`}>
-                      {parcel.metrics.paymentStatus}
+                    <p className={`text-sm font-medium ${metrics.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-600'}`}>
+                      {metrics.paymentStatus}
                     </p>
                   </div>
                 </div>
@@ -203,33 +168,42 @@ const ParcelDetail = ({ parcelData }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {parcel.itemsList.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {item.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.quantity}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.weight} kg
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.dimensions}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.specialPackaging ? (
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                          Yes (Fragile)
-                        </span>
-                      ) : (
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                          No
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {itemsList.length > 0 ? (
+                    // FIX: Iterating over itemsList which is now guaranteed to be an array
+                    itemsList.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {item.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {item.quantity}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {item.weight} kg
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {item.dimensions}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {item.specialPackaging ? (
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            Yes (Fragile)
+                          </span>
+                        ) : (
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                            No
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                    <tr>
+                        <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center italic">
+                            No items listed inside this parcel.
+                        </td>
+                    </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -240,50 +214,50 @@ const ParcelDetail = ({ parcelData }) => {
           <h3 className="text-lg font-medium text-gray-900 mb-4">Tracking Timeline</h3>
           <div className="flow-root">
             <ul className="-mb-8">
-              {/* Note: The tracking_updates array is sorted (newest first) in the mapParcelData function */}
-              {parcel.shipment.tracking_updates.map((update, index) => {
-                const StatusIcon = getStatusIcon(update.status);
-                // Timeline is drawn correctly from newest (top) to oldest (bottom)
-                const isLast = index === parcel.shipment.tracking_updates.length - 1;
-                
-                return (
-                  <li key={index}>
-                    <div className="relative pb-8">
-                      {/* Only draw the line if it's NOT the last item */}
-                      {!isLast && (
-                        <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
-                      )}
-                      <div className="relative flex space-x-3">
-                        <div>
-                          <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white ${getStatusColor(update.status)}`}>
-                            <StatusIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        </div>
-                        <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+              {trackingUpdates.length > 0 ? (
+                  trackingUpdates.map((update, index) => {
+                  const StatusIcon = getStatusIcon(update.status);
+                  // Timeline is drawn correctly from newest (top) to oldest (bottom)
+                  const isLast = index === trackingUpdates.length - 1;
+                  
+                  return (
+                    <li key={index}>
+                      <div className="relative pb-8">
+                        {/* Only draw the line if it's NOT the last item */}
+                        {!isLast && (
+                          <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                        )}
+                        <div className="relative flex space-x-3">
                           <div>
-                            <p className="text-sm text-gray-500">
-                              <span className="font-medium text-gray-900">{update.status}</span>: {update.location}
-                              {update.notes && <span className="block text-xs text-gray-400 italic mt-0.5">({update.notes})</span>}
-                            </p>
+                            <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white ${getStatusColor(update.status)}`}>
+                              <StatusIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
                           </div>
-                          <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                            {/* Display only the date and time, removing seconds */}
-                            {update.updated_at.substring(0, 16)} 
+                          <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                            <div>
+                              <p className="text-sm text-gray-500">
+                                <span className="font-medium text-gray-900">{update.status}</span>: {update.location}
+                                {update.notes && <span className="block text-xs text-gray-400 italic mt-0.5">({update.notes})</span>}
+                              </p>
+                            </div>
+                            <div className="text-right text-sm whitespace-nowrap text-gray-500">
+                              {/* Display only the date and time, removing seconds */}
+                              {update.updated_at.substring(0, 16)} 
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                );
-              })}
+                    </li>
+                  );
+                })
+              ) : (
+                  <li className="text-sm text-gray-500 italic">No tracking updates available.</li>
+              )}
             </ul>
           </div>
         </div>
       </div>
     );
 };
-
-// Assuming you import the raw JSON object as 'RAW_DATA'
-// Example usage: <ParcelDetail data={RAW_DATA} />
 
 export default ParcelDetail;
