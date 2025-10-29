@@ -1,9 +1,10 @@
 import React from 'react';
-import { Package, Search } from 'lucide-react';
+import { Package, Plus, Search } from 'lucide-react';
 
 const ParcelEmptyState = ({ 
   hasFilters = false, 
-  onClearFilters
+  onClearFilters, 
+  onNewParcel 
 }) => {
   return (
     <div className="text-center py-12">
@@ -18,7 +19,7 @@ const ParcelEmptyState = ({
       <p className="mt-2 text-sm text-gray-500">
         {hasFilters 
           ? 'Try adjusting your search criteria or clear the filters to see all parcels.'
-          : 'Your parcels will appear here once they are created and assigned to your account.'
+          : 'Get started by creating your first parcel or importing existing data.'
         }
       </p>
       
@@ -32,6 +33,14 @@ const ParcelEmptyState = ({
             Clear Filters
           </button>
         )}
+        
+        <button
+          onClick={onNewParcel}
+          className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Create New Parcel
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, Truck, CreditCard, Weight } from 'lucide-react';
+import { Package, Truck, CreditCard, AlertTriangle, Weight, Star } from 'lucide-react';
 
 const KPICards = ({ kpiData }) => {
   const cards = [
@@ -22,10 +22,22 @@ const KPICards = ({ kpiData }) => {
       color: 'bg-red-500',
     },
     {
+      title: 'Claims Opened',
+      value: kpiData.claimsOpened,
+      icon: AlertTriangle,
+      color: 'bg-orange-500',
+    },
+    {
       title: 'Total Weight Received Today',
       value: `${kpiData.totalWeightReceivedToday} kg`,
       icon: Weight,
       color: 'bg-green-500',
+    },
+    {
+      title: 'Special Packaging Requests',
+      value: kpiData.specialPackagingRequests,
+      icon: Star,
+      color: 'bg-purple-500',
     },
   ];
 

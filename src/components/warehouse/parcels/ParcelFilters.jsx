@@ -5,12 +5,11 @@ const ParcelFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     status: 'all',
-    specialHandling: false,
-    paymentStatus: 'all'
+    paymentStatus: 'all',
   });
   const [dateRange, setDateRange] = useState({
     startDate: '',
-    endDate: ''
+    endDate: '',
   });
   const [sortBy, setSortBy] = useState('newest');
 
@@ -66,7 +65,6 @@ const ParcelFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
               <option value="Pending">Pending</option>
               <option value="In Transit">In Transit</option>
               <option value="Delivered">Delivered</option>
-              <option value="Special">Special Handling</option>
             </select>
           </div>
 
@@ -83,19 +81,6 @@ const ParcelFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
               <option value="Unpaid">Unpaid</option>
             </select>
           </div>
-
-          {/* Special Handling Toggle */}
-          <button
-            onClick={() => handleFilterChange('specialHandling', !filters.specialHandling)}
-            className={`px-4 py-2 rounded-lg border flex items-center gap-2 transition-colors ${
-              filters.specialHandling
-                ? 'bg-red-100 border-red-300 text-red-700'
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <Filter className="w-4 h-4" />
-            Special Handling Only
-          </button>
 
           {/* Date Range Filter */}
           <div className="flex items-center gap-2">

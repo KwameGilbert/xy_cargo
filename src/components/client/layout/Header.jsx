@@ -1,13 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useClientAuth } from "../../../contexts/ClientAuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { currentUser, logout } = useClientAuth();
+
+  // Fallback to localStorage since AuthProvider may not be present
+  const stored = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const currentUser = stored ? JSON.parse(stored) : { name: "Client" };
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/client/auth/login");
   };
 
@@ -24,9 +27,7 @@ const Header = () => {
         </Link>
 
         <div className="flex items-center">
-          <span className="mr-4 text-sm text-gray-600">
-            Welcome, {currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Loading..."}
-          </span>
+          <span className="mr-4 text-sm text-gray-600">Welcome, {currentUser?.name}</span>
           <button
             onClick={handleLogout}
             className="px-4 py-2 text-sm font-medium text-red-500 hover:text-red-700"

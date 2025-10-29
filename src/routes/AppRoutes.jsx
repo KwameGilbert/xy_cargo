@@ -1,9 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { ClientAuthProvider } from "../contexts/ClientAuthContext";
-import { WarehouseAuthProvider } from "../contexts/WarehouseAuthContext";
-import { ToastProvider } from "../contexts/ToastContext";
-import ToastContainer from "../components/ToastContainer";
 
 // Public pages
 import HomePage from "../pages/public_pages/home/HomePage";
@@ -13,9 +9,6 @@ import Locations from "../pages/public_pages/location/Locations";
 import ShippingCalculator from "../pages/public_pages/ShippingCalc/ShippingCalculator";
 import Contact from "../pages/public_pages/contact/Contact";
 import SupportPage from "../pages/public_pages/support/Support";
-import FAQPage from "../pages/public_pages/faq/FAQPage";
-import GalleryPage from "../pages/public_pages/gallery/GalleryPage";
-import BlogPage from "../pages/public_pages/blog/BlogPage";
 import ServicesPage from "../pages/public_pages/services/Services";
 import HowWeWorkPage from "../pages/public_pages/howwework/HowWeWork";
 import AboutPage from "../pages/public_pages/about/About";
@@ -27,17 +20,13 @@ import Dashboard from "../pages/client/dashboard/Dashboard";
 import ParcelsPage from "../pages/client/parcels/ParcelsPage";
 import ParcelDetailsPage from "../pages/client/parcels/ParcelDetailsPage";
 import ClientPayments from "../pages/client/payments/Payments";
-import InvoiceDetailsPage from "../pages/client/payments/InvoiceDetailsPage";
 import Notifications from "../pages/client/notification/Notifications";
 import ClientAddresses from "../pages/client/addresses/Addresses";
 import ClientSupport from "../pages/client/support/ClientSupport";
-import ClientSettings from "../pages/client/settings/Settings";
-import ClientProtectedRoute from "../components/client/auth/ProtectedRoute";
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
 
 //Warehouse Pages
-import WarehouseProtectedRoute from "../components/warehouse/auth/WarehouseProtectedRoute";
 import WarehouseLogin from "../pages/warehouse/auth/WarehouseLogin";
 import WarehouseForgotPassword from "../pages/warehouse/auth/WarehouseForgotPassword";
 import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard";
@@ -119,10 +108,7 @@ import AdminTwoFactorAuthPage from "../pages/admin/security/AdminTwoFactorAuthPa
 
 
 const AppRoutes = () => (
-  <ToastProvider>
-    <ClientAuthProvider>
-      <WarehouseAuthProvider>
-        <Routes>
+  <Routes>
     {/* Public Routes - wrapped in MainLayout */}
     <Route element={<MainLayout />}>
       <Route index element={<HomePage />} />
@@ -132,9 +118,6 @@ const AppRoutes = () => (
       <Route path="calculator" element={<ShippingCalculator />} />
       <Route path="contact" element={<Contact />} />
       <Route path="support" element={<SupportPage />} />
-      <Route path="faq" element={<FAQPage />} />
-      <Route path="gallery" element={<GalleryPage />} />
-      <Route path="blog" element={<BlogPage />} />
       <Route path="services" element={<ServicesPage />} />
       <Route path="how-we-work" element={<HowWeWorkPage />} />
       <Route path="about" element={<AboutPage />} />
@@ -144,35 +127,34 @@ const AppRoutes = () => (
     <Route path="client/auth/login" element={<ClientLogin />} />
     <Route path="client/auth/signup" element={<ClientSignup />} />
 
-    {/* Protected Client Routes */}
-    <Route path="client/dashboard" element={<ClientProtectedRoute><Dashboard /></ClientProtectedRoute>} />
-    <Route path="client/parcels" element={<ClientProtectedRoute><ParcelsPage /></ClientProtectedRoute>} />
-    <Route path="client/parcels/:id" element={<ClientProtectedRoute><ParcelDetailsPage /></ClientProtectedRoute>} />
-    <Route path="client/payments" element={<ClientProtectedRoute><ClientPayments /></ClientProtectedRoute>} />
-    <Route path="client/invoices/:id" element={<ClientProtectedRoute><InvoiceDetailsPage /></ClientProtectedRoute>} />
-    <Route path="client/notifications" element={<ClientProtectedRoute><Notifications /></ClientProtectedRoute>} />
-    <Route path="client/addresses" element={<ClientProtectedRoute><ClientAddresses /></ClientProtectedRoute>} />
-    <Route path="client/support" element={<ClientProtectedRoute><ClientSupport /></ClientProtectedRoute>} />
-    <Route path="client/settings" element={<ClientProtectedRoute><ClientSettings/></ClientProtectedRoute>} />
+    {/* Client Routes - wrapped in ClientLayout */}
+   
+      <Route path="client/dashboard" element={<Dashboard />} />
+      <Route path="client/parcels" element={<ParcelsPage />} />
+      <Route path="client/parcels/:id" element={<ParcelDetailsPage />} />
+      <Route path="client/payments" element={<ClientPayments />} />
+      <Route path="client/notifications" element={<Notifications />} />
+      <Route path="client/addresses" element={<ClientAddresses />} />
+      <Route path="client/support" element={<ClientSupport />} />
 
 
     {/* Warehouse Auth Routes */}
     <Route path="warehouse/auth/login" element={<WarehouseLogin />} />
     <Route path="warehouse/auth/forgot-password" element={<WarehouseForgotPassword />} />
 
-    {/* Protected Warehouse Routes */}
-    <Route path="warehouse/dashboard" element={<WarehouseProtectedRoute><WarehouseDashboard /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels" element={<WarehouseProtectedRoute><WarehouseParcelsPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels/create" element={<WarehouseProtectedRoute><CreateWarehouseParcelPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels/bulk-update" element={<WarehouseProtectedRoute><BulkUpdatePage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels/:id" element={<WarehouseProtectedRoute><WarehouseParcelDetailPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/payments" element={<WarehouseProtectedRoute><WarehousePaymentsPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/shipments" element={<WarehouseProtectedRoute><WarehouseShipmentsPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/shipments/:shipmentId" element={<WarehouseProtectedRoute><WarehouseShipmentDetailPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/notifications" element={<WarehouseProtectedRoute><WarehouseNotificationPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/support" element={<WarehouseProtectedRoute><WarehouseSupportPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/bulk-updates" element={<WarehouseProtectedRoute><WarehouseBulkUpdatePage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/settings" element={<WarehouseProtectedRoute><WarehouseSettingsPage /></WarehouseProtectedRoute>} />
+    {/* Warehouse Routes - wrapped in WarehouseLayout */}
+      <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />
+      <Route path="warehouse/parcels" element={<WarehouseParcelsPage />} />
+      <Route path="warehouse/parcels/create" element={<CreateWarehouseParcelPage />} />
+      <Route path="warehouse/parcels/bulk-update" element={<BulkUpdatePage />} />
+      <Route path="warehouse/parcels/:id" element={<WarehouseParcelDetailPage />} />
+      <Route path="warehouse/payments" element={<WarehousePaymentsPage />} />
+      <Route path="warehouse/shipments" element={<WarehouseShipmentsPage />} />
+      <Route path="warehouse/shipments/:shipmentId" element={<WarehouseShipmentDetailPage />} />
+      <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />      
+      <Route path="warehouse/support" element={<WarehouseSupportPage />} />      
+      <Route path="warehouse/bulk-updates" element={<WarehouseBulkUpdatePage />} />
+      <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
 
@@ -239,10 +221,6 @@ const AppRoutes = () => (
         {/* </Route> */}
 
   </Routes>
-      </WarehouseAuthProvider>
-    </ClientAuthProvider>
-    <ToastContainer />
-  </ToastProvider>
 );
 
 export default AppRoutes;

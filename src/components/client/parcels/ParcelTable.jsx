@@ -66,10 +66,10 @@ const ParcelTable = ({
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-3 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
-                Tracking ID & Description
+                Waybill No
               </th>
               <th scope="col" className="hidden sm:table-cell px-3 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
-                Items
+                Status
               </th>
               <th scope="col" className="hidden lg:table-cell px-3 py-3.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                 Weight (kg)
@@ -98,10 +98,7 @@ const ParcelTable = ({
                   <td className="px-3 py-4 whitespace-nowrap">
                     <div className="flex flex-col">
                       <div className="text-sm font-medium text-gray-900">
-                        {parcel.trackingNumber}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {parcel.description}
+                        {parcel.waybillNumber || parcel.waybillNo}
                       </div>
                       <div className="sm:hidden mt-1">
                         {getStatusBadge(parcel.status)}
@@ -109,9 +106,7 @@ const ParcelTable = ({
                     </div>
                   </td>
                   <td className="hidden sm:table-cell px-3 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {parcel.items ? parcel.items.length : 0} item{parcel.items && parcel.items.length !== 1 ? 's' : ''}
-                    </div>
+                    {getStatusBadge(parcel.status)}
                   </td>
                   <td className="hidden lg:table-cell px-3 py-4 whitespace-nowrap text-sm text-gray-600">
                     {typeof parcel.weight === 'number' ? parcel.weight.toFixed(2) : parcel.weight}
@@ -140,7 +135,7 @@ const ParcelTable = ({
                             onPayClick(parcel);
                           }}
                           className="text-green-600 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded transition-colors duration-150"
-                          aria-label={`Pay for parcel ${parcel.trackingNumber}`}
+                          aria-label={`Pay for parcel ${parcel.waybillNumber || parcel.waybillNo}`}
                         >
                           <DollarSign className="w-4 h-4" />
                         </button>
@@ -152,7 +147,7 @@ const ParcelTable = ({
                             onClaimClick(parcel);
                           }}
                           className="text-red-600 hover:text-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded transition-colors duration-150"
-                          aria-label={`File claim for parcel ${parcel.trackingNumber}`}
+                          aria-label={`File claim for parcel ${parcel.waybillNumber || parcel.waybillNo}`}
                         >
                           <AlertTriangle className="w-4 h-4" />
                         </button>

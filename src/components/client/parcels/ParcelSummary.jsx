@@ -101,12 +101,12 @@ const ParcelSummary = ({ parcel, onPayNow }) => {
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                 <span className="text-gray-600">Origin:</span>
-                <span className="ml-2 font-medium">{parcel.originWarehouse}</span>
+                <span className="ml-2 font-medium">{parcel.origin}</span>
               </div>
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                 <span className="text-gray-600">Destination:</span>
-                <span className="ml-2 font-medium">{parcel.destinationWarehouse}</span>
+                <span className="ml-2 font-medium">{parcel.destination}</span>
               </div>
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
@@ -133,21 +133,55 @@ const ParcelSummary = ({ parcel, onPayNow }) => {
               <div className="flex items-center">
                 <User className="h-4 w-4 text-gray-400 mr-2" />
                 <span className="text-gray-600">Customer:</span>
-                <span className="ml-2 font-medium">You (Client)</span>
+                <span className="ml-2 font-medium">{parcel.customerName}</span>
               </div>
-              <div className="text-sm text-gray-500">
-                Contact information available in your profile settings.
-              </div>
+              {parcel.customerPhone && (
+                <div className="flex items-center">
+                  <Phone className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="text-gray-600">Phone:</span>
+                  <span className="ml-2 font-medium">{parcel.customerPhone}</span>
+                </div>
+              )}
+              {parcel.customerEmail && (
+                <div className="flex items-center">
+                  <Mail className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="text-gray-600">Email:</span>
+                  <span className="ml-2 font-medium">{parcel.customerEmail}</span>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Recipient Information */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recipient Information</h3>
-            <div className="text-sm text-gray-500">
-              Recipient details are managed by warehouse staff for security and privacy.
+          {parcel.recipient && (
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recipient Information</h3>
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <User className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="text-gray-600">Name:</span>
+                  <span className="ml-2 font-medium">{parcel.recipient.name}</span>
+                </div>
+                <div className="flex items-center">
+                  <Phone className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="text-gray-600">Phone:</span>
+                  <span className="ml-2 font-medium">{parcel.recipient.phone}</span>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="text-gray-600">Email:</span>
+                  <span className="ml-2 font-medium">{parcel.recipient.email}</span>
+                </div>
+                <div className="flex items-start">
+                  <Home className="h-4 w-4 text-gray-400 mr-2 mt-1" />
+                  <div>
+                    <span className="text-gray-600">Address:</span>
+                    <div className="ml-2 font-medium">{parcel.recipient.address}</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Payment Status */}
           <div>

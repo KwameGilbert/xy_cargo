@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Links, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, Truck } from 'lucide-react';
-import { useWarehouseAuth } from '../../../contexts/WarehouseAuthContext';
 
 const WarehouseLogin = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +12,6 @@ const WarehouseLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login } = useWarehouseAuth();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -28,16 +26,16 @@ const WarehouseLogin = () => {
     setLoading(true);
     setError('');
 
+    // Simulate login API call
     try {
-      const result = await login(formData.email, formData.password);
-      if (result.success) {
-        navigate('/warehouse/dashboard');
-      } else {
-        setError(result.message || 'Invalid credentials. Please try again.');
-      }
+      // Replace with actual authentication logic
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Mock successful login
+      localStorage.setItem('warehouseToken', 'mock-token');
+      navigate('/warehouse/dashboard');
     } catch (err) {
-      setError('An error occurred. Please try again.');
-      console.error('Login error:', err);
+      setError('Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import { useClientAuth } from '../../../contexts/ClientAuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 // Component to protect client routes
-const ClientProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useClientAuth();
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -16,4 +16,4 @@ const ClientProtectedRoute = ({ children }) => {
   return children;
 };
 
-export default ClientProtectedRoute;
+export default ProtectedRoute;

@@ -8,7 +8,6 @@ import ParcelListView from '../../../components/client/parcels/ParcelListView';
 import ParcelLoadingState from '../../../components/client/parcels/ParcelLoadingState';
 import ParcelEmptyState from '../../../components/client/parcels/ParcelEmptyState';
 import PaymentModal from '../../../components/client/parcels/PaymentModal';
-import { getAuthHeader, getApiBaseUrl } from '../../../services/client/authService';
 
 const ParcelsPage = () => {
   const navigate = useNavigate();
@@ -29,20 +28,11 @@ const ParcelsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Call the real API endpoint
-        const response = await axios.get(`${getApiBaseUrl()}/clients/parcels/data`, {
-          headers: getAuthHeader()
-        });
-
-        console.log('Fetched parcels data:', response.data);
-        if (response.data.status === 'success') {
-          setParcels(response.data.parcels);
-        } else {
-          console.error('Failed to fetch parcels:', response.data.message);
-        }
+        const parcelsRes = await axios.get('/data/parcels.json');
+        const parcels = Array.isArray(parcelsRes.data) ? parcelsRes.data : [];
+        setParcels(parcels);
       } catch (error) {
-        console.error('Error fetching parcels:', error);
-        // TODO: Handle authentication errors (redirect to login)
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
@@ -66,8 +56,9 @@ const ParcelsPage = () => {
   const normalizedSearchQuery = searchQuery.toLowerCase();
   const filteredParcels = parcels.filter(parcel => {
     const matchesSearch = !searchQuery || 
-      parcel.trackingNumber.toLowerCase().includes(normalizedSearchQuery) ||
+      parcel.waybillNumber.toLowerCase().includes(normalizedSearchQuery) ||
       parcel.description.toLowerCase().includes(normalizedSearchQuery) ||
+      parcel.trackingNumber.toLowerCase().includes(normalizedSearchQuery) ||
       (parcel.recipient?.name && parcel.recipient.name.toLowerCase().includes(normalizedSearchQuery));
 
     const matchesStatus = filters.status === 'all' || 
@@ -174,7 +165,7 @@ const ParcelsPage = () => {
             showFilters={showFilters}
             onToggleFilters={handleToggleFilters}
             onClearFilters={handleClearFilters}
-            placeholder="Search by tracking ID, description, or recipient..."
+            placeholder="Search by waybill, recipient, or status..."
           />
 
           {/* Parcels List */}

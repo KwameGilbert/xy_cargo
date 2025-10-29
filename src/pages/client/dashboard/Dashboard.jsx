@@ -5,7 +5,6 @@ import DashboardMetric from "../../../components/client/dashboard/DashboardMetri
 import ShipmentTable from "../../../components/client/dashboard/ShipmentTable";
 import QuickActions from "../../../components/client/dashboard/QuickActions";
 import Notifications from "../../../components/client/dashboard/Notifications";
-import { getAuthHeader, getApiBaseUrl } from "../../../services/client/authService";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -14,17 +13,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Call the real API endpoint
-        const response = await axios.get(`${getApiBaseUrl()}/clients/dashboard/data`, {
-          headers: getAuthHeader()
-        });
-
-        console.log('Fetched dashboard data:', response.data);
-        setDashboardData(response.data.data);
+        // In production, this would be your API endpoint
+        const response = await axios.get('/data/dashboard.json');
+        console.log('Fetched dashboard data:', response.data); // Log the data for debugging
+        setDashboardData(response.data);
 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
-        // TODO: Handle authentication errors (redirect to login)
       } finally {
         setLoading(false);
       }
@@ -68,7 +63,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
-            <ShipmentTable shipments={dashboardData.recentParcels} />
+            <ShipmentTable shipments={dashboardData.recentShipments} />
           </div>
           <div>
             <QuickActions />

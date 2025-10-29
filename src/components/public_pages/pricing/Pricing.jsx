@@ -27,7 +27,7 @@ const ShippingPricing = () => {
       price: '$11',
       unit: 'per piece',
       delivery: '10-17 days',
-      description: 'Smartphones, tablets, phone accessories',
+      description: 'Smartphones',
       color: 'bg-green-50 text-green-600 border-green-200'
     },
     {
