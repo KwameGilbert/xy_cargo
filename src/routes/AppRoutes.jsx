@@ -33,13 +33,11 @@ import WarehouseDashboard from "../pages/warehouse/dashboard/WarehouseDashboard"
 import WarehouseParcelsPage from "../pages/warehouse/parcels/WarehouseParcelsPage";
 import WarehouseParcelDetailPage from "../pages/warehouse/parcels/WarehouseParcelDetailPage";
 import CreateWarehouseParcelPage from "../pages/warehouse/parcels/CreateWarehouseParcelPage";
-import BulkUpdatePage from "../pages/warehouse/parcels/WarehouseBulkUpdatePage";
 import WarehousePaymentsPage from "../pages/warehouse/payments/WarehousePaymentsPage";
 import WarehouseShipmentsPage from "../pages/warehouse/shipments/WarehouseShipmentsPage";
 import WarehouseShipmentDetailPage from "../pages/warehouse/shipments/WarehouseShipmentDetailPage";
 import WarehouseNotificationPage from "../pages/warehouse/notifications/WarehouseNotificationPage";
 import WarehouseSupportPage from "../pages/warehouse/support/WarehouseSupportPage";
-import WarehouseBulkUpdatePage from "../pages/warehouse/parcels/WarehouseBulkUpdatePage";
 import WarehouseSettingsPage from "../pages/warehouse/settings/WarehouseSettingsPage";
 
 
@@ -146,14 +144,12 @@ const AppRoutes = () => (
       <Route path="warehouse/dashboard" element={<WarehouseDashboard />} />
       <Route path="warehouse/parcels" element={<WarehouseParcelsPage />} />
       <Route path="warehouse/parcels/create" element={<CreateWarehouseParcelPage />} />
-      <Route path="warehouse/parcels/bulk-update" element={<BulkUpdatePage />} />
       <Route path="warehouse/parcels/:id" element={<WarehouseParcelDetailPage />} />
       <Route path="warehouse/payments" element={<WarehousePaymentsPage />} />
       <Route path="warehouse/shipments" element={<WarehouseShipmentsPage />} />
       <Route path="warehouse/shipments/:shipmentId" element={<WarehouseShipmentDetailPage />} />
       <Route path="warehouse/notifications" element={<WarehouseNotificationPage />} />      
       <Route path="warehouse/support" element={<WarehouseSupportPage />} />      
-      <Route path="warehouse/bulk-updates" element={<WarehouseBulkUpdatePage />} />
       <Route path="warehouse/settings" element={<WarehouseSettingsPage />} />
       <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
