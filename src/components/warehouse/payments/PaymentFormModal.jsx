@@ -103,7 +103,7 @@ const PaymentFormModal = ({ isOpen, onOpenChange, onPaymentRecorded }) => {
 
         const dataToSend = {
             // CORRECTED: 'parcel_id' now comes from the fetched 'parcelInfo' state
-            parcel_id: parcelInfo?.id, 
+            parcel_id: parcelInfo?.parcel_id,
             client_id: parseInt(formData.clientId, 10),
             amount: parseFloat(formData.amount),
             payment_method: formData.paymentMethod,
@@ -112,7 +112,7 @@ const PaymentFormModal = ({ isOpen, onOpenChange, onPaymentRecorded }) => {
         
         // CORRECTED: Validation now checks 'parcelInfo' and 'clientInfo'
         if (!clientInfo || !parcelInfo || isNaN(dataToSend.parcel_id) || isNaN(dataToSend.client_id) || isNaN(dataToSend.amount) || dataToSend.amount <= 0) {
-            toast('error', 'Please ensure client info is loaded and all fields are valid.'); // CORRECTED: Using toast function
+            toast.error('Please ensure client info is loaded and all fields are valid.');
             setIsSubmitting(false);
             return;
         }
@@ -121,14 +121,14 @@ const PaymentFormModal = ({ isOpen, onOpenChange, onPaymentRecorded }) => {
             const result = await createPayment(dataToSend);
             
             if (result.success) {
-                toast('success', 'Payment recorded successfully!'); // CORRECTED: Using toast function
+                toast.success('Payment recorded successfully!');
                 onPaymentRecorded();
                 onOpenChange(false);
             } else {
-                toast('error', result.message || 'Failed to record payment.'); // CORRECTED: Using toast function
+                toast.error(result.message || 'Failed to record payment.');
             }
         } catch (error) {
-            toast('error', 'Network error while recording payment.'); // CORRECTED: Using toast function
+            toast.error('Network error while recording payment.');
         } finally {
             setIsSubmitting(false);
         }
@@ -138,15 +138,18 @@ const PaymentFormModal = ({ isOpen, onOpenChange, onPaymentRecorded }) => {
         <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
             <Dialog.Portal>
                 <Dialog.Overlay className="bg-black/50 data-[state=open]:animate-overlayShow fixed inset-0 z-50" />
-                <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none z-50">
-                    <Dialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
-                        Record New Payment
-                    </Dialog.Title>
-                    <Dialog.Description className="text-mauve11 mt-[10px] mb-5 text-[15px]">
-                        Enter transaction details for the new payment.
-                    </Dialog.Description>
+                <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none z-50 flex flex-col">
+                    <div className="p-[25px] border-b border-gray-200">
+                        <Dialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
+                            Record New Payment
+                        </Dialog.Title>
+                        <Dialog.Description className="text-mauve11 mt-[10px] text-[15px]">
+                            Enter transaction details for the new payment.
+                        </Dialog.Description>
+                    </div>
                     
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+                        <div className="flex-1 overflow-y-auto p-[25px] space-y-4">
                         <fieldset className="flex flex-col gap-2">
                             <label className="text-[13px] font-medium" htmlFor="parcelIdOrTrackingNumber">Parcel ID / Tracking Number</label>
                             <input
@@ -228,16 +231,19 @@ const PaymentFormModal = ({ isOpen, onOpenChange, onPaymentRecorded }) => {
                                 <option value="failed">Failed</option>
                             </select>
                         </fieldset>
+                        </div>
                         
-                        <div className="flex justify-end pt-4">
-                            <button
-                                type="submit"
-                                // Disabled if submitting, if client info hasn't loaded, or if amount is zero/invalid
-                                disabled={isSubmitting || !clientInfo || parseFloat(formData.amount) <= 0}
-                                className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium leading-none text-white hover:bg-red-700 disabled:opacity-50"
-                            >
-                                {isSubmitting ? 'Recording...' : 'Record Payment'}
-                            </button>
+                        <div className="border-t border-gray-200 p-[25px]">
+                            <div className="flex justify-end">
+                                <button
+                                    type="submit"
+                                    // Disabled if submitting, if client info hasn't loaded, or if amount is zero/invalid
+                                    disabled={isSubmitting || !clientInfo || parseFloat(formData.amount) <= 0}
+                                    className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium leading-none text-white hover:bg-red-700 disabled:opacity-50"
+                                >
+                                    {isSubmitting ? 'Recording...' : 'Record Payment'}
+                                </button>
+                            </div>
                         </div>
                     </form>
 
