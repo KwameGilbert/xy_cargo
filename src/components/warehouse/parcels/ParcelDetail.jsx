@@ -210,106 +210,112 @@ const ParcelDetail = ({ parcelData }) => {
             </div>
 
             {/* Additional Details */}
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="text-sm font-medium text-gray-500 mb-2">Shipping Details</h4>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-xs text-gray-500">Tracking Numbers</p>
-                  <div className="text-sm font-medium text-gray-900">
-                    <p>Parcel: {parcel.tracking_number || 'N/A'}</p>
-                    <p>Shipment: {parcel.shipment?.tracking_number || 'N/A'}</p>
-                    <p>Waybill: {parcel.shipment?.waybill_number || 'N/A'}</p>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Priority</p>
-                  <p className="text-sm font-medium text-gray-900 capitalize">
-                    <span className={`px-2 py-0.5 rounded-full ${
-                      parcel.shipment?.priority === 'high' 
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Shipping Details</h4>
+                    <div className="space-y-2">
+                    <div>
+                      <p className="text-xs text-gray-500">Tracking Numbers</p>
+                      <div className="text-sm font-medium text-gray-900">
+                      <p>Parcel: {parcel.tracking_number || 'N/A'}</p>
+                      <p>Shipment: {parcel.shipment?.tracking_number || 'N/A'}</p>
+                      <p>Waybill: {parcel.shipment?.waybill_number || 'N/A'}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Priority</p>
+                      <p className="text-sm font-medium text-gray-900 capitalize">
+                      <span className={`px-2 py-0.5 rounded-full ${
+                        parcel.shipment?.priority === 'high' 
                         ? 'bg-red-100 text-red-800'
                         : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {parcel.shipment?.priority || 'Normal'}
-                    </span>
-                  </p>
-                </div>
-                {parcel.shipment?.notes && (
-                  <div>
-                    <p className="text-xs text-gray-500">Shipping Notes</p>
-                    <p className="text-sm font-medium text-gray-900">{parcel.shipment.notes}</p>
+                      }`}>
+                        {parcel.shipment?.priority || 'Normal'}
+                      </span>
+                      </p>
+                    </div>
+                    {parcel.shipment?.notes && (
+                      <div>
+                      <p className="text-xs text-gray-500">Shipping Notes</p>
+                      <p className="text-sm font-medium text-gray-900">{parcel.shipment.notes}</p>
+                      </div>
+                    )}
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Items Inside Parcel */}
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Items Inside Parcel</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Item Name
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Quantity
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Weight
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Dimensions
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Special Packaging
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {items.length > 0 ? (
-                    items.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  </div>
+                </div>
+                
+                {/* Items Inside Parcel */}
+                <div className="p-6 border-b border-gray-200">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Items Inside Parcel</h3>
+                  <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Item Name
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Quantity
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Value
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Weight
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Dimensions
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Special Packaging
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                    {items.length > 0 ? (
+                      items.map((item, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {item.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {item.quantity}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${item.value}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {item.weight} kg
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {item.dimensions.height}x{item.dimensions.width}x{item.dimensions.length}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {item.specialPackaging ? (
                           <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                            Yes (Fragile)
+                          Yes (Fragile)
                           </span>
                         ) : (
                           <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                            No
+                          No
                           </span>
                         )}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                    <tr>
-                        <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center italic">
-                            No items listed inside this parcel.
                         </td>
-                    </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        
-        {/* Timeline / Tracking Log */}
+                      </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center italic">
+                          No items listed inside this parcel.
+                        </td>
+                      </tr>
+                    )}
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+                
+                {/* Timeline / Tracking Log */}
         <div className="p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Tracking Timeline</h3>
           <div className="flow-root">
