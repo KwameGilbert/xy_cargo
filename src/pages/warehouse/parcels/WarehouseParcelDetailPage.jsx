@@ -22,11 +22,10 @@ const WarehouseParcelDetailPage = () => {
                 const result = await getParcelById(id);
                 
                 if (result.success) {
-                    // FIX: Set the state with the transformed data from result.data
-                    setParcel(result.data); 
+                    // Use the raw parcel data from the API response
+                    setParcel(result.data.parcel); 
                 } else {
-                    // FIX: Use the message from the result object if not successful
-                    setError(result.message || 'Parcel not found or API error.'); 
+                    setError(result.message || 'Parcel not found or API error.');
                 }
             } catch (err) {
                 setError('Failed to load parcel details.');
@@ -45,12 +44,17 @@ const WarehouseParcelDetailPage = () => {
     };
 
     if (loading) {
-        // ... (Loading state component remains the same) ...
         return (
             <WarehouseLayout>
                 <div className="p-6 bg-gray-50 min-h-screen">
-                    <div className="flex items-center justify-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+                    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div className="bg-white/10 p-8 rounded-xl shadow-2xl border border-red-100/20 backdrop-blur-md">
+                            <div className="relative">
+                                <div className="animate-spin rounded-full h-16 w-16 border-4 border-red-100 border-t-red-600 mx-auto"></div>
+                                <div className="animate-ping absolute inset-0 rounded-full h-16 w-16 border-4 border-red-400/20"></div>
+                            </div>
+                            <p className="mt-6 text-center text-white font-medium text-shadow">Loading parcel details...</p>
+                        </div>
                     </div>
                 </div>
             </WarehouseLayout>

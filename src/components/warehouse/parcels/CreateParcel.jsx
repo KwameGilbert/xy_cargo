@@ -39,6 +39,10 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
   const [clientLoading, setClientLoading] = useState(false);
   const [clientError, setClientError] = useState(null);
 
+  const [shipmentInfo, setShipmentInfo] = useState(null);
+  const [shipmentLoading, setShipmentLoading] = useState(false);
+  const [shipmentError, setShipmentError] = useState(null);
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -84,6 +88,39 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
       setClientInfo(null);
     } finally {
       setClientLoading(false);
+    }
+  };
+
+  const fetchShipmentById = async (id) => {
+    setShipmentInfo(null);
+    setShipmentError(null);
+
+    const parsed = parseInt(id, 10);
+    if (Number.isNaN(parsed) || parsed <= 0) {
+      setShipmentError('Please enter a valid shipment ID');
+      return;
+    }
+
+    setShipmentLoading(true);
+    try {
+      const res = await fetch(`${getApiBaseUrl()}/shipments/${parsed}`, {
+        headers: { 'Accept': 'application/json' }
+      });
+      const data = await res.json();
+      if (!res.ok || data.status === 'error') {
+        const msg = data.message || 'Shipment not found';
+        setShipmentError(msg);
+        setShipmentInfo(null);
+      } else {
+        setShipmentInfo(data.shipment || data || null);
+        setShipmentError(null);
+      }
+    } catch (err) {
+      console.error('Failed to fetch shipment:', err);
+      setShipmentError('Failed to fetch shipment.');
+      setShipmentInfo(null);
+    } finally {
+      setShipmentLoading(false);
     }
   };
 
@@ -138,6 +175,10 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
       newErrors.client_id = 'Client ID is required';
     }
 
+    if (!formData.shipment_id.trim()) {
+      newErrors.shipment_id = 'Shipment ID is required';
+    }
+
     // Validate items
     formData.items.forEach((item, index) => {
       if (!item.name.trim()) {
@@ -157,6 +198,11 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
 
     if (!validateForm()) {
       return;
+    }
+
+    // Fetch shipment info if shipment_id is provided
+    if (formData.shipment_id) {
+      fetchShipmentById(formData.shipment_id);
     }
 
     // Go to summary page
@@ -275,19 +321,62 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
 
               <div>
                 <label htmlFor="shipment_id" className="block text-sm font-medium text-gray-700">
-                  Shipment ID
+                  Shipment ID *
                 </label>
                 <input
                   type="number"
                   id="shipment_id"
                   value={formData.shipment_id}
-                  onChange={(e) => handleInputChange('shipment_id', e.target.value)}
+                  onChange={(e) => {
+                    handleInputChange('shipment_id', e.target.value);
+                    // Clear shipment info when id changes
+                    if (shipmentInfo) setShipmentInfo(null);
+                    if (shipmentError) setShipmentError(null);
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value) {
+                      fetchShipmentById(e.target.value);
+                    }
+                  }}
                   className={`mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm ${
                     errors.shipment_id ? 'border-red-300' : 'border-gray-300'
                   }`}
+                  required
                 />
                 {errors.shipment_id && <p className="mt-1 text-sm text-red-600">{errors.shipment_id}</p>}
+                {shipmentError && <p className="mt-1 text-sm text-red-600">{shipmentError}</p>}
               </div>
+
+              {/* Non-editable shipment info display */}
+              {shipmentInfo && (
+                <div className="sm:col-span-2 bg-blue-50 p-3 rounded-md">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Shipment Details</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                    {shipmentInfo.tracking_number && (
+                      <div>
+                        <p className="text-xs text-gray-500">Tracking Number</p>
+                        <p className="text-sm text-gray-900">{shipmentInfo.tracking_number}</p>
+                      </div>
+                    )}
+                    {shipmentInfo.status && (
+                      <div>
+                        <p className="text-xs text-gray-500">Status</p>
+                        <p className="text-sm text-gray-900 capitalize">{shipmentInfo.status.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs text-gray-500">Origin - Destination</p>
+                      <p className="text-sm text-gray-900">{shipmentInfo.origin_country || 'N/A'} → {shipmentInfo.destination_country || 'N/A'}</p>
+                    </div>
+                    {shipmentInfo.expected_delivery && (
+                      <div>
+                        <p className="text-xs text-gray-500">Expected Delivery</p>
+                        <p className="text-sm text-gray-900">{new Date(shipmentInfo.expected_delivery).toLocaleDateString()}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Non-editable client info display */}
               {clientInfo && (
@@ -610,6 +699,36 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
             <h3 className="text-lg font-medium text-gray-900 mb-4">Parcel Summary</h3>
 
             {/* Basic Information Summary */}
+            {/* Client Information Summary */}
+            {clientInfo && (
+              <div className="bg-gray-50 p-4 rounded-md mb-6">
+                <h4 className="text-md font-medium text-gray-900 mb-3">Client Information</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Client ID</p>
+                    <p className="text-sm text-gray-900">{formData.client_id}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Name</p>
+                    <p className="text-sm text-gray-900">{(clientInfo.firstName || '') + ' ' + (clientInfo.lastName || '')}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Phone</p>
+                    <p className="text-sm text-gray-900">{clientInfo.phone || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Email</p>
+                    <p className="text-sm text-gray-900">{clientInfo.email || 'N/A'}</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <p className="text-sm font-medium text-gray-500">Address</p>
+                    <p className="text-sm text-gray-900">{clientInfo.address || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Basic Information Summary */}
             <div className="bg-gray-50 p-4 rounded-md mb-6">
               <h4 className="text-md font-medium text-gray-900 mb-3">Basic Information</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -675,6 +794,81 @@ const CreateParcel = ({ onSubmit, onCancel }) => {
                 )}
               </div>
             </div>
+
+            {/* Shipment Information Summary */}
+                  {shipmentInfo && (
+                    <div className="bg-blue-50 p-4 rounded-md mb-6">
+                    <h4 className="text-md font-medium text-gray-900 mb-3">Shipment Information</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {shipmentInfo.tracking_number && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Tracking Number</p>
+                        <p className="text-sm text-gray-900">{shipmentInfo.tracking_number}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.origin_country && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Origin Country</p>
+                        <p className="text-sm text-gray-900">{shipmentInfo.origin_country}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.destination_country && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Destination Country</p>
+                        <p className="text-sm text-gray-900">{shipmentInfo.destination_country}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.departure_date && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Departure Date</p>
+                        <p className="text-sm text-gray-900">{new Date(shipmentInfo.departure_date).toLocaleDateString()}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.expected_delivery && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Expected Delivery</p>
+                        <p className="text-sm text-gray-900">{new Date(shipmentInfo.expected_delivery).toLocaleDateString()}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.arrival_date && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Arrival Date</p>
+                        <p className="text-sm text-gray-900">{new Date(shipmentInfo.arrival_date).toLocaleDateString()}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.status && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Status</p>
+                        <p className="text-sm text-gray-900 capitalize">{shipmentInfo.status.toLowerCase().split('_').map(word =>word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.priority && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Priority</p>
+                        <p className="text-sm text-gray-900 capitalize">{shipmentInfo.priority}</p>
+                      </div>
+                      )}
+                      {shipmentInfo.notes && (
+                      <div className="sm:col-span-2">
+                        <p className="text-sm font-medium text-gray-500">Notes</p>
+                        <p className="text-sm text-gray-900">{shipmentInfo.notes}</p>
+                      </div>
+                      )}
+                    </div>
+                    </div>
+                  )}
+
+                  {/* Show loading or error for shipment */}
+            {shipmentLoading && (
+              <div className="bg-yellow-50 p-4 rounded-md mb-6">
+                <p className="text-sm text-yellow-800">Loading shipment information...</p>
+              </div>
+            )}
+            {shipmentError && (
+              <div className="bg-red-50 p-4 rounded-md mb-6">
+                <p className="text-sm text-red-800">{shipmentError}</p>
+              </div>
+            )}
 
             {/* Items Summary */}
             <div className="bg-gray-50 p-4 rounded-md mb-6">

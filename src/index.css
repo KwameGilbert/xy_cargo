@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

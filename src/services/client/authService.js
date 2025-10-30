@@ -1,8 +1,14 @@
 // src/services/client/authService.js
-const env = 
-// API base URL - matches backend deployment
-const API_BASE_URL = 'http://api.xycargozm.com/v1';
+const APP_ENV = import.meta.env.VITE_APP_ENV || "development"
+const PROD_API_BASE_URL = import.meta.env.VITE_PROD_API_BASE_URL
+const DEV_API_BASE_URL = import.meta.env.VITE_DEV_API_BASE_URL
 
+// Determine the active environment and select the appropriate base URL
+const isDevelopment = APP_ENV === 'development';
+
+const API_BASE_URL = isDevelopment
+  ? DEV_API_BASE_URL
+  : PROD_API_BASE_URL;
 // Centralized endpoints
 const ENDPOINTS = {
   login: `${API_BASE_URL}/auth/client/login`,

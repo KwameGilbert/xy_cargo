@@ -103,20 +103,7 @@ const ParcelTable = ({ parcels, onView, onEdit, onPrintLabel, onMarkShipped }) =
                       title="Print Label"
                     >
                       <Printer className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => onMarkShipped(parcel.id)}
-                      className="text-purple-600 hover:text-purple-900"
-                      title="Mark as Shipped"
-                    >
-                      <Truck className="w-5 h-5" />
-                    </button>
-                    <button
-                      className="text-gray-600 hover:text-gray-900"
-                      title="More Options"
-                    >
-                      <MoreHorizontal className="w-5 h-5" />
-                    </button>
+                    </button>                       
                   </div>
                 </td>
               </tr>

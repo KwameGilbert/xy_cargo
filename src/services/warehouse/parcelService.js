@@ -71,10 +71,10 @@ export async function getParcelById(parcelId) {
             };
         }
 
-        // Return the result object containing the transformed data
+        // Return the raw API response data
         return {
             success: true,
-            data: transformParcelData(data.parcel)
+            data: data
         };
     } catch (error) {
         return {
@@ -423,18 +423,39 @@ export function transformParcelData(parcel) {
             specialPackaging: !!it.special_packaging || !!it.fragile,
         })),
 
+
         // Shipment Tracking (for detail page timeline)
         shipment: {
-            // FIX: Ensure tracking_updates is an array, map statuses, and sort by date (newest first)
+            id: parcel.shipment?.shipment_id,
+            trackingNumber: parcel.shipment?.tracking_number,
+            waybillNumber: parcel.shipment?.waybill_number,
+            origin: parcel.shipment?.origin_country,
+            destination: {
+                country: parcel.shipment?.destination_country,
+                cityId: parcel.shipment?.destination_city_id
+            },
+            dates: {
+                departure: parcel.shipment?.departure_date ? new Date(parcel.shipment.departure_date).toLocaleString() : null,
+                arrival: parcel.shipment?.arrival_date ? new Date(parcel.shipment.arrival_date).toLocaleString() : null,
+                shipped: parcel.shipment?.shipped_at ? new Date(parcel.shipment.shipped_at).toLocaleString() : null,
+                expectedDelivery: parcel.shipment?.expected_delivery ? new Date(parcel.shipment.expected_delivery).toLocaleString() : null,
+                delivered: parcel.shipment?.delivered_at ? new Date(parcel.shipment.delivered_at).toLocaleString() : null
+            },
+            status: statusMap[`${parcel.shipment?.status}`.toLowerCase()] || parcel.shipment?.status || 'Pending',
+            priority: parcel.shipment?.priority?.toUpperCase() || 'STANDARD',
+            warehouseId: parcel.shipment?.warehouse_id,
+            notes: parcel.shipment?.notes,
+            // Enhanced tracking updates with better date formatting and status mapping
             tracking_updates: Array.isArray(parcel.shipment?.tracking_updates)
                 ? parcel.shipment.tracking_updates
                     .map(update => ({
                         status: statusMap[`${update.status}`.toLowerCase()] || update.status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
                         location: update.location || 'Warehouse',
                         notes: update.notes || '',
-                        updated_at: update.updated_at || update.created_at, // Use updated_at first
+                        updated_at: update.updated_at ? new Date(update.updated_at).toLocaleString() : null,
+                        timestamp: update.updated_at // Keep raw timestamp for sorting
                     }))
-                    .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)) // Sort newest first
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) // Sort newest first
                 : []
         },
 

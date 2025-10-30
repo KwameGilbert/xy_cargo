@@ -1,4 +1,4 @@
-// ParcelDetail.jsx
+// ParcelDetail.jsx - Raw API Data Display
 
 import React from 'react';
 import { 
@@ -12,22 +12,16 @@ import {
     Package
 } from 'lucide-react';
 
-// FIX: Removed mapParcelData function entirely
-
-// The component now expects the transformed data from parcelService and uses it directly
 const ParcelDetail = ({ parcelData }) => {
     if (!parcelData) {
         return <div className="p-6 text-center text-red-500">Error: Parcel data is not available.</div>;
     }
 
-    // Use the transformed data directly
+    console.log('Parcel info reached parcel detail component', parcelData);
     const parcel = parcelData;
-
-    // FIX: Added safer object access and defaults to prevent runtime errors
+    const items = parcel.items || [];
+    const client = parcel.client || {};
     const trackingUpdates = parcel.shipment?.tracking_updates || [];
-    const itemsList = parcel.itemsList || [];
-    const customer = parcel.customer || {};
-    const metrics = parcel.metrics || {};
 
 
     const getStatusColor = (status) => {
@@ -71,8 +65,13 @@ const ParcelDetail = ({ parcelData }) => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Parcel #{parcel.id}</h2>
-              <p className="text-sm text-gray-500">Tracking: {parcel.trackingNumber}</p>
+              <h2 className="text-2xl font-bold text-gray-900">Parcel #{parcel.parcel_id}</h2>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Tracking: {parcel.tracking_number}</p>
+                {parcel.shipment?.waybill_number && (
+                  <p className="text-sm text-gray-500">Waybill: {parcel.shipment.waybill_number}</p>
+                )}
+              </div>
             </div>
             <div className="mt-4 md:mt-0">
               <span className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getStatusColor(parcel.status)}`}>
@@ -108,10 +107,13 @@ const ParcelDetail = ({ parcelData }) => {
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-2">Customer Information</h4>
               <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm font-medium text-gray-900">{customer.name}</p>
-                <p className="text-sm text-gray-500">{customer.phone}</p>
-                <p className="text-sm text-gray-500">{customer.email}</p>
-                <p className="text-sm text-gray-500 mt-2">{customer.address}</p>
+                <p className="text-sm font-medium text-gray-900">{client.fullName}</p>
+                <p className="text-sm text-gray-500">{client.phone}</p>
+                <p className="text-sm text-gray-500">{client.email}</p>
+                <p className="text-sm text-gray-500 mt-2">{client.address}</p>
+                {client.company && (
+                  <p className="text-sm text-gray-500 mt-1">Company: {client.company}</p>
+                )}
               </div>
             </div>
             
@@ -121,23 +123,122 @@ const ParcelDetail = ({ parcelData }) => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-gray-500">Total Weight</p>
-                    <p className="text-sm font-medium text-gray-900">{metrics.totalWeight} kg</p>
+                    <p className="text-sm font-medium text-gray-900">{parcel.weight} kg</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Dimensions (L×W×H)</p>
-                    <p className="text-sm font-medium text-gray-900">{metrics.volume}</p>
+                    <p className="text-sm font-medium text-gray-900">{parcel.dimensions}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Declared Value</p>
-                    <p className="text-sm font-medium text-gray-900">{metrics.declaredValue}</p>
+                    <p className="text-sm font-medium text-gray-900">${parcel.declared_value}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Shipping Cost</p>
+                    <p className="text-sm font-medium text-gray-900">${parcel.shipping_cost}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Category</p>
+                    <p className="text-sm font-medium text-gray-900">{parcel.category || 'N/A'}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Payment Status</p>
-                    <p className={`text-sm font-medium ${metrics.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-600'}`}>
-                      {metrics.paymentStatus}
+                    <p className={`text-sm font-medium ${parcel.payment_status === 'paid' ? 'text-green-600' : 'text-red-600'}`}>
+                      {parcel.payment_status.charAt(0).toUpperCase() + parcel.payment_status.slice(1)}
                     </p>
                   </div>
+                  {parcel.tags && parcel.tags.length > 0 && (
+                    <div className="col-span-2">
+                      <p className="text-xs text-gray-500">Tags</p>
+                      <div className="flex gap-2 mt-1">
+                        {parcel.tags.map((tag, index) => (
+                          <span key={index} className="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Shipment Details */}
+        <div className="p-6 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Shipment Details</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Origin and Destination */}
+            <div className="bg-gray-50 p-4 rounded-md">
+              <h4 className="text-sm font-medium text-gray-500 mb-2">Route Information</h4>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-gray-500">Origin</p>
+                  <p className="text-sm font-medium text-gray-900">{parcel.shipment?.origin_country || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Destination</p>
+                  <p className="text-sm font-medium text-gray-900">{parcel.shipment?.destination_country || 'N/A'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Dates */}
+            <div className="bg-gray-50 p-4 rounded-md">
+              <h4 className="text-sm font-medium text-gray-500 mb-2">Important Dates</h4>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-gray-500">Departure Date</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {parcel.shipment?.departure_date ? new Date(parcel.shipment.departure_date).toLocaleDateString() : 'Not set'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Expected Delivery</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {parcel.shipment?.expected_delivery ? new Date(parcel.shipment.expected_delivery).toLocaleDateString() : 'Not set'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Arrival Date</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {parcel.shipment?.arrival_date ? new Date(parcel.shipment.arrival_date).toLocaleDateString() : 'Not set'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Details */}
+            <div className="bg-gray-50 p-4 rounded-md">
+              <h4 className="text-sm font-medium text-gray-500 mb-2">Shipping Details</h4>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-gray-500">Tracking Numbers</p>
+                  <div className="text-sm font-medium text-gray-900">
+                    <p>Parcel: {parcel.tracking_number || 'N/A'}</p>
+                    <p>Shipment: {parcel.shipment?.tracking_number || 'N/A'}</p>
+                    <p>Waybill: {parcel.shipment?.waybill_number || 'N/A'}</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Priority</p>
+                  <p className="text-sm font-medium text-gray-900 capitalize">
+                    <span className={`px-2 py-0.5 rounded-full ${
+                      parcel.shipment?.priority === 'high' 
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {parcel.shipment?.priority || 'Normal'}
+                    </span>
+                  </p>
+                </div>
+                {parcel.shipment?.notes && (
+                  <div>
+                    <p className="text-xs text-gray-500">Shipping Notes</p>
+                    <p className="text-sm font-medium text-gray-900">{parcel.shipment.notes}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -168,9 +269,8 @@ const ParcelDetail = ({ parcelData }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {itemsList.length > 0 ? (
-                    // FIX: Iterating over itemsList which is now guaranteed to be an array
-                    itemsList.map((item, index) => (
+                {items.length > 0 ? (
+                    items.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {item.name}
@@ -182,7 +282,7 @@ const ParcelDetail = ({ parcelData }) => {
                         {item.weight} kg
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.dimensions}
+                        {item.dimensions.height}x{item.dimensions.width}x{item.dimensions.length}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {item.specialPackaging ? (
@@ -225,7 +325,7 @@ const ParcelDetail = ({ parcelData }) => {
                       <div className="relative pb-8">
                         {/* Only draw the line if it's NOT the last item */}
                         {!isLast && (
-                          <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                          <span className="absolute top-4 left-4 -ml-px f-full w-0.5 bg-gray-200" aria-hidden="true"></span>
                         )}
                         <div className="relative flex space-x-3">
                           <div>
@@ -236,7 +336,7 @@ const ParcelDetail = ({ parcelData }) => {
                           <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                             <div>
                               <p className="text-sm text-gray-500">
-                                <span className="font-medium text-gray-900">{update.status}</span>: {update.location}
+                                <span className="font-medium text-gray-900">{update.status.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>: {update.location}
                                 {update.notes && <span className="block text-xs text-gray-400 italic mt-0.5">({update.notes})</span>}
                               </p>
                             </div>

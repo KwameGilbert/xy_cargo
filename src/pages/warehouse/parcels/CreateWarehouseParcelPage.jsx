@@ -48,10 +48,13 @@ const CreateWarehouseParcelPage = () => {
         </div>
         
         {isSubmitting && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600 mx-auto"></div>
-              <p className="mt-4 text-center text-gray-700">Creating parcel...</p>
+          <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white/10 p-8 rounded-xl shadow-2xl border border-red-100/20 backdrop-blur-md">
+              <div className="relative">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-red-100 border-t-red-600 mx-auto"></div>
+                <div className="animate-ping absolute inset-0 rounded-full h-16 w-16 border-4 border-red-400/20"></div>
+              </div>
+              <p className="mt-6 text-center text-white font-medium text-shadow">Creating parcel...</p>
             </div>
           </div>
         )}
