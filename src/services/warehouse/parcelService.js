@@ -309,37 +309,6 @@ export async function deleteParcel(parcelId) {
 }
 
 /**
- * Bulk update parcel status
- * @param {Array<number>} parcelIds - Array of parcel IDs
- * @param {string} status - The new status
- * @returns {Promise<Object>} Update result or error
- */
-export async function bulkUpdateParcelStatus(parcelIds, status) {
-    try {
-        const promises = parcelIds.map(id => updateParcelStatus(id, status));
-        const results = await Promise.all(promises);
-
-        const successCount = results.filter(result => result.success).length;
-        const failureCount = results.length - successCount;
-
-        return {
-            success: failureCount === 0,
-            message: `Updated ${successCount} parcels successfully${failureCount > 0 ? `, ${failureCount} failed` : ''}`,
-            results
-        };
-    } catch (error) {
-        return {
-            success: false,
-            message: error.message || "Network error occurred during bulk update"
-        };
-    }
-}
-
-// ---------------------------------------------------
-// 🔥 DATA TRANSFORMATION FUNCTIONS (Crucial Fixes Here)
-// ---------------------------------------------------
-
-/**
  * Transform backend parcel data to match frontend expectations
  * @param {Object} parcel - Backend parcel object
  * @returns {Object} Transformed parcel object

@@ -13,7 +13,9 @@ const EditParcelForm = ({ initialData, onSubmit, onCancel }) => {
         shipping_cost: '',
         category: '',
         notes: '',
+        shipment_id: '',
         tags: [],
+        tagInput: '', // for managing tag input
         items: [
             {
                 name: '',
@@ -52,7 +54,9 @@ const EditParcelForm = ({ initialData, onSubmit, onCancel }) => {
                 shipping_cost: initialData.shipping_cost || '',
                 category: initialData.category || '',
                 notes: initialData.notes || '',
+                shipment_id: initialData.shipment_id || '',
                 tags: initialData.tags || [],
+                tagInput: '',
                 items: initialData.items?.length > 0 
                     ? initialData.items.map(item => ({
                         name: item.name || '',
@@ -137,6 +141,34 @@ const EditParcelForm = ({ initialData, onSubmit, onCancel }) => {
         }));
     };
 
+    const handleTagInputChange = (e) => {
+        setFormData(prev => ({
+            ...prev,
+            tagInput: e.target.value
+        }));
+    };
+
+    const handleTagInputKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const newTag = formData.tagInput.trim();
+            if (newTag && !formData.tags.includes(newTag)) {
+                setFormData(prev => ({
+                    ...prev,
+                    tags: [...prev.tags, newTag],
+                    tagInput: ''
+                }));
+            }
+        }
+    };
+
+    const removeTag = (tagToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            tags: prev.tags.filter(tag => tag !== tagToRemove)
+        }));
+    };
+
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
             {/* Shipment Information (Read-only) */}
@@ -191,6 +223,48 @@ const EditParcelForm = ({ initialData, onSubmit, onCancel }) => {
                         />
                     </div>
                     <div>
+                        <label className="block text-sm font-medium text-gray-700">Shipment ID</label>
+                        <input
+                            type="text"
+                            name="shipment_id"
+                            value={formData.shipment_id}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 px-3 py-2"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Tags</label>
+                        <div className="mt-1">
+                            <div className="flex flex-wrap gap-2 mb-2">
+                                {formData.tags.map((tag, index) => (
+                                    <span
+                                        key={index}
+                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                                    >
+                                        {tag}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeTag(tag)}
+                                            className="ml-1 inline-flex items-center p-0.5 text-red-400 hover:text-red-600"
+                                        >
+                                            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Type a tag and press Enter"
+                                value={formData.tagInput}
+                                onChange={handleTagInputChange}
+                                onKeyDown={handleTagInputKeyDown}
+                                className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 px-3 py-2"
+                            />
+                        </div>
+                    </div>
+                    <div>
                         <label className="block text-sm font-medium text-gray-700">Notes</label>
                         <textarea
                             name="notes"
@@ -219,7 +293,7 @@ const EditParcelForm = ({ initialData, onSubmit, onCancel }) => {
                             name="shipping_cost"
                             value={formData.shipping_cost}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+                            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 px-3 py-2"
                         />
                     </div>
                 </div>
