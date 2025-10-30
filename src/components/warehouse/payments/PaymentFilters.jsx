@@ -28,9 +28,10 @@ const PaymentFilters = ({ onFilterChange }) => {
           onChange={(e) => handlePeriodChange(e.target.value)}
           className="px-4 py-2 border rounded-md text-sm min-w-[150px]"
         >
-          <option value="daily">Today</option>
-          <option value="weekly">Last 7 Days</option>
-          <option value="monthly">Last 30 Days</option>
+          <option value="today">Today</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+          <option value="year">Last Year</option>
           <option value="custom">Custom Range</option>
         </select>
 
