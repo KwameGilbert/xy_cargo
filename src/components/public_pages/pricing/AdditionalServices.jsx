@@ -54,9 +54,9 @@ const AdditionalServices = () => {
               Starting at {service.price}
             </p>
             
-            <button className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center">
+            {/* <button className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center">
               Add to Shipment <span className="ml-2">→</span>
-            </button>
+            </button> */}
           </div>
         ))}
       </div>

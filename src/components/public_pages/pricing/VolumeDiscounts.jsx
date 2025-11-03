@@ -117,7 +117,7 @@ const VolumeDiscounts = () => {
             ))}
           </motion.div>
 
-          <div className="text-center mt-8">
+          {/* <div className="text-center mt-8">
             <motion.button 
               whileHover={{ 
                 scale: 1.05,
@@ -132,7 +132,7 @@ const VolumeDiscounts = () => {
             >
               Apply for Volume Discount
             </motion.button>
-          </div>
+          </div> */}
         </motion.div>
       </div>
     </section>

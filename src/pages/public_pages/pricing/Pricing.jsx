@@ -60,7 +60,7 @@ const Pricing = () => {
             </motion.div>
             
             <motion.div variants={sectionVariants}>
-                <PriceMatch />
+                {/* <PriceMatch /> */}
             </motion.div>
             
             <motion.div variants={sectionVariants}>

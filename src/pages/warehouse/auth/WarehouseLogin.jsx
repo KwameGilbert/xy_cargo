@@ -169,8 +169,8 @@ const WarehouseLogin = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Need help? Contact{' '}
-              <a href="mailto:support@warehouse.com" className="font-medium text-red-600 hover:text-red-500">
-                support@xycargo.com
+              <a href="mailto:info@warehouse.com" className="font-medium text-red-600 hover:text-red-500">
+                info@xycargo.com
               </a>
             </p>
           </div>

@@ -54,14 +54,14 @@ const ShipmentFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
         </div>
 
         {/* Filters Row */}
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {/* Status Filter */}
           <div className="flex items-center">
-            <Filter className="w-4 h-4 mr-2 text-gray-500" />
+            <Filter className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
             >
               <option value="all">All Status</option>
               <option value="Pending">Pending</option>
@@ -73,11 +73,11 @@ const ShipmentFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
 
           {/* Origin Country Filter */}
           <div className="flex items-center">
-            <Filter className="w-4 h-4 mr-2 text-gray-500" />
+            <Filter className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
             <select
               value={filters.originCountry}
               onChange={(e) => handleFilterChange('originCountry', e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
             >
               <option value="all">All Origins</option>
               <option value="China">China</option>
@@ -90,11 +90,11 @@ const ShipmentFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
 
           {/* Destination Country Filter */}
           <div className="flex items-center">
-            <Filter className="w-4 h-4 mr-2 text-gray-500" />
+            <Filter className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
             <select
               value={filters.destinationCountry}
               onChange={(e) => handleFilterChange('destinationCountry', e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
             >
               <option value="all">All Destinations</option>
               <option value="Ghana">Ghana</option>
@@ -105,45 +105,55 @@ const ShipmentFilters = ({ onSearch, onFilter, onDateRangeChange, onSort }) => {
           </div>
 
           {/* International Toggle */}
-          <button
-            onClick={() => handleFilterChange('international', !filters.international)}
-            className={`px-4 py-2 rounded-lg border flex items-center gap-2 transition-colors ${
-              filters.international
-                ? 'bg-blue-100 border-blue-300 text-blue-700'
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <Globe className="w-4 h-4" />
-            International Only
-          </button>
+          <div className="flex items-center justify-center sm:justify-start">
+            <button
+              onClick={() => handleFilterChange('international', !filters.international)}
+              className={`px-3 py-2 rounded-lg border flex items-center gap-2 transition-colors text-sm ${
+                filters.international
+                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Globe className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:inline">International Only</span>
+              <span className="sm:hidden">Intl</span>
+            </button>
+          </div>
+        </div>
 
+        {/* Date Range and Sort Row */}
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
           {/* Date Range Filter */}
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-gray-500" />
-            <input
-              type="date"
-              name="startDate"
-              value={dateRange.startDate}
-              onChange={handleDateRangeChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            />
-            <span>to</span>
-            <input
-              type="date"
-              name="endDate"
-              value={dateRange.endDate}
-              onChange={handleDateRangeChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0 mt-1 sm:mt-0" />
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <input
+                type="date"
+                name="startDate"
+                value={dateRange.startDate}
+                onChange={handleDateRangeChange}
+                className="w-full sm:w-auto border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                placeholder="Start date"
+              />
+              <span className="hidden sm:inline text-gray-500">to</span>
+              <input
+                type="date"
+                name="endDate"
+                value={dateRange.endDate}
+                onChange={handleDateRangeChange}
+                className="w-full sm:w-auto border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                placeholder="End date"
+              />
+            </div>
           </div>
 
           {/* Sort By */}
-          <div className="flex items-center ml-auto">
-            <SortDesc className="w-4 h-4 mr-2 text-gray-500" />
+          <div className="flex items-center ml-auto w-full sm:w-auto">
+            <SortDesc className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
             <select
               value={sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="w-full sm:w-auto border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>

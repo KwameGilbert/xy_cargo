@@ -46,7 +46,7 @@ import WarehouseParcelDetailPage from "../pages/warehouse/parcels/WarehouseParce
 import CreateWarehouseParcelPage from "../pages/warehouse/parcels/CreateWarehouseParcelPage";
 import EditWarehouseParcelPage from "../pages/warehouse/parcels/EditWarehouseParcelPage";
 import WarehousePaymentsPage from "../pages/warehouse/payments/WarehousePaymentsPage";
-import WarehouseShipmentsPage from "../pages/warehouse/shipments/WarehouseShipmentsPage";
+import WarehouseShipmentsPage from "../pages/warehouse/shipments/WarehouseShipmentsPage.jsx";
 import WarehouseShipmentDetailPage from "../pages/warehouse/shipments/WarehouseShipmentDetailPage";
 import WarehouseNotificationPage from "../pages/warehouse/notifications/WarehouseNotificationPage";
 import WarehouseSupportPage from "../pages/warehouse/support/WarehouseSupportPage";
@@ -129,6 +129,7 @@ const AppRoutes = () => (
       <Route path="tracking" element={<PackageTracking />} />
       <Route path="locations" element={<Locations />} />
       <Route path="calculator" element={<ShippingCalculator />} />
+      <Route path="shipping-calculator" element={<ShippingCalculator />} />
       <Route path="contact" element={<Contact />} />
       <Route path="support" element={<SupportPage />} />
       <Route path="faq" element={<FAQPage />} />

@@ -93,7 +93,7 @@ const FAQPage = () => {
         },
         {
           question: "How can I contact customer service?",
-          answer: "You can reach our customer service team through multiple channels: phone (+260-XXX-XXXX), email (support@xycargozm.com), live chat on our website, or by visiting any of our offices."
+          answer: "You can reach our customer service team through multiple channels: phone (+260-XXX-XXXX), email (info@xycargozm.com), live chat on our website, or by visiting any of our offices."
         }
       ]
     },
@@ -261,7 +261,7 @@ const FAQPage = () => {
               Call Support
             </a>
             <a
-              href="mailto:support@xycargozm.com"
+              href="mailto:info@xycargozm.com"
               className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg transition-colors"
             >
               <Mail className="mr-2" size={18} />

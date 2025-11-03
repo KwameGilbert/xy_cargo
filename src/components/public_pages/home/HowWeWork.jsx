@@ -16,7 +16,7 @@ const HowWeWork = () => {
       id: 2,
       icon: <Package size={40} className="text-blue-500" />,
       title: 'Drop/Send Parcel',
-      description: 'Bring your package to our location or schedule a pickup at your convenience.',
+      description: 'Send your parcel to our warehouse for processing and shipping.',
       color: 'from-blue-400 to-blue-600',
     },
     {
@@ -47,7 +47,7 @@ const HowWeWork = () => {
   };
 
   const headerVariants = {
-    hidden: { opacity: 0, y: -30 },
+    hidden: { opacity: 0, y: -15 },
     visible: {
       opacity: 1,
       y: 0,
@@ -146,7 +146,7 @@ const HowWeWork = () => {
             WebkitBackgroundClip: "text",
             color: "transparent",
           }}
-          transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+          transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
         >
           How We Work
         </motion.h2>
@@ -160,6 +160,73 @@ const HowWeWork = () => {
           Simple, transparent, and reliable. Our streamlined process ensures your packages
           reach their destination safely and on time.
         </motion.p>
+      </motion.div>
+
+      {/* Process Overview Section */}
+      <motion.div
+        className="mb-16 px-4 md:px-16"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          {/* Text Content */}
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-6">Our Shipping Process</h3>
+            <div className="space-y-4 text-gray-600">
+              <p>
+                We've simplified the shipping process into four easy steps to ensure transparency
+                and reliability. From registration to delivery, we keep you informed every step
+                of the way.
+              </p>
+              <p>
+                Our advanced tracking system allows you to monitor your package in real-time,
+                giving you peace of mind throughout the entire shipping journey.
+              </p>
+            </div>
+
+            <motion.div
+              className="mt-8"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <Link
+                to="/tracking"
+                className="inline-flex items-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Track Your Package
+                <ArrowRight className="ml-2" size={18} />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Image Section */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div
+                className="h-80 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=400&fit=crop&crop=center')"
+                }}
+              ></div>
+              <div className="p-6 bg-white">
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">End-to-End Logistics</h4>
+                <p className="text-gray-600 text-sm">
+                  Complete shipping solutions from China to Zambia with real-time tracking and dedicated support.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </motion.div>
 
       <motion.div 

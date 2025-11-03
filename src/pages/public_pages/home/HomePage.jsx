@@ -2,9 +2,10 @@ import { motion } from "framer-motion";
 import NavBar from "../../../components/public_pages/layout/NavBar";
 import HeroSection from "../../../components/public_pages/home/HeroSection";
 import HowWeWork from "../../../components/public_pages/home/HowWeWork";
+import AboutUs from "../../../components/public_pages/home/AboutUs";
 import ShippingCalculator from "../../../components/public_pages/calc/ShippingCalculator";
 import Pricing from "../../../components/public_pages/pricing/Pricing";
-import Tracking from "../../../components/public_pages/home/Tracking";
+// import Tracking from "../../../components/public_pages/home/Tracking";
 import SupportCenter from "../../../components/public_pages/home/SupportCenter";
 // import SEO from "../../../components/public_pages/common/SEO/SEO";
 
@@ -53,6 +54,10 @@ const HomePage = () => {
       
       <motion.div variants={sectionVariants}>
         <HowWeWork />
+      </motion.div>
+      
+      <motion.div variants={sectionVariants}>
+        <AboutUs />
       </motion.div>
       
       <motion.div variants={sectionVariants}>

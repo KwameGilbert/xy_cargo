@@ -76,11 +76,11 @@ const Support = () => {
       icon: Mail,
       title: "Email Support",
       subtitle: "Detailed Help",
-      contact: "support@xycargozm.com",
+      contact: "info@xycargozm.com",
       action: "Send Email",
       color: "from-purple-400 to-purple-600",
       available: true,
-      href: "mailto:support@xycargozm.com?subject=Support Request - XY Cargo Zambia"
+      href: "mailto:info@xycargozm.com?subject=Support Request - XY Cargo Zambia"
     }
   ];
 
@@ -134,7 +134,7 @@ const Support = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden bg-[url('/images/hero-logistics.jpg')]">
       {/* Background Elements */}
       <motion.div
         animate={{

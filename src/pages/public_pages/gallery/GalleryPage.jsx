@@ -10,66 +10,101 @@ const GalleryPage = () => {
   const galleryImages = [
     {
       id: 1,
-      src: "/images/gallery/warehouse-operations.jpg",
+      src: "/images/XY-e1751100152489-1355x1536.jpg",
       alt: "Warehouse Operations",
       category: "Operations",
       title: "Modern Warehouse Facility"
     },
     {
       id: 2,
-      src: "/images/gallery/delivery-trucks.jpg",
+      src: "/images/william-william-NndKt2kF1L4-unsplash-1.jpg",
       alt: "Delivery Fleet",
       category: "Fleet",
       title: "Our Delivery Fleet"
     },
     {
       id: 3,
-      src: "/images/gallery/package-sorting.jpg",
+      src: "/images/63405.jpg",
       alt: "Package Sorting",
       category: "Operations",
       title: "Efficient Package Sorting"
     },
     {
       id: 4,
-      src: "/images/gallery/customer-service.jpg",
-      alt: "Customer Service",
-      category: "Service",
-      title: "Dedicated Customer Service"
+      src: "/images/gallery/podcast-1.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
     },
     {
       id: 5,
-      src: "/images/gallery/logistics-center.jpg",
-      alt: "Logistics Center",
-      category: "Facilities",
-      title: "State-of-the-Art Logistics Center"
+      src: "/images/gallery/podcast-2.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
     },
     {
       id: 6,
-      src: "/images/gallery/delivery-team.jpg",
-      alt: "Delivery Team",
-      category: "Team",
-      title: "Our Professional Delivery Team"
+      src: "/images/gallery/podcast-3.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
     },
     {
       id: 7,
-      src: "/images/gallery/tracking-system.jpg",
-      alt: "Tracking System",
-      category: "Technology",
-      title: "Advanced Tracking Technology"
+      src: "/images/gallery/podcast-4.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
     },
     {
       id: 8,
-      src: "/images/gallery/safety-equipment.jpg",
-      alt: "Safety Equipment",
-      category: "Safety",
-      title: "Safety First Approach"
+      src: "/images/gallery/podcast-5.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
     },
     {
       id: 9,
-      src: "/images/gallery/international-shipping.jpg",
-      alt: "International Shipping",
-      category: "Services",
-      title: "International Shipping Solutions"
+      src: "/images/gallery/podcast-6.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
+    },
+    {
+      id: 10,
+      src: "/images/gallery/podcast-7.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
+    },
+    {
+      id: 11,
+      src: "/images/gallery/podcast-8.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
+    },
+    {
+      id: 12,
+      src: "/images/gallery/podcast-9.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
+    },
+    {
+      id: 13,
+      src: "/images/gallery/podcast-10.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
+    },
+    {
+      id: 14,
+      src: "/images/gallery/podcast-11.jpg",
+      alt: "XY Cargo Podcasting",
+      category: "Marketing",
+      title: "XY Cargo Podcasting Studio"
     }
   ];
 
@@ -191,7 +226,7 @@ const GalleryPage = () => {
                   }}
                 />
               </div>
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/70 transition-all duration-300 flex items-center justify-center">
                 <Image className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={48} />
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
@@ -209,14 +244,14 @@ const GalleryPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/20 backdrop-blur-xs z-50 flex items-center justify-center p-4"
           onClick={closeLightbox}
         >
           <div className="relative max-w-4xl max-h-full" onClick={(e) => e.stopPropagation()}>
             {/* Close Button */}
             <button
               onClick={closeLightbox}
-              className="absolute top-4 right-4 z-10 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-colors"
+              className="absolute top-4 right-4 z-10 bg-black/20  text-white p-2 rounded-full hover:bg-black/70 transition-colors"
             >
               <X size={24} />
             </button>

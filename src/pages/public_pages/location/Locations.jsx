@@ -6,7 +6,7 @@ const Locations = () => {
   const locations = [
       {
           id: 1,
-          city: "Lusaka",
+          city: "Lusaka & Ndola",
           country: "Zambia",
           address: "Main Shipping Hub, Lusaka, Zambia",
           phone: "+260 96 7379139",
@@ -19,13 +19,14 @@ const Locations = () => {
               { number: "+260 96 7379139" }
             ]
         },
+        
         {
           id: 2,
           city: "Foshan",
           country: "China",
           address: "Shop # 94 Carousel Mall, Lusaka, Zambia",
           phone: "+260 96 7379139",
-          email: "support@xycargozm.com",
+          email: "info@xycargozm.com",
           hours: "Mon-Fri: 8:00 AM - 5:00 PM (Zambia Time)\nSat: 8:00 AM - 12:00 PM\nSun: Closed",
           services: ["Warehouse Operations", "Air Freight", "Sea Freight", "Electronics Handling"],
           timezone: "CAT (UTC+2)",

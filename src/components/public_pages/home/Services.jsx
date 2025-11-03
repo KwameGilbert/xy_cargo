@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { 
   Plane, Ship, Package, Truck, 
   ShieldCheck, Battery, Smartphone, 
-  Clock, DollarSign, MessageCircle 
+  Clock, DollarSign, MessageCircle,
+  Search, CreditCard, Send
 } from "lucide-react";
 
 const Services = () => {
@@ -57,39 +58,48 @@ const Services = () => {
       buttonLink: "/shipping-calculator"
     },
     {
-      icon: Battery,
-      title: "Electronics & Battery Shipping",
-      description: "Specialized handling for sensitive electronics, batteries, and regulated goods with all necessary safety compliance.",
-      features: ["Special packaging", "Safety documentation", "Customs compliance"],
+      icon: Search,
+      title: "Product Sourcing",
+      description: "Expert assistance in finding and selecting the best products from Chinese suppliers. We help you discover quality products at competitive prices.",
+      features: ["Supplier verification", "Product research", "Quality assurance", "Price negotiation"],
+      color: "bg-purple-50 text-purple-600 border-purple-200",
+      buttonText: "Start Product Sourcing",
+      buttonLink: "/contact"
+    },
+    {
+      icon: CreditCard,
+      title: "Supplier Payment Facilitation",
+      description: "Secure and convenient payment solutions for Chinese suppliers. We handle currency exchange, payment processing, and financial security.",
+      features: ["Secure payment processing", "Currency exchange", "Payment protection", "Transaction monitoring"],
       color: "bg-orange-50 text-orange-600 border-orange-200",
-      buttonText: "Ship Electronics Safely",
+      buttonText: "Learn About Payments",
       buttonLink: "/contact"
     },
     {
       icon: ShieldCheck,
-      title: "Customs Clearance",
+      title: "Custom Clearance",
       description: "Hassle-free import processing with our experienced team handling all documentation and regulatory requirements.",
       features: ["Documentation assistance", "Duty & tax calculation", "Compliance management"],
-      color: "bg-purple-50 text-purple-600 border-purple-200",
-      buttonText: "Learn About Customs",
+      color: "bg-indigo-50 text-indigo-600 border-indigo-200",
+      buttonText: "Customs Clearance Info",
       buttonLink: "/contact"
     },
     {
       icon: Truck,
-      title: "Final Mile Delivery",
-      description: "Direct delivery to your doorstep in Zambia. We ensure your packages arrive safely at their final destination.",
-      features: ["Nationwide coverage", "SMS notifications", "Proof of delivery"],
+      title: "Door to Door Delivery",
+      description: "Complete end-to-end delivery service from supplier warehouse to your doorstep in Zambia. We handle every step of the logistics chain.",
+      features: ["Full logistics management", "Real-time tracking", "Insurance coverage", "Final delivery"],
       color: "bg-red-50 text-red-600 border-red-200",
-      buttonText: "Track Your Delivery",
-      buttonLink: "/tracking"
+      buttonText: "Schedule Delivery",
+      buttonLink: "/contact"
     },
     {
-      icon: Smartphone,
-      title: "Mobile & Tech Products",
-      description: "Specialized service for smartphones, tablets, laptops and accessories with secure handling and fast delivery.",
-      features: ["Anti-theft packaging", "Insurance options", "Express delivery available"],
-      color: "bg-indigo-50 text-indigo-600 border-indigo-200",
-      buttonText: "Ship Tech Products",
+      icon: Send,
+      title: "Export",
+      description: "Professional export services for businesses shipping goods internationally. We ensure compliance with all export regulations and requirements.",
+      features: ["Export documentation", "Regulatory compliance", "Customs procedures", "International shipping"],
+      color: "bg-teal-50 text-teal-600 border-teal-200",
+      buttonText: "Export Services",
       buttonLink: "/contact"
     }
   ];
@@ -101,7 +111,7 @@ const Services = () => {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.1 }}
       >
         {/* Header Section */}
         <motion.div className="text-center mb-16" variants={headingVariants}>
@@ -109,6 +119,61 @@ const Services = () => {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Reliable, fast, and secure shipping solutions connecting China and Zambia with services tailored to your specific cargo needs.
           </p>
+        </motion.div>
+
+        {/* Services Overview Section */}
+        <motion.div variants={itemVariants} className="mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Text Content */}
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-6">Comprehensive Logistics Solutions</h3>
+              <div className="space-y-4 text-gray-600">
+                <p>
+                  From air freight to sea shipping, we provide end-to-end logistics services
+                  designed to meet your specific shipping requirements. Our experienced team
+                  ensures your cargo arrives safely and on time.
+                </p>
+                <p>
+                  Whether you're shipping electronics, textiles, machinery, or consumer goods,
+                  we have the expertise and infrastructure to handle it all with the highest
+                  standards of safety and efficiency.
+                </p>
+              </div>
+
+              <motion.div
+                className="mt-8"
+                variants={itemVariants}
+              >
+                <Link
+                  to="/shipping-calculator"
+                  className="inline-flex items-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+                >
+                  Calculate Shipping Cost
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Image Section */}
+            <motion.div
+              variants={itemVariants}
+              className="relative"
+            >
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div
+                  className="h-80 bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: "url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&h=400&fit=crop&crop=center')"
+                  }}
+                ></div>
+                <div className="p-6 bg-white">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-2">Global Shipping Network</h4>
+                  <p className="text-gray-600 text-sm">
+                    Connecting China and Zambia with reliable, fast, and secure shipping solutions.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Stats Section */}
@@ -135,7 +200,7 @@ const Services = () => {
         </motion.div>
 
         {/* Services Grid */}
-        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {servicesData.map((service, index) => (
             <motion.div
               key={index}

@@ -36,18 +36,18 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Support",
-      content: "support@xycargozm.com",
+      content: "info@xycargozm.com",
       subtitle: "Response within 2 hours",
       action: "Send Email",
-      href: "mailto:support@xycargozm.com?subject=Support Request - XY Cargo Zambia"
+      href: "mailto:info@xycargozm.com?subject=Support Request - XY Cargo Zambia"
     },
-    {
-      icon: MessageCircle,
-      title: "Live Chat",
-      content: "Available 24/7",
-      subtitle: "Instant assistance",
-      action: "Start Chat"
-    },
+    // {
+    //   icon: MessageCircle,
+    //   title: "Live Chat",
+    //   content: "Available 24/7",
+    //   subtitle: "Instant assistance",
+    //   action: "Start Chat"
+    // },
     {
       icon: MapPin,
       title: "Head Office",
@@ -167,12 +167,12 @@ const Contact = () => {
       animate="visible"
       className="min-h-screen bg-gray-50 py-16"
     >
-      <SEO 
+      {/* <SEO 
         title="Contact Us"
         description="Get in touch with XY Cargo Zambia. Contact our team for shipping inquiries, quotes, and support via phone, email, or the contact form."
         keywords="contact XY Cargo, shipping support, customer service, contact form, shipping inquiries"
         canonical="https://xycargozm.com/contact"
-      />
+      /> */}
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <motion.div variants={sectionVariants} className="text-center mb-16">

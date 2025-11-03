@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plane, Ship, Smartphone, Laptop, Package, Battery, Scissors, MessageCircle } from 'lucide-react';
+import { Plane, Ship, Smartphone, Laptop, Package, Battery, Scissors, MessageCircle, HeartPulse } from 'lucide-react';
 
 const ShippingPricing = () => {
   const airFreightRates = [
@@ -31,12 +31,12 @@ const ShippingPricing = () => {
       color: 'bg-green-50 text-green-600 border-green-200'
     },
     {
-      category: 'Battery Goods',
+      category: 'Battery Goods & Electronics',
       icon: Battery,
       price: '$14',
       unit: 'per kg',
       delivery: '10-17 days',
-      description: 'Items with batteries, cosmetics, toner, medicine',
+      description: 'Items with batteries, TVs, Speakers, Monitors',
       color: 'bg-orange-50 text-orange-600 border-orange-200'
     },
     {
@@ -45,7 +45,16 @@ const ShippingPricing = () => {
       price: '$16',
       unit: 'per kg',
       delivery: '10-17 days',
-      description: 'Computers, tablets, electronic devices',
+      description: 'Computers, laptops, tablet devices',
+      color: 'bg-red-50 text-red-600 border-red-200'
+    },
+    {
+    category: 'Medicare',
+      icon: HeartPulse,
+      price: '$14',
+      unit: 'per kg',
+      delivery: '10-17 days',
+      description: 'Cosmetics and medicine',
       color: 'bg-red-50 text-red-600 border-red-200'
     }
   ];

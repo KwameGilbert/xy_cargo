@@ -1,127 +1,159 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WarehouseLayout from '../../../components/warehouse/layout/WarehouseLayout';
 import ShipmentFilters from '../../../components/warehouse/shipments/ShipmentFilters';
 import ShipmentTable from '../../../components/warehouse/shipments/ShipmentTable';
 import ShipmentCard from '../../../components/warehouse/shipments/ShipmentCard';
 import ShipmentActions from '../../../components/warehouse/shipments/ShipmentActions';
-import mockShipmentsData from '../../../components/warehouse/shipments/mockData';
-import { useMediaQuery } from 'react-responsive';
+import ShipmentCreateModal from '../../../components/warehouse/shipments/ShipmentCreateModal';
+// import { useMediaQuery } from 'react-responsive'; // No longer needed
+import { getShipmentsSummary, createShipment } from '../../../services/warehouse/shipmentService';
+import { useToast } from '../../../contexts/ToastContext';
 
 const WarehouseShipmentsPage = () => {
-  const navigate = useNavigate();
-  const [shipments, setShipments] = useState(mockShipmentsData.shipments);
-  const [filters, setFilters] = useState({
-    status: '',
-    origin: '',
-    destination: '',
-    carrier: '',
-    dateRange: { start: null, end: null },
-  });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedShipments, setSelectedShipments] = useState([]);
-
-  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
-
-  const filteredShipments = useMemo(() => {
-    return shipments.filter((shipment) => {
-      const { status, origin, destination, carrier, dateRange } = filters;
-      const shipmentDate = new Date(shipment.departureDate);
-
-      return (
-        (status ? shipment.status === status : true) &&
-        (origin ? shipment.originCountry.toLowerCase().includes(origin.toLowerCase()) : true) &&
-        (destination ? shipment.destinationCountry.toLowerCase().includes(destination.toLowerCase()) : true) &&
-        (carrier ? shipment.carrier.toLowerCase().includes(carrier.toLowerCase()) : true) &&
-        (dateRange.start ? shipmentDate >= dateRange.start : true) &&
-        (dateRange.end ? shipmentDate <= dateRange.end : true) &&
-        (searchTerm
-          ? shipment.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          shipment.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase())
-          : true)
-      );
+    const navigate = useNavigate();
+    const [shipments, setShipments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [filters, setFilters] = useState({
+        status: '',
+        origin: '',
+        destination: '',
+        dateRange: { start: null, end: null }
     });
-  }, [shipments, filters, searchTerm]);
+    const [searchTerm, setSearchTerm] = useState('');
+    // const isMobile = useMediaQuery({ query: '(max-width: 768px)' }); // No longer needed
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const toast = useToast();
 
-  const handleSelectShipment = (shipmentId) => {
-    setSelectedShipments((prev) =>
-      prev.includes(shipmentId)
-        ? prev.filter((id) => id !== shipmentId)
-        : [...prev, shipmentId]
-    );
-  };
+    // ... (fetchShipments and useEffect remain identical) ...
+    const fetchShipments = async () => {
+        setLoading(true);
+        try {
+            const result = await getShipmentsSummary();
+            
+            if (result.success) {
+                setShipments(result.data);
+            } else {
+                toast.error(result.message || 'Failed to fetch shipments');
+            }
+        } catch (error) {
+            toast.error('Error loading shipments');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedShipments(filteredShipments.map((s) => s.id));
-    } else {
-      setSelectedShipments([]);
-    }
-  };
+    useEffect(() => {
+        fetchShipments();
+    }, []);
 
-  const handleViewDetails = (shipmentId) => {
-    navigate(`/warehouse/shipments/${shipmentId}`);
-  };
+    // ... (filteredShipments useMemo remains identical) ...
+    const filteredShipments = useMemo(() => {
+        return shipments.filter((shipment) => {
+            const { status, origin, destination } = filters;
 
-  return (
-    <WarehouseLayout>
-      <div className="p-6 bg-gray-50 min-h-screen">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Manage Shipments</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Track, update, and manage all incoming and outgoing shipments.
-          </p>
-        </div>
+            if (status && status !== 'all' && shipment.status !== status) return false;
+            if (origin && origin !== 'all' && !shipment.originCountry.toLowerCase().includes(origin.toLowerCase())) return false;
+            if (destination && destination !== 'all' && !shipment.destinationCountry.toLowerCase().includes(destination.toLowerCase())) return false;
+            if (searchTerm) {
+                const q = searchTerm.toLowerCase();
+                if (!(`${shipment.id}`.toLowerCase().includes(q) || (shipment.trackingNumber || '').toLowerCase().includes(q))) return false;
+            }
 
-        <ShipmentFilters
-          filters={filters}
-          setFilters={setFilters}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-        />
+            return true;
+        });
+    }, [shipments, filters, searchTerm]);
 
-        <ShipmentActions
-          selectedCount={selectedShipments.length}
-          onExportCSV={() => console.log("Export CSV:", selectedShipments)}
-          onExportPDF={() => console.log("Export PDF:", selectedShipments)}
-          onPrintManifests={() => console.log("Print manifests for:", selectedShipments)}
-          onBulkStatusUpdate={(status) => {
-            console.log(`Update ${selectedShipments.length} shipments to ${status}`);
-          }}
-        />
+    const handleCreateShipment = async (shipmentData) => {
+        const result = await createShipment(shipmentData);
+        if (result.success) {
+            toast.success('Shipment created successfully!');
+            // Refresh the shipments list
+            await fetchShipments();
+        } else {
+            toast.error(result.message || 'Failed to create shipment');
+            throw new Error(result.message);
+        }
+    };
 
-        <div className="bg-white rounded-lg shadow-md mt-4">
+    // ... (loading state remains identical) ...
+    if (loading) {
+        return (
+            <WarehouseLayout>
+                <div className="flex items-center justify-center h-[60vh]">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                </div>
+            </WarehouseLayout>
+        );
+    }
 
-          {isMobile ? (
-            <div className="p-4">
-              {filteredShipments.map((shipment) => (
-                <ShipmentCard
-                  key={shipment.id}
-                  shipment={shipment}
-                  onView={(id) => handleViewDetails(id)}   // ✅ corrected
-                  onEdit={(id) => console.log("Edit shipment:", id)}
-                  onPrintManifest={(id) => console.log("Print manifest:", id)}
-                  onUpdateStatus={(id) => console.log("Update status:", id)}
-                />
-              ))}
+    return (
+        <WarehouseLayout>
+            <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
+                <div className="max-w-7xl mx-auto">
+                    {/* Header */}
+                    <div className="mb-4 sm:mb-6">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Shipments Management</h1>
+                        <p className="text-gray-600 mt-1 text-sm sm:text-base">View and manage all warehouse shipments</p>
+                    </div>
+
+                    {/* Filters */}
+                    <ShipmentFilters
+                        onSearch={setSearchTerm}
+                        onFilter={(newFilters) => setFilters(prev => ({ ...prev, ...newFilters }))}
+                        onDateRangeChange={(dr) => setFilters(prev => ({ ...prev, dateRange: dr }))}
+                        onSort={() => { /* sorting */ }}
+                    />
+                    
+                    {/* Actions */}
+                    <ShipmentActions
+                         onExportCSV={() => console.log('Export CSV')}
+                         onExportPDF={() => console.log('Export PDF')}
+                         onPrintManifests={() => console.log('Print manifests')}
+                         onCreateShipment={() => setShowCreateModal(true)}
+                    />
+
+                    {/* Shipments Table / Cards */}
+                    <div className="bg-white shadow-lg rounded-sm border border-gray-200 mb-8">
+                        
+                        {/* --- Mobile View: Cards (Hidden on 'md' and up) --- */}
+                        <div className="p-2 sm:p-4 md:hidden">
+                            {filteredShipments.map((shipment) => (
+                                <ShipmentCard
+                                    key={shipment.id}
+                                    shipment={shipment}
+                                    onView={(id) => navigate(`/warehouse/shipments/${id}`)}
+                                    onEdit={(id) => console.log('Edit shipment:', id)}
+                                    onPrintManifest={(id) => console.log('Print manifest:', id)}
+                                    onUpdateStatus={(id) => console.log('Update status:', id)}
+                                />
+                            ))}
+                        </div>
+
+                        {/* --- Desktop View: Table (Hidden *below* 'md') --- */}
+                        <div className="hidden md:flex">
+                            <ShipmentTable
+                                shipments={filteredShipments}
+                                showSelection={false}
+                                onView={(id) => navigate(`/warehouse/shipments/${id}`)}
+                                onEdit={(id) => console.log('Edit shipment:', id)}
+                                onPrintManifest={(id) => console.log('Print manifest:', id)}
+                                onUpdateStatus={(id) => console.log('Update status:', id)}
+                            />
+                        </div>
+
+                    </div>
+                </div>
             </div>
-          ) : (
-            <ShipmentTable
-              shipments={filteredShipments}
-              selectedShipments={selectedShipments}
-              onSelectShipment={handleSelectShipment}
-              onSelectAll={handleSelectAll}
-              onView={handleViewDetails}
-              onEdit={(id) => console.log("Edit shipment:", id)}
-              onPrintManifest={(id) => console.log("Print manifest:", id)}
-              onUpdateStatus={(id) => console.log("Update status:", id)}
-            />
-          )}
 
-        </div>
-      </div>
-    </WarehouseLayout>
-  );
+            {/* Create Shipment Modal */}
+            <ShipmentCreateModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onSubmit={handleCreateShipment}
+            />
+        </WarehouseLayout>
+    );
 };
 
 export default WarehouseShipmentsPage;

@@ -166,7 +166,7 @@ const ClientSupport = () => {
                 <h3 className="font-semibold text-gray-900 mb-2">Contact Information</h3>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-gray-700"><Phone className="w-4 h-4" /> <span>+1 (800) 555-0123</span></div>
-                  <div className="flex items-center gap-2 text-gray-700"><Mail className="w-4 h-4" /> <span>support@logisticspro.com</span></div>
+                  <div className="flex items-center gap-2 text-gray-700"><Mail className="w-4 h-4" /> <span>info@logisticspro.com</span></div>
                   <div className="flex items-center gap-2 text-gray-700"><MessageCircle className="w-4 h-4" /> <span>Live Chat <span className="text-xs text-green-600 ml-1">Available 24/7</span></span></div>
                   <button className="bg-red-50 text-red-600 px-3 py-1 rounded-md text-sm mt-2">Start Chat</button>
                 </div>

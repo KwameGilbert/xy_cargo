@@ -189,7 +189,7 @@ const mockSupportTickets = {
       category: 'technical',
       requester: {
         name: 'Tech Solutions Ltd',
-        email: 'support@techsolutions.com',
+        email: 'info@techsolutions.com',
         phone: '+260 21 123 4567',
         type: 'business'
       },

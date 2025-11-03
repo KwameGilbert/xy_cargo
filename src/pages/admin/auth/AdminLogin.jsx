@@ -175,10 +175,10 @@ const AdminLogin = () => {
             <p className="text-sm text-gray-600">
               Need help? Contact{" "}
               <a
-                href="mailto:admin-support@example.com"
+                href="mailto:admin-info@example.com"
                 className="font-medium text-gray-900 hover:text-gray-700"
               >
-                admin-support@xycargo.com
+                admin-info@xycargo.com
               </a>
             </p>
           </div>

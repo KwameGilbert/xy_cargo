@@ -104,7 +104,7 @@ const WarehouseSupportPage = () => {
                 <h3 className="font-semibold text-gray-900">Email</h3>
                 </div>
                 <p className="text-sm text-gray-600 mb-2">General inquiries</p>
-                <p className="text-sm font-semibold text-gray-900">support@warehouse.com</p>
+                <p className="text-sm font-semibold text-gray-900">info@warehouse.com</p>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
