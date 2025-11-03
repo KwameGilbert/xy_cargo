@@ -20,18 +20,26 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone Support",
-      content: "+260 96 7379139",
+      content: "0211 220 012",
       subtitle: "Zambia Office",
       action: "Call Now",
-      href: "tel:+260967379139"
+      href: "tel:0211220012"
     },
     {
-      icon: Phone,
-      title: "WhatsApp Support",
+      icon: MessageCircle,
+      title: "WhatsApp Primary",
       content: "+260 769 481 203",
       subtitle: "Quick Response",
-      action: "Call Now",
-      href: "tel:+260769481203"
+      action: "Message Us",
+      href: "https://wa.me/260769481203"
+    },
+    {
+      icon: MessageCircle,
+      title: "WhatsApp Secondary",
+      content: "+260 967 379 139",
+      subtitle: "24/7 Support",
+      action: "Message Us",
+      href: "https://wa.me/260967379139"
     },
     {
       icon: Mail,

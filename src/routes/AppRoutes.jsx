@@ -4,6 +4,7 @@ import { ClientAuthProvider } from "../contexts/ClientAuthContext";
 import { WarehouseAuthProvider } from "../contexts/WarehouseAuthContext";
 import { ToastProvider } from "../contexts/ToastContext";
 import ToastContainer from "../components/ToastContainer";
+import ScrollToTop from "../components/ScrollToTop";
 
 // Public pages
 import HomePage from "../pages/public_pages/home/HomePage";
@@ -35,7 +36,6 @@ import ClientSettings from "../pages/client/settings/Settings";
 import ClientProtectedRoute from "../components/client/auth/ProtectedRoute";
 import MainLayout from "../components/public_pages/layout/MainLayout";
 
-
 //Warehouse Pages
 import WarehouseProtectedRoute from "../components/warehouse/auth/WarehouseProtectedRoute";
 import WarehouseLogin from "../pages/warehouse/auth/WarehouseLogin";
@@ -51,7 +51,6 @@ import WarehouseShipmentDetailPage from "../pages/warehouse/shipments/WarehouseS
 import WarehouseNotificationPage from "../pages/warehouse/notifications/WarehouseNotificationPage";
 import WarehouseSupportPage from "../pages/warehouse/support/WarehouseSupportPage";
 import WarehouseSettingsPage from "../pages/warehouse/settings/WarehouseSettingsPage";
-
 
 // Admin Pages
 import AdminLayout from "../components/admin/layout/AdminLayout";
@@ -121,58 +120,60 @@ const AppRoutes = () => (
   <ToastProvider>
     <ClientAuthProvider>
       <WarehouseAuthProvider>
+        <ScrollToTop />
         <Routes>
-    {/* Public Routes - wrapped in MainLayout */}
-    <Route element={<MainLayout />}>
-      <Route index element={<HomePage />} />
-      <Route path="pricing" element={<Pricing />} />
-      <Route path="tracking" element={<PackageTracking />} />
-      <Route path="locations" element={<Locations />} />
-      <Route path="calculator" element={<ShippingCalculator />} />
-      <Route path="shipping-calculator" element={<ShippingCalculator />} />
-      <Route path="contact" element={<Contact />} />
-      <Route path="support" element={<SupportPage />} />
-      <Route path="faq" element={<FAQPage />} />
-      <Route path="gallery" element={<GalleryPage />} />
-      <Route path="blog" element={<BlogPage />} />
-      <Route path="services" element={<ServicesPage />} />
-      <Route path="how-we-work" element={<HowWeWorkPage />} />
-      <Route path="about" element={<AboutPage />} />
-    </Route>
+            {/* Public Routes - wrapped in MainLayout */}
+            {/* <Route element={<MainLayout />}> */}
+            <Route element={<MainLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="pricing" element={<Pricing />} />
+              <Route path="tracking" element={<PackageTracking />} />
+              <Route path="locations" element={<Locations />} />
+              <Route path="calculator" element={<ShippingCalculator />} />
+              <Route path="shipping-calculator" element={<ShippingCalculator />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="support" element={<SupportPage />} />
+              <Route path="faq" element={<FAQPage />} />
+              <Route path="gallery" element={<GalleryPage />} />
+              <Route path="blog" element={<BlogPage />} />
+              <Route path="services" element={<ServicesPage />} />
+              <Route path="how-we-work" element={<HowWeWorkPage />} />
+              <Route path="about" element={<AboutPage />} />
+            </Route>
 
-    {/* Client Auth Routes */}
-    <Route path="client/auth/login" element={<ClientLogin />} />
-    <Route path="client/auth/signup" element={<ClientSignup />} />
+            {/* Client Auth Routes */}
+            <Route path="client/auth/login" element={<ClientLogin />} />
+            <Route path="client/auth/signup" element={<ClientSignup />} />
 
-    {/* Protected Client Routes */}
-    <Route path="client/dashboard" element={<ClientProtectedRoute><Dashboard /></ClientProtectedRoute>} />
-    <Route path="client/parcels" element={<ClientProtectedRoute><ParcelsPage /></ClientProtectedRoute>} />
-    <Route path="client/parcels/:id" element={<ClientProtectedRoute><ParcelDetailsPage /></ClientProtectedRoute>} />
-    <Route path="client/payments" element={<ClientProtectedRoute><ClientPayments /></ClientProtectedRoute>} />
-    <Route path="client/invoices/:id" element={<ClientProtectedRoute><InvoiceDetailsPage /></ClientProtectedRoute>} />
-    <Route path="client/notifications" element={<ClientProtectedRoute><Notifications /></ClientProtectedRoute>} />
-    <Route path="client/addresses" element={<ClientProtectedRoute><ClientAddresses /></ClientProtectedRoute>} />
-    <Route path="client/support" element={<ClientProtectedRoute><ClientSupport /></ClientProtectedRoute>} />
-    <Route path="client/settings" element={<ClientProtectedRoute><ClientSettings/></ClientProtectedRoute>} />
+            {/* Protected Client Routes */}
+            <Route path="client/dashboard" element={<ClientProtectedRoute><Dashboard /></ClientProtectedRoute>} />
+            <Route path="client/parcels" element={<ClientProtectedRoute><ParcelsPage /></ClientProtectedRoute>} />
+            <Route path="client/parcels/:id" element={<ClientProtectedRoute><ParcelDetailsPage /></ClientProtectedRoute>} />
+            <Route path="client/payments" element={<ClientProtectedRoute><ClientPayments /></ClientProtectedRoute>} />
+            <Route path="client/invoices/:id" element={<ClientProtectedRoute><InvoiceDetailsPage /></ClientProtectedRoute>} />
+            <Route path="client/notifications" element={<ClientProtectedRoute><Notifications /></ClientProtectedRoute>} />
+            <Route path="client/addresses" element={<ClientProtectedRoute><ClientAddresses /></ClientProtectedRoute>} />
+            <Route path="client/support" element={<ClientProtectedRoute><ClientSupport /></ClientProtectedRoute>} />
+            <Route path="client/settings" element={<ClientProtectedRoute><ClientSettings/></ClientProtectedRoute>} />
 
 
-    {/* Warehouse Auth Routes */}
-    <Route path="warehouse/auth/login" element={<WarehouseLogin />} />
-    <Route path="warehouse/auth/forgot-password" element={<WarehouseForgotPassword />} />
+            {/* Warehouse Auth Routes */}
+            <Route path="warehouse/auth/login" element={<WarehouseLogin />} />
+            <Route path="warehouse/auth/forgot-password" element={<WarehouseForgotPassword />} />
 
-    {/* Protected Warehouse Routes */}
-    <Route path="warehouse/dashboard" element={<WarehouseProtectedRoute><WarehouseDashboard /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels" element={<WarehouseProtectedRoute><WarehouseParcelsPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels/create" element={<WarehouseProtectedRoute><CreateWarehouseParcelPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels/:id" element={<WarehouseProtectedRoute><WarehouseParcelDetailPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/parcels/:id/edit" element={<WarehouseProtectedRoute><EditWarehouseParcelPage/></WarehouseProtectedRoute>}/>
-    <Route path="warehouse/payments" element={<WarehouseProtectedRoute><WarehousePaymentsPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/shipments" element={<WarehouseProtectedRoute><WarehouseShipmentsPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/shipments/:shipmentId" element={<WarehouseProtectedRoute><WarehouseShipmentDetailPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/notifications" element={<WarehouseProtectedRoute><WarehouseNotificationPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/support" element={<WarehouseProtectedRoute><WarehouseSupportPage /></WarehouseProtectedRoute>} />
-    <Route path="warehouse/settings" element={<WarehouseProtectedRoute><WarehouseSettingsPage /></WarehouseProtectedRoute>} />
-      <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
+            {/* Protected Warehouse Routes */}
+            <Route path="warehouse/dashboard" element={<WarehouseProtectedRoute><WarehouseDashboard /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/parcels" element={<WarehouseProtectedRoute><WarehouseParcelsPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/parcels/create" element={<WarehouseProtectedRoute><CreateWarehouseParcelPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/parcels/:id" element={<WarehouseProtectedRoute><WarehouseParcelDetailPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/parcels/:id/edit" element={<WarehouseProtectedRoute><EditWarehouseParcelPage/></WarehouseProtectedRoute>}/>
+            <Route path="warehouse/payments" element={<WarehouseProtectedRoute><WarehousePaymentsPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/shipments" element={<WarehouseProtectedRoute><WarehouseShipmentsPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/shipments/:shipmentId" element={<WarehouseProtectedRoute><WarehouseShipmentDetailPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/notifications" element={<WarehouseProtectedRoute><WarehouseNotificationPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/support" element={<WarehouseProtectedRoute><WarehouseSupportPage /></WarehouseProtectedRoute>} />
+            <Route path="warehouse/settings" element={<WarehouseProtectedRoute><WarehouseSettingsPage /></WarehouseProtectedRoute>} />
+            <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
 
 
         {/* Admin Auth Routes */}
@@ -237,7 +238,7 @@ const AppRoutes = () => (
           {/* <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} /> */}
         {/* </Route> */}
 
-  </Routes>
+        </Routes>
       </WarehouseAuthProvider>
     </ClientAuthProvider>
     <ToastContainer />

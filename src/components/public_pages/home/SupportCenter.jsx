@@ -41,45 +41,46 @@ const SupportCenter = () => {
   ];
 
   const supportChannels = [
-    {
-      icon: Phone,
-      title: 'Phone Support',
-      subtitle: 'Zambia Office',
-      contact: '+260 96 7379139',
-      action: 'Call Now',
-      color: 'from-green-400 to-green-600',
-      available: true,
-      href: 'tel:+260967379139',
-    },
-    {
-      icon: Phone,
-      title: 'Phone Support',
-      subtitle: 'WhatsApp Support',
-      contact: '+260 769 481 203',
-      action: 'Call Now',
-      color: 'from-green-400 to-green-600',
-      available: true,
-      href: 'tel:+260769481203',
-    },
-    {
-      icon: MessageCircle,
-      title: 'Live Chat',
-      subtitle: 'Instant Help',
-      contact: 'Average wait: 30 seconds',
-      action: 'Start Chat',
-      color: 'from-blue-400 to-blue-600',
-      available: false,
-    },
-    {
-      icon: Mail,
-      title: 'Email Support',
-      subtitle: 'Detailed Help',
-      contact: 'info@xycargozm.com',
-      action: 'Send Email',
-      color: 'from-purple-400 to-purple-600',
-      available: true,
-      href: 'mailto:info@xycargozm.com?subject=Support Request - XY Cargo Zambia',
-    },
+     {
+          icon: Phone,
+          title: "Phone Landline Support",
+          subtitle: "Zambia Office",
+          contact: "0211 220 012",
+          action: "Call Now",
+          color: "from-green-400 to-green-600",
+          available: true,
+          href: "tel:0211220012"
+        },
+        {
+          icon: MessageCircle,
+          title: "WhatsApp Support",
+          subtitle: "Primary Line",
+          contact: "+260 769 481 203",
+          action: "Message Us",
+          color: "from-green-400 to-green-600",
+          available: true,
+          href: "https://wa.me/260769481203"
+        },
+        {
+          icon: MessageCircle,
+          title: "WhatsApp Support",
+          subtitle: "Secondary Line",
+          contact: "+260 967 379 139",
+          action: "Message Us",
+          color: "from-blue-400 to-blue-600",
+          available: true,
+          href: "https://wa.me/260967379139"
+        },
+        {
+          icon: Mail,
+          title: "Email Support",
+          subtitle: "Detailed Help",
+          contact: "info@xycargozm.com",
+          action: "Send Email",
+          color: "from-purple-400 to-purple-600",
+          available: true,
+          href: "mailto:info@xycargozm.com?subject=Support Request - XY Cargo Zambia"
+        }
   ];
 
   const handleInputChange = (e) => {

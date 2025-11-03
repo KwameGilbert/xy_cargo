@@ -5,7 +5,7 @@ import { Calculator, Package, Plane, Ship } from "lucide-react";
 const ShippingCalculator = ({ SEO }) => {
   const [formData, setFormData] = useState({
     fromCountry: "China",
-    toCountry: "Zambia",
+    toCountry: "Zambia Lusaka",
     weight: "",
     length: "",
     width: "",
@@ -25,24 +25,65 @@ const ShippingCalculator = ({ SEO }) => {
   ];
 
   const categoryTypes = [
-    { id: "normal", name: "Normal Goods", rate: 12, service: "air" },
-    { id: "wigs", name: "Wigs", rate: 14, service: "air" },
-    { id: "phones", name: "Phones", rate: 11, unit: "per piece", service: "air" },
-    { id: "battery", name: "Battery Goods/Cosmetics/Toner Cartridges/Medicine", rate: 14, service: "air" },
-    { id: "laptop", name: "Laptops and iPads", rate: 16, service: "air" },
-    { id: "sea_general", name: "General Goods (Sea)", rate: 300, unit: "CBM", service: "sea" },
-    { id: "sea_special", name: "Special Goods (Sea)", rate: 330, unit: "CBM", service: "sea" }
+    // Lusaka rates
+    { id: "normal", name: "Normal Goods", rate: 12, service: "air", destination: "lusaka" },
+    { id: "wigs", name: "Wigs", rate: 14, service: "air", destination: "lusaka" },
+    { id: "phones", name: "Phones", rate: 11, unit: "per piece", service: "air", destination: "lusaka" },
+    { id: "battery", name: "Battery Goods/Cosmetics/Toner Cartridges/Medicine", rate: 14, service: "air", destination: "lusaka" },
+    { id: "laptop", name: "Laptops and iPads", rate: 16, service: "air", destination: "lusaka" },
+    // Ndola rates (+$2)
+    { id: "normal_ndola", name: "Normal Goods", rate: 14, service: "air", destination: "ndola" },
+    { id: "wigs_ndola", name: "Wigs and Hair", rate: 16, service: "air", destination: "ndola" },
+    { id: "phones_ndola", name: "Mobile Phones", rate: 13, unit: "per piece", service: "air", destination: "ndola" },
+    { id: "battery_ndola", name: "Battery Goods/Cosmetics/Toner Cartridges/Medicine", rate: 16, service: "air", destination: "ndola" },
+    { id: "laptop_ndola", name: "Laptops and iPads", rate: 18, service: "air", destination: "ndola" },
+    // Sea freight - Lusaka rates
+    { id: "sea_general", name: "General Goods (Sea)", rate: 300, unit: "CBM", service: "sea", destination: "lusaka" },
+    { id: "sea_special", name: "Special Goods (Sea)", rate: 330, unit: "CBM", service: "sea", destination: "lusaka" },
+    // Sea freight - Ndola rates
+    { id: "sea_general_ndola", name: "General Goods (Sea)", rate: 330, unit: "CBM", service: "sea", destination: "ndola" },
+    { id: "sea_special_ndola", name: "Special Goods (Sea)", rate: 360, unit: "CBM", service: "sea", destination: "ndola" }
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "weight") {
-      // Only show warning for express
-      if (formData.serviceType === "express" && value !== "" && parseFloat(value) < 5) {
+      // Only show warning for express and non-phone items
+      const isPhoneCategory = formData.category.includes('phones');
+      if (formData.serviceType === "express" && !isPhoneCategory && value !== "" && parseFloat(value) < 5) {
         setWeightWarning("Minimum allowed weight for Express is 5kg.");
       } else {
         setWeightWarning("");
       }
+    }
+    if (name === "toCountry") {
+      // Update category when destination changes
+      const isNdola = value === "Zambia Ndola";
+      const currentCategory = formData.category;
+      let newCategory = currentCategory;
+      
+      if (isNdola) {
+        // Switch to Ndola rates
+        if (currentCategory === "normal") newCategory = "normal_ndola";
+        else if (currentCategory === "wigs") newCategory = "wigs_ndola";
+        else if (currentCategory === "phones") newCategory = "phones_ndola";
+        else if (currentCategory === "battery") newCategory = "battery_ndola";
+        else if (currentCategory === "laptop") newCategory = "laptop_ndola";
+        else if (currentCategory === "sea_general") newCategory = "sea_general_ndola";
+        else if (currentCategory === "sea_special") newCategory = "sea_special_ndola";
+      } else {
+        // Switch to Lusaka rates
+        if (currentCategory === "normal_ndola") newCategory = "normal";
+        else if (currentCategory === "wigs_ndola") newCategory = "wigs";
+        else if (currentCategory === "phones_ndola") newCategory = "phones";
+        else if (currentCategory === "battery_ndola") newCategory = "battery";
+        else if (currentCategory === "laptop_ndola") newCategory = "laptop";
+        else if (currentCategory === "sea_general_ndola") newCategory = "sea_general";
+        else if (currentCategory === "sea_special_ndola") newCategory = "sea_special";
+      }
+      
+      setFormData(prev => ({ ...prev, [name]: value, category: newCategory }));
+      return;
     }
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -53,8 +94,9 @@ const ShippingCalculator = ({ SEO }) => {
         alert("Please enter weight for air freight");
         return;
       }
-      // Only enforce minimum for express
-      if (formData.serviceType === 'express' && parseFloat(formData.weight) < 5) {
+      // Only enforce minimum for express and non-phone items
+      const isPhoneCategory = formData.category.includes('phones');
+      if (formData.serviceType === 'express' && !isPhoneCategory && parseFloat(formData.weight) < 5) {
         setWeightWarning("Minimum allowed weight for Express is 5kg.");
         return;
       }
@@ -69,8 +111,9 @@ const ShippingCalculator = ({ SEO }) => {
       let description = '';
       const selectedCategory = categoryTypes.find(cat => cat.id === formData.category);
       if (formData.serviceType !== 'sea') {
-        // Only apply minimum for express
-        const weight = formData.serviceType === 'express'
+        // Only apply minimum for express and non-phone items
+        const isPhoneCategory = formData.category.includes('phones');
+        const weight = formData.serviceType === 'express' && !isPhoneCategory
           ? Math.max(parseFloat(formData.weight) || 0, 5)
           : parseFloat(formData.weight) || 0;
         cost = weight * selectedCategory.rate;
@@ -105,7 +148,7 @@ const ShippingCalculator = ({ SEO }) => {
           estimatedDays: description,
           route: {
             origin: "Foshan, China",
-            destination: "Lusaka, Zambia"
+            destination: formData.toCountry
           },
           measurements: formData.serviceType === 'sea' 
             ? {
@@ -119,10 +162,10 @@ const ShippingCalculator = ({ SEO }) => {
                 }
               }
             : {
-                weight: formData.serviceType === 'express'
+                weight: formData.serviceType === 'express' && !formData.category.includes('phones')
                   ? Math.max(parseFloat(formData.weight) || 0, 5)
                   : parseFloat(formData.weight) || 0,
-                unit: selectedCategory.id === "phones" ? "pieces" : "kg"
+                unit: selectedCategory.id.includes("phones") ? "pieces" : "kg"
               },
           priceBreakdown: {
             baseCost: cost.toFixed(2),
@@ -192,10 +235,10 @@ const ShippingCalculator = ({ SEO }) => {
                     name="toCountry"
                     value={formData.toCountry}
                     onChange={handleInputChange}
-                    disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   >
-                    <option value="Zambia">Zambia (Lusaka)</option>
+                    <option value="Zambia Lusaka">Zambia (Lusaka)</option>
+                    <option value="Zambia Ndola">Zambia (Ndola)</option>
                   </select>
                 </div>
               </div>
@@ -213,11 +256,20 @@ const ShippingCalculator = ({ SEO }) => {
                             ? 'border-red-500 bg-red-50' 
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
-                        onClick={() => setFormData(prev => ({ 
-                          ...prev, 
-                          serviceType: service.id,
-                          category: service.id === 'sea' ? 'sea_general' : 'normal'
-                        }))}
+                        onClick={() => {
+                          const isNdola = formData.toCountry === "Zambia Ndola";
+                          const newCategory = service.id === 'sea' ? 
+                            (isNdola ? 'sea_general_ndola' : 'sea_general') : 
+                            (isNdola ? 
+                              (service.id === 'express' ? 'normal_ndola' : 'normal_ndola') : 
+                              (service.id === 'express' ? 'normal' : 'normal')
+                            );
+                          setFormData(prev => ({ 
+                            ...prev, 
+                            serviceType: service.id,
+                            category: newCategory
+                          }));
+                        }}
                       >
                         <div className="flex items-center mb-2">
                           <IconComponent className="text-red-500 mr-2" size={20} />
@@ -239,17 +291,27 @@ const ShippingCalculator = ({ SEO }) => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   >
                     {formData.serviceType !== 'sea' ? (
-                      categoryTypes.filter(cat => cat.service === "air").map(category => (
-                        <option key={category.id} value={category.id}>
-                          {category.name} - ${category.rate}/{category.unit || "kg"}
-                        </option>
-                      ))
+                      categoryTypes
+                        .filter(cat => cat.service === "air" && 
+                          ((formData.toCountry === "Zambia Ndola" && cat.destination === "ndola") ||
+                           (formData.toCountry === "Zambia Lusaka" && cat.destination === "lusaka"))
+                        )
+                        .map(category => (
+                          <option key={category.id} value={category.id}>
+                            {category.name} - ${category.rate}/{category.unit || "kg"}
+                          </option>
+                        ))
                     ) : (
-                      categoryTypes.filter(cat => cat.service === "sea").map(category => (
-                        <option key={category.id} value={category.id}>
-                          {category.name} - ${category.rate}/{category.unit}
-                        </option>
-                      ))
+                      categoryTypes
+                        .filter(cat => cat.service === "sea" && 
+                          ((formData.toCountry === "Zambia Ndola" && cat.destination === "ndola") ||
+                           (formData.toCountry === "Zambia Lusaka" && cat.destination === "lusaka"))
+                        )
+                        .map(category => (
+                          <option key={category.id} value={category.id}>
+                            {category.name} - ${category.rate}/{category.unit}
+                          </option>
+                        ))
                     )}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -260,8 +322,8 @@ const ShippingCalculator = ({ SEO }) => {
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
                   {formData.serviceType !== 'sea' 
-                    ? formData.category === 'phones'
-                      ? 'For phones, enter the number of pieces.'
+                    ? formData.category.includes('phones')
+                      ? 'For phones, enter the number of pieces. No minimum weight requirement.'
                       : formData.serviceType === 'express'
                         ? 'For express air freight, minimum weight is 5kg.'
                         : 'For standard air freight, no minimum weight.'
@@ -281,14 +343,14 @@ const ShippingCalculator = ({ SEO }) => {
                       value={formData.weight}
                       onChange={handleInputChange}
                         placeholder={
-                          formData.category === 'phones'
+                          formData.category.includes('phones')
                             ? "1"
                             : formData.serviceType === 'express'
                               ? "5.0"
                               : "1.0"
                         }
-                      min="5"
-                      step={formData.category === 'phones' ? "1" : "0.1"}
+                      min={formData.category.includes('phones') ? "1" : "5"}
+                      step={formData.category.includes('phones') ? "1" : "0.1"}
                       className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent ${weightWarning ? 'border-red-500' : ''}`}
                       required
                     />
@@ -414,14 +476,15 @@ const ShippingCalculator = ({ SEO }) => {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
-                    <motion.button
+                    <motion.a
+                      href="tel:0211220012"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg flex items-center justify-center"
                     >
                       <Package className="mr-2" size={16} />
-                      Book Shipment
-                    </motion.button>
+                      Call to Book
+                    </motion.a>
                     <motion.a
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -451,7 +514,7 @@ const ShippingCalculator = ({ SEO }) => {
                 </div>
                 <div className="mt-8 space-y-4">
                   <div className="border border-gray-200 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-700 mb-2">Air Services Pricing:</h4>
+                    <h4 className="font-medium text-gray-700 mb-2">Air Services Pricing - Lusaka:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• Normal goods: $12/kg</li>
                       <li>• Wigs: $14/kg</li>
@@ -461,10 +524,28 @@ const ShippingCalculator = ({ SEO }) => {
                     </ul>
                   </div>
                   <div className="border border-gray-200 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-700 mb-2">Sea Services Pricing:</h4>
+                    <h4 className="font-medium text-gray-700 mb-2">Air Services Pricing - Ndola:</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Normal goods: $14/kg</li>
+                      <li>• Wigs and Hair: $16/kg</li>
+                      <li>• Mobile Phones: $13/piece</li>
+                      <li>• Battery/Cosmetics/Toner/Medicine: $16/kg</li>
+                      <li>• Laptops & iPads: $18/kg</li>
+                    </ul>
+                  </div>
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <h4 className="font-medium text-gray-700 mb-2">Sea Services Pricing - Lusaka:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• General Goods: $300/CBM</li>
                       <li>• Special Goods: $330/CBM</li>
+                      <li>• Minimum charge: $50 (0.1 CBM)</li>
+                    </ul>
+                  </div>
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <h4 className="font-medium text-gray-700 mb-2">Sea Services Pricing - Ndola:</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• General Goods: $330/CBM</li>
+                      <li>• Special Goods: $360/CBM</li>
                       <li>• Minimum charge: $50 (0.1 CBM)</li>
                     </ul>
                   </div>

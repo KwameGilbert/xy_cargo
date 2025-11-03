@@ -65,7 +65,7 @@ const Footer = () => {
               <li><Link to={"/locations"} className="text-gray-400 hover:text-red-500">China Warehouse</Link></li>
               <li><a href="https://wa.me/260967379139" className="text-gray-400 hover:text-red-500">WhatsApp Support</a></li>
               <li><Link to={"/contact"} className="text-gray-400 hover:text-red-500">Contact Us</Link></li>
-              <li><a href="tel:+260967379139" className="text-gray-400 hover:text-red-500">Call Zambia Office</a></li>
+              <li><a href="tel:0211220012" className="text-gray-400 hover:text-red-500">Call Zambia Office</a></li>
               <li><Link to={"/faq"} className="text-gray-400 hover:text-red-500">FAQ</Link></li>
             </ul>
             <div className="mt-4">

@@ -51,7 +51,7 @@ const Services = () => {
     {
       icon: Ship,
       title: "Sea Freight",
-      description: "Cost-effective solution for bulk shipments with transit times of 4-6 weeks. Ideal for large volumes and non-urgent cargo.",
+      description: "Cost-effective solution for bulk shipments with transit times of 40-60 days. Ideal for large volumes and non-urgent cargo.",
       features: ["Affordable bulk rates", "FCL & LCL options", "Regular scheduled departures"],
       color: "bg-green-50 text-green-600 border-green-200",
       buttonText: "Calculate Sea Freight",
@@ -180,7 +180,7 @@ const Services = () => {
         <motion.div variants={containerVariants} className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {[
             { icon: Clock, number: "10-17", label: "Days Air Delivery" },
-            { icon: Truck, number: "4-6", label: "Weeks Sea Shipping" },
+            { icon: Truck, number: "40-60", label: "Days Sea Shipping" },
             { icon: Package, number: "1000+", label: "Parcels Monthly" },
             { icon: DollarSign, number: "$12", label: "Starting Rate/kg" }
           ].map((stat, index) => (

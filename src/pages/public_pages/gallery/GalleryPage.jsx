@@ -303,7 +303,7 @@ const GalleryPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:+260967379139"
+              href="tel:0211220012"
               className="inline-flex items-center justify-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
             >
               Schedule a Tour

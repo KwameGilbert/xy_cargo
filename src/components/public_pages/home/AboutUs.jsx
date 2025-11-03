@@ -131,8 +131,7 @@ const AboutUs = () => {
               <div className="p-6 bg-white">
                 <h4 className="text-lg font-semibold text-gray-800 mb-2">Our Mission</h4>
                 <p className="text-gray-600 text-sm">
-                  To provide seamless, reliable, and cost-effective shipping solutions that connect
-                  businesses and families across borders.
+                  To redefine logistics in Africa by building a connected, efficient, and technology-driven cargo network that empowers trade and supports economic growth.
                 </p>
               </div>
             </div>

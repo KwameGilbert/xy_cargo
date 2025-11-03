@@ -44,23 +44,23 @@ const Support = () => {
   const supportChannels = [
     {
       icon: Phone,
-      title: "Phone Support",
+      title: "Phone Landline Support",
       subtitle: "Zambia Office",
-      contact: "+260 96 7379139",
+      contact: "0211220012",
       action: "Call Now",
       color: "from-green-400 to-green-600",
       available: true,
-      href: "tel:+260967379139"
+      href: "tel:0211220012"
     },
     {
-      icon: Phone,
-      title: "Phone Support",
+      icon: MessageCircle,
+      title: "WhatsApp Support",
       subtitle: "Secondary Line",
       contact: "+260 769 481 203",
-      action: "Call Now",
+      action: "Message Us",
       color: "from-green-400 to-green-600",
       available: true,
-      href: "tel:+260769481203"
+      href: "https://wa.me/260769481203"
     },
     {
       icon: MessageCircle,
